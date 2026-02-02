@@ -1,0 +1,93 @@
+{
+  "run_label": "20260501_002340",
+  "config": {
+    "num_jobs": 50,
+    "resumes_per_job": 5,
+    "model": "llama-3.3-70b-versatile"
+  },
+  "phases": {
+    "generation": {
+      "jobs_generated": 28,
+      "pairs_generated": 8
+    },
+    "validation": {
+      "resume_summary": {
+        "total": 8,
+        "valid": 8,
+        "invalid": 0,
+        "success_rate": 1.0
+      },
+      "job_summary": {
+        "total": 28,
+        "valid": 28,
+        "invalid": 0,
+        "success_rate": 1.0
+      }
+    },
+    "labeling": {
+      "total_pairs": 8,
+      "overall_pass_rate": 0.25,
+      "average_skills_overlap": 0.30624999999999997,
+      "failure_rates": {
+        "low_skills_overlap": 0.625,
+        "experience_mismatch": 0.0,
+        "seniority_mismatch": 0.25,
+        "missing_core_skill": 0.75,
+        "hallucinated_skill": 0.0,
+        "awkward_language": 0.0
+      },
+      "by_template": {
+        "casual": {
+          "count": 3,
+          "failures": 1,
+          "failure_rate": 0.3333333333333333
+        },
+        "achievement_focused": {
+          "count": 1,
+          "failures": 1,
+          "failure_rate": 1.0
+        },
+        "technical": {
+          "count": 2,
+          "failures": 2,
+          "failure_rate": 1.0
+        },
+        "formal": {
+          "count": 2,
+          "failures": 2,
+          "failure_rate": 1.0
+        }
+      },
+      "by_fit_level": {
+        "mismatch": {
+          "count": 5,
+          "avg_overlap": 0.24
+        },
+        "partial": {
+          "count": 1,
+          "avg_overlap": 0.6666666666666666
+        },
+        "poor": {
+          "count": 2,
+          "avg_overlap": 0.29166666666666663
+        }
+      },
+      "niche_role_failure_rate": 0.0
+    },
+    "correction": {}
+  },
+  "stage_times_seconds": {
+    "phase1_generation": 11013.3,
+    "phase2_validation": 0.28,
+    "phase3_labeling": 0.18,
+    "phase4_correction": 0.2
+  },
+  "files": {
+    "jobs": "data/generated/jobs_20260501_002340.jsonl",
+    "pairs": "data/generated/pairs_20260501_002340.jsonl",
+    "resumes": "data/generated/resumes_20260501_002340.jsonl",
+    "failure_labels": "data/labeled/failure_labels_20260501_002340.jsonl",
+    "failed_pairs": "data/labeled/failed_pairs_20260501_002340.jsonl"
+  },
+  "total_time_seconds": 11013.97
+}
