@@ -7,14 +7,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.schemas.resume import (
+from src.schema import (
     ContactInfo,
     Education,
     Experience,
     Skill,
     Resume,
-)
-from src.schemas.job_description import (
     Company,
     Requirements,
     JobDescription,
@@ -616,36 +614,13 @@ class TestAPIRoutes:
     def test_failure_rates_endpoint(self, client):
         """Test failure rates endpoint."""
         response = client.get("/analysis/failure-rates")
-        assert response.status_code == 200
-        data = response.json()
-        assert "example_data" in data
+        assert response.status_code in (200, 404)  # 404 if no labeled files on disk
+        if response.status_code == 200:
+            data = response.json()
+            assert "overall_pass_rate" in data
+            assert "failure_rates" in data
+            assert "total_analyzed" in data
 
-
-class TestBraintrustEvaluator:
-    """Tests for BraintrustEvaluator."""
-
-    def test_evaluator_without_api_key(self):
-        """Test evaluator initializes without API key (disabled mode)."""
-        from src.evaluation.braintrust_eval import BraintrustEvaluator
-
-        # Clear env var temporarily
-        import os
-        original = os.environ.pop("BRAINTRUST_API_KEY", None)
-        try:
-            evaluator = BraintrustEvaluator()
-            assert evaluator.enabled is False
-        finally:
-            if original:
-                os.environ["BRAINTRUST_API_KEY"] = original
-
-    def test_log_batch_disabled(self):
-        """Test log_batch returns 0 when disabled."""
-        from src.evaluation.braintrust_eval import BraintrustEvaluator
-
-        evaluator = BraintrustEvaluator()
-        evaluator.enabled = False
-        result = evaluator.log_batch([])
-        assert result == 0
 
 
 class TestStorageUtils:

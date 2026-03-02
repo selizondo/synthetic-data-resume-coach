@@ -322,10 +322,11 @@ class FailureLabeler:
             True if missing a core skill.
         """
         resume_skills = self.extract_resume_skills(resume)
-        required_skills, _ = self.extract_job_skills(job)
 
-        # First 3 required skills are considered core
-        core_skills = list(required_skills)[:3]
+        # Use the original ordered list before set-normalization so the first 3
+        # skills (as specified in the job) are treated as core, not an arbitrary
+        # set-to-list ordering.
+        core_skills = [self.normalize_skill(s) for s in job.requirements.required_skills[:3]]
 
         # Check if any core skill is missing
         for core_skill in core_skills:

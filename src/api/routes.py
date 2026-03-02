@@ -426,7 +426,7 @@ async def review_resume(request: ReviewResumeRequest):
 
         except Exception as e:
             logfire.error(f"Review failed: {e}", trace_id=trace_id)
-            raise HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @router.get("/analysis/failure-rates")
@@ -434,6 +434,12 @@ async def get_failure_rates(labeled_dir: str = "data/labeled"):
     """Get aggregate failure rate statistics from the most recent labeled JSONL file."""
     import json
     from pathlib import Path
+
+    # Prevent path traversal: labeled_dir must resolve inside data/
+    safe_base = Path("data").resolve()
+    labeled_path = Path(labeled_dir).resolve()
+    if not str(labeled_path).startswith(str(safe_base)):
+        raise HTTPException(status_code=400, detail="Invalid labeled_dir")
 
     labeled_path = Path(labeled_dir)
     label_files = sorted(

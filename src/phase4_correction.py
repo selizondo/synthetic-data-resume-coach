@@ -67,7 +67,7 @@ def run_correction_phase(
         correction_file = corrector.save_results(
             correction_results,
             output_dir=str(validated_dir),
-            filename=f"corrections_{run_label}.jsonl",
+            filename=f"corrections_{run_label}.json",
         )
         files["corrections"] = str(correction_file)
         print(f"  Saved → {correction_file}")

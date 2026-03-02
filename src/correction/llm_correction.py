@@ -279,7 +279,7 @@ Return the corrected data as a valid {schema.__name__} object.
         self,
         results: list[CorrectionResult],
         output_dir: str = "data/validated",
-        filename: str = "correction_results.json",
+        filename: str = "correction_results.json",  # JSON object, not JSONL
     ) -> Path:
         """Save correction results to a JSON file.
 

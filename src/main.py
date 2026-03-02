@@ -10,10 +10,28 @@ from dotenv import load_dotenv
 
 from .config import PipelineConfig
 from llm_utils.config import get_settings
-from .phase1_generation import run_generation_phase
+from .phase1_generation import _load_jsonl, run_generation_phase
 from .phase2_validation import run_validation_phase
 from .phase3_labeling import run_labeling_phase
 from .phase4_correction import run_correction_phase
+from .schema import JobDescription, ResumeJobPair
+
+
+def _load_gen_checkpoint(output_dir: Path, run_label: str) -> dict:
+    """Load phase 1 JSONL checkpoints from disk for --phase 2+ runs."""
+    generated_dir = output_dir / "generated"
+    jobs = _load_jsonl(generated_dir / f"jobs_{run_label}.jsonl", JobDescription)
+    pairs = _load_jsonl(generated_dir / f"pairs_{run_label}.jsonl", ResumeJobPair)
+    return {
+        "jobs": jobs,
+        "pairs": pairs,
+        "resumes": [p.resume for p in pairs],
+        "files": {
+            "jobs": str(generated_dir / f"jobs_{run_label}.jsonl"),
+            "pairs": str(generated_dir / f"pairs_{run_label}.jsonl"),
+            "resumes": str(generated_dir / f"resumes_{run_label}.jsonl"),
+        },
+    }
 
 
 # ── Console helpers ────────────────────────────────────────────────────────────
@@ -109,6 +127,10 @@ def main() -> None:
         "files": {},
     }
 
+    # Phase output vars — populated by each phase or loaded from checkpoint.
+    gen: dict = {}
+    val: dict = {"invalid_resumes": [], "invalid_jobs": []}
+
     # ── Phase 1: Generation ───────────────────────────────────────────────────
     if phase_start <= 1 <= phase_end:
         _section("PHASE 1 — Generation")
@@ -128,6 +150,18 @@ def main() -> None:
             "pairs_generated": len(gen["pairs"]),
         }
         results["files"].update(gen["files"])
+
+    # Load phase 1 output from disk when phase 1 was not run this session.
+    if phase_start > 1 and not gen:
+        if not run_label:
+            print("\n  ERROR: --resume <run_label> is required when starting from phase 2 or later.")
+            return
+        gen = _load_gen_checkpoint(output_dir, run_label)
+        if gen["jobs"]:
+            print(f"  Loaded checkpoint: {len(gen['jobs'])} jobs, {len(gen['pairs'])} pairs")
+        else:
+            print(f"\n  ERROR: No checkpoint found for run_label={run_label!r}. Run phase 1 first.")
+            return
 
     # ── Phase 2: Validation ───────────────────────────────────────────────────
     if phase_start <= 2 <= phase_end:
