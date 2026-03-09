@@ -112,7 +112,6 @@ class ResumeGenerator:
 
     def __init__(self, model: str = "llama-3.3-70b-versatile"):
         self.model = model
-        logfire.configure()
         logfire.info("ResumeGenerator initialized", model=model)
 
     def generate_single(
@@ -267,7 +266,6 @@ class JobDescriptionGenerator:
 
     def __init__(self, model: str = "llama-3.3-70b-versatile"):
         self.model = model
-        logfire.configure()
         logfire.info("JobDescriptionGenerator initialized", model=model)
 
     def generate_single(

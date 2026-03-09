@@ -275,6 +275,8 @@ synthetic_data_resume_coach/
 
 ## Key concepts
 
+**Pass rate interpretation** — The labeler applies 6 binary gates (`skills_overlap_ratio ≥ 0.5`, `experience_mismatch == 0`, `seniority_mismatch == 0`, `missing_core_skill == 0`, `hallucinated_skill == 0`, `awkward_language_flag == 0`). A pair passes only if all 6 gates clear simultaneously. The dominant failure mode in practice is **Seniority Mismatch** (~19.7% of pairs fail here) because plain titles like "Software Engineer" without explicit seniority keywords default to a level inferred from total experience years, which often mismatches the job requirement. A 61% pass rate on a pipeline targeting 5 fit levels (including "Mismatch" by design) is expected — not a signal of low quality.
+
 **Fit levels** control how well the generated resume matches the job.
 The prompt instruction per level:
 

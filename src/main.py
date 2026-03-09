@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import logfire
 from dotenv import load_dotenv
 
 from .config import PipelineConfig
@@ -49,6 +50,7 @@ def _section(text: str) -> None:
 
 def main() -> None:
     load_dotenv()
+    logfire.configure()
 
     parser = argparse.ArgumentParser(
         description="Synthetic Data Resume Coach — Data Generation Pipeline"

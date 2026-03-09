@@ -62,8 +62,10 @@ def _pairs_by_job(pairs: list[ResumeJobPair]) -> dict[str, list[ResumeJobPair]]:
         jid = (
             pair.resume.metadata.target_job_trace_id
             if pair.resume and pair.resume.metadata
-            else ""
+            else None
         )
+        if not jid:
+            continue  # skip pairs missing job link — can't resume by job
         index.setdefault(jid, []).append(pair)
     return index
 

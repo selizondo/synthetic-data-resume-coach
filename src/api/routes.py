@@ -303,20 +303,20 @@ def generate_recommendations(
     return recommendations
 
 
+FAILURE_PENALTY_PER_FLAG = 0.1  # not empirically tuned; adjust via A/B on labeler output
+
+
 def calculate_fit_score(
     skill_overlap: float,
     failure_count: int,
+    overall_pass: bool = True,
 ) -> tuple[float, str]:
     """Calculate overall fit score and label."""
-    # Base score from skill overlap
     base_score = skill_overlap
-
-    # Penalty for failures
-    penalty = failure_count * 0.1
+    penalty = failure_count * FAILURE_PENALTY_PER_FLAG
 
     score = max(0.0, min(1.0, base_score - penalty))
 
-    # Determine fit level
     if score >= 0.8:
         fit_level = "excellent"
     elif score >= 0.6:
@@ -327,6 +327,10 @@ def calculate_fit_score(
         fit_level = "poor"
     else:
         fit_level = "mismatch"
+
+    # Binary labeler gates override soft score when it disagrees.
+    if not overall_pass and fit_level in ("excellent", "good"):
+        fit_level = "partial"
 
     return score, fit_level
 
@@ -372,10 +376,12 @@ async def review_resume(request: ReviewResumeRequest):
                 awkward_language=labels.awkward_language_flag == 1,
             )
 
-            # Calculate fit score
+            # Calculate fit score — overall_pass gates the level to prevent
+            # contradictions between the soft score and binary labeler flags.
             fit_score, fit_level = calculate_fit_score(
                 labels.skills_overlap_ratio,
                 labels.failure_count,
+                labels.overall_pass,
             )
 
             # Generate recommendations

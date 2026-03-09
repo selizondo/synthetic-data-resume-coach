@@ -85,7 +85,6 @@ class LLMJudge:
             model: Model to use for judgment.
         """
         self.model = model
-        logfire.configure()
         logfire.info("LLMJudge initialized", model=model)
 
         self.judgments: list[LLMJudgment] = []

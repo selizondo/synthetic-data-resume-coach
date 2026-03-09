@@ -137,7 +137,6 @@ class FailureLabeler:
 
     def __init__(self):
         """Initialize the failure labeler."""
-        logfire.configure()
         self.labels: list[FailureLabels] = []
 
     def jaccard_similarity(self, set1: set, set2: set) -> float:
@@ -286,13 +285,28 @@ class FailureLabeler:
                 if level in title:
                     resume_level = level
                     break
-            # Also check for junior/senior keywords
             if "junior" in title or "jr" in title:
                 resume_level = "entry"
             elif "senior" in title or "sr" in title:
                 resume_level = "senior"
             elif "lead" in title or "principal" in title:
                 resume_level = "lead"
+
+            # Fallback: infer from total experience years when title is ambiguous.
+            # Avoids defaulting plain titles like "Software Engineer" to "mid" when
+            # the candidate has entry-level or senior-level total experience.
+            if resume_level == "mid":
+                from datetime import date as _date
+                total_years = sum(
+                    ((exp.end_date or _date.today()) - exp.start_date).days / 365
+                    for exp in resume.experience
+                )
+                if total_years < 2:
+                    resume_level = "entry"
+                elif total_years >= 8:
+                    resume_level = "lead"
+                elif total_years >= 5:
+                    resume_level = "senior"
 
         resume_order = self.SENIORITY_ORDER.get(resume_level, 1)
 

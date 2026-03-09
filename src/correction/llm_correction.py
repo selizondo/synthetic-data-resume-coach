@@ -62,7 +62,6 @@ class LLMCorrector:
             "total_attempts": 0,
         }
 
-        logfire.configure()
         logfire.info(
             "LLMCorrector initialized",
             model=model,
