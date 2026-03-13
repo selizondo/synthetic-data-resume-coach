@@ -14,7 +14,7 @@ requires-python = ">=3.12"
 dependencies = [
     "pydantic[email]>=2.0",
     "openai>=1.0",
-    "llm-utils",
+    "llm-utils @ git+https://github.com/selizondo/llm-utils.git",
     "pandas>=2.0",
     "matplotlib>=3.7",
     "seaborn>=0.12",
