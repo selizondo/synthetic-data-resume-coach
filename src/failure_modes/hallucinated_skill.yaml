@@ -7,7 +7,13 @@ description: >-
   (3) Explicit hallucination phrases in summary or skill names.
 thresholds:
   expert_skills_entry_level: 10
+  # A credible entry-level candidate (≤2 years) cannot have Expert proficiency in 10+
+  # skills — domain mastery takes years per skill. 10 is a generous upper bound that
+  # catches the LLM pattern of adding "Expert" to every item when no constraint is given.
   expert_skills_any_level: 20
+  # Senior engineers realistically master 5–15 skills deeply over a career.
+  # 20 is the threshold where "expert in everything" pattern is unambiguous regardless
+  # of seniority level.
 flag_if: any_threshold_exceeded
 hint: >-
   Count skills where proficiency_level == "Expert". If the resume has ≤2 years total

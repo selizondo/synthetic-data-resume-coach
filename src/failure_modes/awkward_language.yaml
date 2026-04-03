@@ -6,6 +6,9 @@ description: >-
   the summary. (2) The same word appearing 3+ times in close proximity.
   (3) Known AI-pattern phrases (e.g. "synergy", "move the needle", "circle back").
 threshold: 5
+# 1–2 buzzwords appear in real resumes (recruiters use them too); 3–4 is borderline.
+# At 5+ distinct hits in a single summary paragraph, the LLM is filling space rather
+# than describing accomplishments. Calibrated manually against 20 generated summaries.
 flag_if: buzzword_count_above_threshold_or_pattern_match
 buzzwords:
   - synergy
