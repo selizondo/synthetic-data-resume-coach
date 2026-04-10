@@ -1,6 +1,6 @@
 """API routes for the Resume Coach service."""
 
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Optional
 
 import logfire
@@ -418,7 +418,7 @@ async def review_resume(request: ReviewResumeRequest):
                 failure_flags=failure_flags,
                 recommendations=recommendations[:5],  # Limit to 5
                 llm_assessment=llm_assessment,
-                analyzed_at=datetime.utcnow().isoformat(),
+                analyzed_at=datetime.now(timezone.utc).isoformat(),
             )
 
             logfire.info(

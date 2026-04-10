@@ -1,7 +1,7 @@
 """Storage utilities for JSONL format and data persistence."""
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator, TypeVar
 
@@ -130,7 +130,7 @@ def save_invalid_records(
         invalid_data.append({
             "record": record,
             "errors": error,
-            "labeled_at": datetime.utcnow().isoformat(),
+            "labeled_at": datetime.now(timezone.utc).isoformat(),
         })
 
     return save_jsonl(invalid_data, file_path, append=True)

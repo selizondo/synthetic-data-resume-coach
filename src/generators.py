@@ -1,7 +1,7 @@
 """Resume and job description generators (jobs-first pipeline flow)."""
 
 import random
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -148,7 +148,7 @@ class ResumeGenerator:
             )
             resume.metadata = ResumeMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.utcnow(),
+                generated_at=datetime.now(timezone.utc),
                 prompt_template=prompt_template,
                 target_industry=industry,
                 target_seniority=experience_level,
@@ -208,7 +208,7 @@ class ResumeGenerator:
             )
             resume.metadata = ResumeMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.utcnow(),
+                generated_at=datetime.now(timezone.utc),
                 prompt_template=prompt_template,
                 target_industry=industry,
                 target_seniority=exp_level,
@@ -313,7 +313,7 @@ class JobDescriptionGenerator:
             )
             job.metadata = JobDescriptionMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.utcnow(),
+                generated_at=datetime.now(timezone.utc),
                 prompt_template=prompt_template or "default",
                 is_niche_role=_is_niche_role(job.title),
             )
@@ -374,7 +374,7 @@ class JobDescriptionGenerator:
                     job_description=job,
                     metadata=ResumeJobPairMetadata(
                         trace_id=generate_trace_id("pair"),
-                        generated_at=datetime.utcnow(),
+                        generated_at=datetime.now(timezone.utc),
                         fit_level=fit_level.value,
                     ),
                 )

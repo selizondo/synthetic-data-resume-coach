@@ -2,7 +2,7 @@
 
 import re
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -498,7 +498,7 @@ class FailureLabeler:
                 matched_skills=matched_skills,
                 experience_gap=exp_gap,
                 seniority_gap=seniority_gap,
-                labeled_at=datetime.utcnow(),
+                labeled_at=datetime.now(timezone.utc),
                 prompt_template=resume.metadata.prompt_template if resume.metadata else None,
                 fit_level=resume.metadata.fit_level.value
                 if resume.metadata and resume.metadata.fit_level

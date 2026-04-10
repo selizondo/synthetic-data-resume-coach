@@ -1,7 +1,7 @@
 """Trace ID generation and tracking utilities."""
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -16,7 +16,7 @@ def generate_trace_id(prefix: str = "trace") -> str:
     Returns:
         A unique trace ID string in format: prefix_timestamp_uuid
     """
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
     unique_id = uuid.uuid4().hex[:8]
     return f"{prefix}_{timestamp}_{unique_id}"
 

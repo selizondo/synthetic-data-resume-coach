@@ -1,7 +1,7 @@
 """LLM Judge for subtle failure detection in resume-job pairs."""
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import logfire
@@ -240,7 +240,7 @@ Provide your evaluation in structured format."""
                 resume_trace_id=resume_trace_id,
                 job_trace_id=job_trace_id,
                 result=result,
-                judged_at=datetime.utcnow(),
+                judged_at=datetime.now(timezone.utc),
                 model_used=self.model,
             )
 
