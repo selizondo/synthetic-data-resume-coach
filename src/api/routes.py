@@ -1,5 +1,6 @@
 """API routes for the Resume Coach service."""
 
+import time
 from datetime import date, datetime, timezone
 from typing import Optional
 
@@ -164,6 +165,8 @@ class ReviewResumeResponse(BaseModel):
     failure_flags: FailureFlags
     recommendations: list[str]
     llm_assessment: Optional[LLMAssessment] = None
+    strategy_used: str = Field(description="Analysis path: 'rule_based' or 'rule_based+llm_judge'")
+    latency_ms: float = Field(description="Wall-clock time for this request in milliseconds")
     analyzed_at: str
 
 
@@ -350,6 +353,7 @@ async def review_resume(request: ReviewResumeRequest):
     - Optional LLM-based quality assessment
     """
     trace_id = generate_trace_id("review")
+    _start = time.perf_counter()
 
     with logfire.span("review_resume", trace_id=trace_id):
         try:
@@ -410,6 +414,7 @@ async def review_resume(request: ReviewResumeRequest):
                 except Exception as e:
                     logfire.warning(f"LLM judge failed: {e}")
 
+            strategy = "rule_based+llm_judge" if request.use_llm_judge and llm_assessment else "rule_based"
             response = ReviewResumeResponse(
                 trace_id=trace_id,
                 overall_fit=fit_level,
@@ -418,6 +423,8 @@ async def review_resume(request: ReviewResumeRequest):
                 failure_flags=failure_flags,
                 recommendations=recommendations[:5],  # Limit to 5
                 llm_assessment=llm_assessment,
+                strategy_used=strategy,
+                latency_ms=round((time.perf_counter() - _start) * 1000, 1),
                 analyzed_at=datetime.now(timezone.utc).isoformat(),
             )
 
@@ -426,6 +433,8 @@ async def review_resume(request: ReviewResumeRequest):
                 trace_id=trace_id,
                 fit_level=fit_level,
                 fit_score=fit_score,
+                strategy_used=strategy,
+                latency_ms=response.latency_ms,
             )
 
             return response
