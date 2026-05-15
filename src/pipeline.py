@@ -262,6 +262,13 @@ class Pipeline:
                     except Exception as e:
                         logfire.warning(f"LLM Judge failed for pair: {e}")
 
+                if judgments:
+                    save_jsonl(
+                        [j.to_dict() for j in judgments],
+                        self.labeled_dir / f"llm_judgments_{timestamp}.jsonl",
+                        append=True,
+                    )
+
                 stage_times["llm_judge"] = round(time.perf_counter() - t0, 2)
                 results["analysis"]["llm_judgments"] = {
                     "judged_count": len(judgments),

@@ -15,6 +15,7 @@ from .phase1_generation import _load_jsonl, run_generation_phase
 from .phase2_validation import run_validation_phase
 from .phase3_labeling import run_labeling_phase
 from .phase4_correction import run_correction_phase
+from .phase5_eval import run_eval_quality_phase
 from .schema import JobDescription, ResumeJobPair
 
 
@@ -78,6 +79,9 @@ def main() -> None:
     parser.add_argument("--resume", type=str, default="",
                         help="Resume a prior run by its run_label (e.g. 20260501_002340). "
                              "Reuses existing checkpoint files and skips already-generated items.")
+    parser.add_argument("--eval-quality", action="store_true",
+                        help="Run Phase 5 label quality analysis and exit. "
+                             "Requires --resume <run_label> or a completed run in --output-dir.")
 
     args = parser.parse_args()
 
@@ -107,6 +111,21 @@ def main() -> None:
     else:
         run_label = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path(config.output_dir)
+
+    # ── Phase 5: Label quality (standalone, exits after) ─────────────────────
+    if args.eval_quality:
+        if not args.resume:
+            # Find the latest run with failure_labels_*.jsonl
+            labeled_dir = output_dir / "labeled"
+            candidates = sorted(labeled_dir.glob("failure_labels_*.jsonl"),
+                                key=lambda p: p.stat().st_mtime, reverse=True)
+            if not candidates:
+                print(f"\n  ERROR: No labeled runs found in {labeled_dir}. Run the pipeline first.")
+                return
+            run_label = candidates[0].stem.replace("failure_labels_", "")
+            print(f"\n  Using latest run: {run_label}")
+        run_eval_quality_phase(run_label, str(output_dir))
+        return
     pipeline_start = time.perf_counter()
 
     _banner("RESUME COACH — SYNTHETIC DATA PIPELINE")

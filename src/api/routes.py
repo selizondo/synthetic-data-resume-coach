@@ -512,3 +512,49 @@ async def get_failure_rates(labeled_dir: str = "data/labeled"):
         "average_skills_overlap": round(avg_overlap, 4),
         "failure_rates": {k: round(v, 4) for k, v in failure_rates.items()},
     }
+
+
+@router.get("/analysis/label-quality")
+async def get_label_quality(run_label: str = "", labeled_dir: str = "data/labeled"):
+    """Return the label quality report for a specific or the latest pipeline run.
+
+    Reads label_quality_<run_label>.json produced by phase5_eval (--eval-quality).
+    If run_label is omitted, returns the most recent report available.
+    """
+    import json
+    from pathlib import Path
+
+    # Prevent path traversal: labeled_dir must resolve inside data/
+    safe_base = Path("data").resolve()
+    labeled_path = Path(labeled_dir).resolve()
+    if not str(labeled_path).startswith(str(safe_base)):
+        raise HTTPException(status_code=400, detail="Invalid labeled_dir")
+
+    labeled_path = Path(labeled_dir)
+
+    if run_label:
+        report_file = labeled_path / f"label_quality_{run_label}.json"
+        if not report_file.exists():
+            raise HTTPException(
+                status_code=404,
+                detail=f"No label quality report for run '{run_label}'. "
+                       "Run: python -m src.main --eval-quality --resume <run_label>",
+            )
+    else:
+        candidates = sorted(
+            labeled_path.glob("label_quality_*.json"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        if not candidates:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No label quality reports found in {labeled_dir}. "
+                       "Run: python -m src.main --eval-quality",
+            )
+        report_file = candidates[0]
+
+    try:
+        return json.loads(report_file.read_text())
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to read {report_file}: {e}")
