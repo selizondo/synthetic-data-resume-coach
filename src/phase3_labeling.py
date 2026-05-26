@@ -41,7 +41,7 @@ def run_labeling_phase(
 
     for i, label in enumerate(labels):
         fail_flags = []
-        if label.skills_overlap_ratio < 0.5:
+        if label.skills_overlap_ratio < 0.5:  # 0.5 = Jaccard pass threshold; see docs/tradeoffs.md + Phase 5 sensitivity analysis
             fail_flags.append(f"overlap={label.skills_overlap_ratio:.2f}")
         if label.experience_mismatch:
             fail_flags.append("exp_mismatch")

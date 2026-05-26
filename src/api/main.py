@@ -1,5 +1,6 @@
 """FastAPI application for Synthetic Data Resume Coach."""
 
+import os
 from contextlib import asynccontextmanager
 
 import logfire
@@ -58,5 +59,22 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
-    return {"status": "healthy"}
+    """Health check endpoint.
+
+    Returns process status plus LLM configuration check. Does NOT make a live
+    LLM API call (too slow for a health probe) — instead validates that the
+    required env vars are set and non-empty. A degraded response means the
+    rule-based /review-resume path still works; only LLM judge calls will fail.
+    """
+    api_key = os.getenv("LLM_API_KEY", "")
+    llm_configured = bool(api_key and api_key not in ("", "sk-no-key-required", "your-key-here"))
+
+    return {
+        "status": "healthy" if llm_configured else "degraded",
+        "checks": {
+            "llm_configured": llm_configured,
+            "llm_base_url": os.getenv("LLM_BASE_URL", "https://api.openai.com/v1"),
+            "llm_model": os.getenv("LLM_MODEL", "(not set)"),
+            "rule_based_labeler": "available",  # always up — no external dependency
+        },
+    }

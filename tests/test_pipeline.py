@@ -600,10 +600,15 @@ class TestAPIRoutes:
         assert data["status"] == "healthy"
 
     def test_health_endpoint(self, client):
-        """Test health check endpoint."""
+        """Test health check endpoint returns status and dependency checks."""
         response = client.get("/health")
         assert response.status_code == 200
-        assert response.json()["status"] == "healthy"
+        data = response.json()
+        assert data["status"] in ("healthy", "degraded")
+        assert "checks" in data
+        assert "llm_configured" in data["checks"]
+        assert "rule_based_labeler" in data["checks"]
+        assert data["checks"]["rule_based_labeler"] == "available"
 
     def test_review_resume_validation(self, client):
         """Test review-resume endpoint input validation."""

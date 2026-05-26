@@ -436,7 +436,7 @@ class HeatmapGenerator:
         data = []
         for label in labeler.labels:
             data.append({
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,
+                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
                 "experience_mismatch": label.experience_mismatch,
                 "seniority_mismatch": label.seniority_mismatch,
                 "missing_core_skill": label.missing_core_skill,
@@ -508,7 +508,7 @@ class HeatmapGenerator:
             template = label.prompt_template or "unknown"
             data.append({
                 "template": template,
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,
+                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
                 "experience_mismatch": label.experience_mismatch,
                 "seniority_mismatch": label.seniority_mismatch,
                 "missing_core_skill": label.missing_core_skill,
@@ -577,7 +577,7 @@ class HeatmapGenerator:
             fit = label.fit_level or "unknown"
             data.append({
                 "fit_level": fit,
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,
+                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
                 "experience_mismatch": label.experience_mismatch,
                 "seniority_mismatch": label.seniority_mismatch,
                 "missing_core_skill": label.missing_core_skill,
