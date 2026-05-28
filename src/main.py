@@ -51,7 +51,10 @@ def _section(text: str) -> None:
 
 def main() -> None:
     load_dotenv()
-    logfire.configure()
+    try:
+        logfire.configure()
+    except Exception:
+        logfire.configure(send_to_logfire=False)
 
     parser = argparse.ArgumentParser(
         description="Synthetic Data Resume Coach — Data Generation Pipeline"

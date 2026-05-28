@@ -88,8 +88,45 @@ FIT_INSTRUCTIONS: dict[FitLevel, str] = {
     FitLevel.GOOD:      "Include 80% of required skills with Advanced proficiency.",
     FitLevel.PARTIAL:   "Include about 50% of required skills with varying proficiency.",
     FitLevel.POOR:      "Include only 20-30% of required skills, mostly at Beginner level.",
-    FitLevel.MISMATCH:  "Include skills from a completely different field.",
+    FitLevel.MISMATCH:  "Include skills from a completely different field. Do NOT include any of the required skills listed above.",
 }
+
+TEMPLATE_STYLE_HINTS: dict[str, str] = {
+    "formal":              "Write in a formal, traditional resume style.",
+    "casual":              "Write in a friendly, approachable tone.",
+    "technical":           "Emphasize technical depth — specific tools, frameworks, and system-level achievements with metrics.",
+    "achievement_focused": "Lead every bullet with a quantified achievement (numbers, percentages, scale).",
+    "career_changer":      "Frame the candidate as transitioning from a different field. Emphasize transferable skills, self-learning, and bootcamps over direct experience.",
+}
+
+_SENIORITY_ORDER = ["Entry", "Mid", "Senior", "Lead", "Executive"]
+
+
+def _seniority_below(seniority: str, steps: int = 1) -> str:
+    try:
+        idx = _SENIORITY_ORDER.index(seniority)
+    except ValueError:
+        idx = 2
+    return _SENIORITY_ORDER[max(0, idx - steps)]
+
+
+def _opposite_seniority(seniority: str) -> str:
+    opposites = {"Entry": "Senior", "Mid": "Lead", "Senior": "Entry", "Lead": "Mid", "Executive": "Entry"}
+    return opposites.get(seniority, "Entry")
+
+
+def _seniority_instruction(fit_level: FitLevel, job_seniority: str) -> str:
+    if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD):
+        return f"The candidate's seniority MUST be {job_seniority} level."
+    elif fit_level == FitLevel.PARTIAL:
+        target = _seniority_below(job_seniority, 1)
+        return f"The candidate's seniority must be {target} (one level below the {job_seniority} job requirement)."
+    elif fit_level == FitLevel.POOR:
+        target = _seniority_below(job_seniority, 2)
+        return f"The candidate's seniority must be {target} (significantly below the {job_seniority} job requirement)."
+    else:  # MISMATCH
+        target = _opposite_seniority(job_seniority)
+        return f"The candidate's seniority MUST be {target}, NOT {job_seniority}."
 
 
 def _is_niche_role(title: str) -> bool:
@@ -167,22 +204,38 @@ class ResumeGenerator:
         industry: str,
         experience_years: int,
         fit_level: FitLevel = FitLevel.GOOD,
+        template: Optional[str] = None,
     ) -> Resume:
         """Generate a resume tailored to a specific job with a controlled fit level."""
         exp_level = _years_to_exp_level(experience_years)
+        job_seniority = _years_to_seniority(experience_years)
         fit_match = (
             "matches well with" if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD)
             else "partially matches" if fit_level == FitLevel.PARTIAL
             else "does not match"
         )
-        prompt_template = random.choice(list(self._templates().keys()))
+        prompt_template = template or random.choice(list(self._templates().keys()))
+        style_hint = TEMPLATE_STYLE_HINTS.get(prompt_template, "")
         trace_id = generate_trace_id("resume")
+
+        fit_instruction = FIT_INSTRUCTIONS.get(fit_level, FIT_INSTRUCTIONS[FitLevel.GOOD])
+        if fit_level == FitLevel.MISMATCH and required_skills:
+            excluded = required_skills[:min(5, len(required_skills))]
+            fit_instruction += (
+                f" Specifically exclude: {', '.join(excluded)}. "
+                "Target Jaccard skill overlap with the job: < 0.20."
+            )
+
+        seniority_line = _seniority_instruction(fit_level, job_seniority)
 
         user_prompt = (
             f"Generate a resume for a candidate applying for a {job_title} position\n"
             f"in the {industry} industry requiring {experience_years} years of experience.\n\n"
             f"Required skills for this job: {', '.join(required_skills)}\n\n"
-            f"{FIT_INSTRUCTIONS.get(fit_level, FIT_INSTRUCTIONS[FitLevel.GOOD])}\n\n"
+            f"FIT LEVEL INSTRUCTIONS:\n"
+            f"{fit_instruction}\n\n"
+            f"SENIORITY CONSTRAINT: {seniority_line}\n\n"
+            f"{('WRITING STYLE: ' + style_hint + chr(10) + chr(10)) if style_hint else ''}"
             f"Create a realistic resume that {fit_match} this job.\n\n"
             "Include:\n"
             "1. Contact information (realistic but fake)\n"
@@ -356,10 +409,13 @@ class JobDescriptionGenerator:
         """Generate resumes at each fit level for a single job (jobs-first flow)."""
         fit_levels = fit_levels or list(FitLevel)
         job_trace_id = job.metadata.trace_id if job.metadata else generate_trace_id("job")
+        template_names = list(resume_generator._templates().keys())
         pairs = []
+        dropped: list[str] = []
 
         for i in range(resumes_per_job):
             fit_level = fit_levels[i % len(fit_levels)]
+            template = template_names[i % len(template_names)]
             try:
                 resume = resume_generator.generate_for_job(
                     job_trace_id=job_trace_id,
@@ -368,6 +424,7 @@ class JobDescriptionGenerator:
                     industry=job.company.industry,
                     experience_years=job.requirements.experience_years,
                     fit_level=fit_level,
+                    template=template,
                 )
                 pair = ResumeJobPair(
                     resume=resume,
@@ -380,12 +437,19 @@ class JobDescriptionGenerator:
                 )
                 pairs.append(pair)
                 logfire.info(f"Generated resume {i + 1}/{resumes_per_job} for job",
-                             job_trace_id=job_trace_id, fit_level=fit_level.value)
+                             job_trace_id=job_trace_id, fit_level=fit_level.value,
+                             template=template)
             except Exception as e:
                 if isinstance(e, RateLimitError) or "429" in str(e):
                     raise
+                dropped.append(fit_level.value)
                 logfire.error(f"Failed to generate resume {i + 1} for job",
-                              error=str(e), job_trace_id=job_trace_id)
+                              error=str(e), job_trace_id=job_trace_id,
+                              fit_level=fit_level.value)
+
+        if dropped:
+            print(f"  WARNING: dropped {len(dropped)} pairs for job {job_trace_id}: {dropped}")
+
         return pairs
 
     def save_jobs(
