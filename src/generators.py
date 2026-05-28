@@ -94,7 +94,7 @@ FIT_INSTRUCTIONS: dict[FitLevel, str] = {
 TEMPLATE_STYLE_HINTS: dict[str, str] = {
     "formal":              "Write in a formal, traditional resume style.",
     "casual":              "Write in a friendly, approachable tone.",
-    "technical":           "Emphasize technical depth — specific tools, frameworks, and system-level achievements with metrics.",
+    "technical":           "Use precise, technical language. Quantify achievements with metrics. Do not add skills beyond those required by the job.",
     "achievement_focused": "Lead every bullet with a quantified achievement (numbers, percentages, scale).",
     "career_changer":      "Frame the candidate as transitioning from a different field. Emphasize transferable skills, self-learning, and bootcamps over direct experience.",
 }
@@ -230,11 +230,12 @@ class ResumeGenerator:
 
         user_prompt = (
             f"Generate a resume for a candidate applying for a {job_title} position\n"
-            f"in the {industry} industry requiring {experience_years} years of experience.\n\n"
+            f"in the {industry} industry.\n\n"
+            f"CRITICAL CONSTRAINTS (these override everything else):\n"
+            f"1. {seniority_line}\n"
+            f"2. The resume MUST include at least 5 skills with proficiency levels.\n\n"
             f"Required skills for this job: {', '.join(required_skills)}\n\n"
-            f"FIT LEVEL INSTRUCTIONS:\n"
-            f"{fit_instruction}\n\n"
-            f"SENIORITY CONSTRAINT: {seniority_line}\n\n"
+            f"FIT LEVEL: {fit_instruction}\n\n"
             f"{('WRITING STYLE: ' + style_hint + chr(10) + chr(10)) if style_hint else ''}"
             f"Create a realistic resume that {fit_match} this job.\n\n"
             "Include:\n"
@@ -242,7 +243,7 @@ class ResumeGenerator:
             "2. Professional summary\n"
             "3. Education (1-2 entries)\n"
             "4. Work experience (2-4 entries)\n"
-            "5. Skills (with proficiency levels)\n"
+            "5. Skills (minimum 5, with proficiency levels)\n"
             "6. Certifications (if applicable)\n\n"
             "Use ISO date format (YYYY-MM-DD). For current positions, set end_date to null."
         )
@@ -347,9 +348,14 @@ class JobDescriptionGenerator:
         title_context = f"for a {title} position" if title else "for a relevant position"
         trace_id = generate_trace_id("job")
 
+        min_years = {"Entry": 1, "Mid": 3, "Senior": 6, "Lead": 8, "Executive": 10}.get(seniority_level, 2)
         user_prompt = (
             f"Generate a realistic, detailed job description {title_context} in the {industry} industry.\n\n"
             f"The position should be at the {seniority_level} level with a {remote_policy} work arrangement.\n\n"
+            "CONSTRAINTS (must be followed exactly):\n"
+            f"- experience_years MUST be {min_years} or higher (never 0)\n"
+            f"- experience_level MUST be: {seniority_level}\n"
+            "- required_skills MUST contain at least 5 specific, concrete skills\n\n"
             "Include:\n"
             "1. Company information (realistic but fictional company)\n"
             "2. Detailed job description (at least 100 words)\n"
@@ -357,9 +363,7 @@ class JobDescriptionGenerator:
             "4. Key responsibilities (5-8 bullet points)\n"
             "5. Benefits and perks (4-6 items)\n"
             "6. Salary range (realistic for the role and level)\n\n"
-            "Make the job posting professional and appealing to candidates.\n"
             f"The company size should be one of: Startup, Small, Medium, Large, Enterprise.\n"
-            f"Experience level should be: {seniority_level}"
         )
 
         with logfire.span("generate_job_description", trace_id=trace_id,

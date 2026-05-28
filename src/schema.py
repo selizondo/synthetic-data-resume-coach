@@ -158,10 +158,10 @@ class Company(BaseModel):
 
 
 class Requirements(BaseModel):
-    required_skills: list[str] = Field(default_factory=list, min_length=1)
+    required_skills: list[str] = Field(default_factory=list, min_length=3)
     preferred_skills: list[str] = Field(default_factory=list)
     education_requirements: str = Field(..., description="Minimum education requirement")
-    experience_years: int = Field(..., ge=0, le=30)
+    experience_years: int = Field(..., ge=1, le=30)
     experience_level: str = Field(..., description="Entry, Mid, Senior, Lead, or Executive")
 
     @field_validator("experience_level")
