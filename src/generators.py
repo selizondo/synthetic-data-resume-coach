@@ -247,7 +247,16 @@ class ResumeGenerator:
             "Use ISO date format (YYYY-MM-DD). For current positions, set end_date to null."
         )
 
-        with logfire.span("generate_resume_for_job", trace_id=trace_id, job_trace_id=job_trace_id):
+        with logfire.span(
+            "generate_resume_for_job",
+            trace_id=trace_id,
+            job_trace_id=job_trace_id,
+            fit_level=fit_level.value,
+            template=prompt_template,
+            industry=industry,
+            model=self.model,
+            phase="generation",
+        ):
             resume = instructor_complete(
                 messages=[
                     {"role": "system", "content": (
@@ -269,7 +278,8 @@ class ResumeGenerator:
                 target_job_trace_id=job_trace_id,
             )
             logfire.info("Resume generated for job", trace_id=trace_id,
-                         job_trace_id=job_trace_id, fit_level=fit_level.value)
+                         job_trace_id=job_trace_id, fit_level=fit_level.value,
+                         template=prompt_template, industry=industry, model=self.model)
         return resume
 
     def generate_batch(
@@ -352,7 +362,9 @@ class JobDescriptionGenerator:
             f"Experience level should be: {seniority_level}"
         )
 
-        with logfire.span("generate_job_description", trace_id=trace_id):
+        with logfire.span("generate_job_description", trace_id=trace_id,
+                          industry=industry, seniority=seniority_level,
+                          model=self.model, phase="generation"):
             job = instructor_complete(
                 messages=[
                     {"role": "system", "content": (

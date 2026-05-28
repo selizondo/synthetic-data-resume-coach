@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import logfire
+
 from .analysis.failure_labeler import FailureLabeler
 from .schema import ResumeJobPair
 from .utils.storage import save_jsonl
@@ -37,25 +39,47 @@ def run_labeling_phase(
 
     # ── Step 3.1: Label all pairs ─────────────────────────────────────────────
     print(f"  Labeling {len(pairs)} resume-job pairs...")
-    labels = labeler.label_pairs(pairs)
+    with logfire.span("phase3_labeling", phase="labeling", pair_count=len(pairs)):
+        labels = labeler.label_pairs(pairs)
 
-    for i, label in enumerate(labels):
-        fail_flags = []
-        if label.skills_overlap_ratio < 0.5:  # 0.5 = Jaccard pass threshold; see docs/tradeoffs.md + Phase 5 sensitivity analysis
-            fail_flags.append(f"overlap={label.skills_overlap_ratio:.2f}")
-        if label.experience_mismatch:
-            fail_flags.append("exp_mismatch")
-        if label.seniority_mismatch:
-            fail_flags.append("seniority_mismatch")
-        if label.missing_core_skill:
-            fail_flags.append("missing_core")
-        if label.hallucinated_skill:
-            fail_flags.append("hallucination")
-        if label.awkward_language_flag:
-            fail_flags.append("awkward_lang")
+        for i, (pair, label) in enumerate(zip(pairs, labels)):
+            fit_level = pair.metadata.fit_level if pair.metadata else "unknown"
+            template = (
+                pair.resume.metadata.prompt_template
+                if pair.resume and pair.resume.metadata else "unknown"
+            )
+            fail_flags = []
+            if label.skills_overlap_ratio < 0.5:
+                fail_flags.append(f"overlap={label.skills_overlap_ratio:.2f}")
+            if label.experience_mismatch:
+                fail_flags.append("exp_mismatch")
+            if label.seniority_mismatch:
+                fail_flags.append("seniority_mismatch")
+            if label.missing_core_skill:
+                fail_flags.append("missing_core")
+            if label.hallucinated_skill:
+                fail_flags.append("hallucination")
+            if label.awkward_language_flag:
+                fail_flags.append("awkward_lang")
 
-        status = f"PASS" if label.overall_pass else f"FAIL [{', '.join(fail_flags)}]"
-        print(f"  [{i+1}/{len(labels)}] {label.trace_id[:12]}... {status}")
+            status = "PASS" if label.overall_pass else f"FAIL [{', '.join(fail_flags)}]"
+            print(f"  [{i+1}/{len(labels)}] {label.trace_id[:12]}... {status}")
+
+            logfire.info(
+                "pair_labeled",
+                phase="labeling",
+                fit_level=fit_level,
+                template=template,
+                passed=label.overall_pass,
+                skills_overlap=round(label.skills_overlap_ratio, 3),
+                seniority_mismatch=label.seniority_mismatch,
+                experience_mismatch=label.experience_mismatch,
+                missing_core_skill=label.missing_core_skill,
+                hallucinated_skill=label.hallucinated_skill,
+                awkward_language=label.awkward_language_flag,
+                failure_modes=fail_flags,
+                trace_id=label.trace_id,
+            )
 
     # ── Step 3.2: Save labels ──────────────────────────────────────────────────
     labels_file = labeler.save_labels(
