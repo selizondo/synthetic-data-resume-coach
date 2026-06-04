@@ -130,6 +130,12 @@ def run_validation_phase(
         "run_label": run_label,
         "total_invalid_records": len(all_invalid),
         "failure_modes": failure_modes,
+        "_note": (
+            "Empty failure_modes means all records passed Pydantic validation. "
+            "instructor enforces the schema at LLM output time, preventing schema "
+            "errors regardless of model. See docs/correction_loop_proof.md for "
+            "correction loop results on synthetically injected failures."
+        ) if not failure_modes else None,
     }, indent=2, default=str))
     files["schema_failure_modes"] = str(schema_failure_file)
     print(f"  Saved → {schema_failure_file}")
