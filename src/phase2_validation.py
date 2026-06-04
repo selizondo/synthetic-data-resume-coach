@@ -1,11 +1,9 @@
 """Phase 2 — Schema validation and error categorization."""
 
 from pathlib import Path
-from typing import Optional
 
-from .schema import JobDescription, Resume, ResumeJobPair
+from .schema import JobDescription, Resume, SchemaValidator
 from .utils.storage import save_jsonl
-from .schema import SchemaValidator
 
 
 def run_validation_phase(

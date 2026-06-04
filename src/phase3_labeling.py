@@ -42,7 +42,7 @@ def run_labeling_phase(
     with logfire.span("phase3_labeling", phase="labeling", pair_count=len(pairs)):
         labels = labeler.label_pairs(pairs)
 
-        for i, (pair, label) in enumerate(zip(pairs, labels)):
+        for i, (pair, label) in enumerate(zip(pairs, labels, strict=False)):
             fit_level = pair.metadata.fit_level if pair.metadata else "unknown"
             template = (
                 pair.resume.metadata.prompt_template

@@ -6,12 +6,9 @@ import pytest
 
 from src.analysis.eval_quality import (
     BINARY_DIMS,
-    FIT_LEVEL_ORDER,
     LabelQualityAnalyzer,
     _cohen_kappa_binary,
-    _pearson_r,
 )
-
 
 # ── Fixtures ───────────────────────────────────────────────────────────────────
 

@@ -1,7 +1,6 @@
 """Prompt template and failure mode config loaders."""
 
 from pathlib import Path
-from typing import Optional
 
 import yaml
 
@@ -25,7 +24,7 @@ def load_prompt(name: str) -> dict:
     return {"system": data["system"], "user": data["user"]}
 
 
-def load_resume_prompt_templates(template_name: Optional[str] = None) -> dict[str, dict]:
+def load_resume_prompt_templates(template_name: str | None = None) -> dict[str, dict]:
     """Load resume generation prompt templates from YAML files.
 
     Args:

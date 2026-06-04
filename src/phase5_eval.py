@@ -10,7 +10,6 @@ Produces label_quality_<run>.json with four diagnostics:
   - llm_agreement: Cohen's kappa on overlapping dimensions (if judge data exists)
 """
 
-import json
 from pathlib import Path
 
 import logfire
@@ -82,7 +81,7 @@ def _print_summary(report: LabelQualityReport) -> None:
         print(f"    {lvl:<10}  {bar:<30}  {s.pass_rate:.1%}  (n={s.n})")
 
     if report.ordering_violations:
-        print(f"\n  ⚠ Monotonic ordering violated:")
+        print("\n  ⚠ Monotonic ordering violated:")
         for v in report.ordering_violations:
             print(f"    {v}")
     else:

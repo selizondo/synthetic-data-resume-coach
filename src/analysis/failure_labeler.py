@@ -2,15 +2,14 @@
 
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import logfire
 import pandas as pd
 
 from ..schema import JobDescription, Resume, ResumeJobPair, SeniorityLevel
-from ..utils.storage import save_jsonl, get_timestamped_filename
+from ..utils.storage import get_timestamped_filename, save_jsonl
 
 
 @dataclass
@@ -18,8 +17,8 @@ class FailureLabels:
     """Failure labels for a resume-job pair."""
 
     trace_id: str
-    resume_trace_id: Optional[str]
-    job_trace_id: Optional[str]
+    resume_trace_id: str | None
+    job_trace_id: str | None
 
     # Core metrics (0 = pass, 1 = fail)
     skills_overlap_ratio: float  # 0.0 to 1.0 (Jaccard similarity)
@@ -36,9 +35,9 @@ class FailureLabels:
     seniority_gap: str = ""  # e.g., "Entry vs Senior"
 
     # Metadata
-    labeled_at: Optional[datetime] = None
-    prompt_template: Optional[str] = None
-    fit_level: Optional[str] = None
+    labeled_at: datetime | None = None
+    prompt_template: str | None = None
+    fit_level: str | None = None
     is_niche_role: bool = False
 
     def to_dict(self) -> dict:
@@ -435,7 +434,7 @@ class FailureLabeler:
         return False
 
     def label_pair(
-        self, resume: Resume, job: JobDescription, pair_trace_id: Optional[str] = None
+        self, resume: Resume, job: JobDescription, pair_trace_id: str | None = None
     ) -> FailureLabels:
         """Label failure modes for a resume-job pair.
 
@@ -478,7 +477,7 @@ class FailureLabeler:
                 matched_skills=matched_skills,
                 experience_gap=exp_gap,
                 seniority_gap=seniority_gap,
-                labeled_at=datetime.now(timezone.utc),
+                labeled_at=datetime.now(UTC),
                 prompt_template=resume.metadata.prompt_template if resume.metadata else None,
                 fit_level=resume.metadata.fit_level.value
                 if resume.metadata and resume.metadata.fit_level
@@ -543,21 +542,21 @@ class FailureLabeler:
             }
 
         total = len(self.labels)
-        pass_count = sum(1 for l in self.labels if l.overall_pass)
+        pass_count = sum(1 for lb in self.labels if lb.overall_pass)
 
         # Calculate failure rates for each category
         failure_rates = {
-            "low_skills_overlap": sum(1 for l in self.labels if l.skills_overlap_ratio < 0.5)
+            "low_skills_overlap": sum(1 for lb in self.labels if lb.skills_overlap_ratio < 0.5)
             / total,
-            "experience_mismatch": sum(l.experience_mismatch for l in self.labels) / total,
-            "seniority_mismatch": sum(l.seniority_mismatch for l in self.labels) / total,
-            "missing_core_skill": sum(l.missing_core_skill for l in self.labels) / total,
-            "hallucinated_skill": sum(l.hallucinated_skill for l in self.labels) / total,
-            "awkward_language": sum(l.awkward_language_flag for l in self.labels) / total,
+            "experience_mismatch": sum(lb.experience_mismatch for lb in self.labels) / total,
+            "seniority_mismatch": sum(lb.seniority_mismatch for lb in self.labels) / total,
+            "missing_core_skill": sum(lb.missing_core_skill for lb in self.labels) / total,
+            "hallucinated_skill": sum(lb.hallucinated_skill for lb in self.labels) / total,
+            "awkward_language": sum(lb.awkward_language_flag for lb in self.labels) / total,
         }
 
         # Average skills overlap
-        avg_overlap = sum(l.skills_overlap_ratio for l in self.labels) / total
+        avg_overlap = sum(lb.skills_overlap_ratio for lb in self.labels) / total
 
         # Stats by prompt template
         template_stats = {}
@@ -587,9 +586,9 @@ class FailureLabeler:
             fit_level_stats[fit]["avg_overlap"] /= fit_level_stats[fit]["count"]
 
         # Niche role stats
-        niche_labels = [l for l in self.labels if l.is_niche_role]
+        niche_labels = [lb for lb in self.labels if lb.is_niche_role]
         niche_failure_rate = (
-            sum(1 for l in niche_labels if not l.overall_pass) / len(niche_labels)
+            sum(1 for lb in niche_labels if not lb.overall_pass) / len(niche_labels)
             if niche_labels
             else 0.0
         )
@@ -607,7 +606,7 @@ class FailureLabeler:
     def save_labels(
         self,
         output_dir: str = "data/labeled",
-        filename: Optional[str] = None,
+        filename: str | None = None,
     ) -> Path:
         """Save labels to a JSONL file.
 

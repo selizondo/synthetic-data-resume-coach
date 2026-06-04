@@ -3,17 +3,16 @@
 import json
 from collections import Counter
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
-from typing import Optional
 
 import logfire
 import pandas as pd
 
-from ..schema import ValidationResult, ValidationError_
+from ..schema import ValidationError_, ValidationResult
 
 
-class FailureCategory(str, Enum):
+class FailureCategory(StrEnum):
     """Categories of validation failures."""
 
     MISSING_REQUIRED = "missing_required_field"

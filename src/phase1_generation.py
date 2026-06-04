@@ -12,7 +12,6 @@ Resume logic:
 """
 
 from pathlib import Path
-from typing import Optional
 
 from openai import RateLimitError
 
@@ -78,7 +77,7 @@ def run_generation_phase(
     model: str,
     output_dir: str,
     run_label: str,
-    industries: Optional[list[str]] = None,
+    industries: list[str] | None = None,
 ) -> dict:
     """Generate job descriptions and matched resumes with incremental checkpointing.
 

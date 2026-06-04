@@ -1,28 +1,26 @@
 """Resume and job description generators (jobs-first pipeline flow)."""
 
 import random
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import logfire
-from openai import RateLimitError
 from llm_utils import instructor_complete
+from openai import RateLimitError
 
-from .prompts import load_resume_prompt_templates, load_prompt
+from .prompts import load_prompt, load_resume_prompt_templates
 from .schema import (
     FitLevel,
-    SeniorityLevel,
     JobDescription,
     JobDescriptionMetadata,
     Resume,
     ResumeJobPair,
     ResumeJobPairMetadata,
     ResumeMetadata,
+    SeniorityLevel,
 )
 from .utils.storage import get_timestamped_filename, save_jsonl
 from .utils.trace import generate_trace_id
-
 
 # ── Shared constants ───────────────────────────────────────────────────────────
 
@@ -193,12 +191,12 @@ class ResumeGenerator:
 
     def generate_single(
         self,
-        industry: Optional[str] = None,
-        experience_level: Optional[str] = None,
-        specific_role: Optional[str] = None,
-        prompt_template: Optional[str] = None,
-        target_job_trace_id: Optional[str] = None,
-        fit_level: Optional[FitLevel] = None,
+        industry: str | None = None,
+        experience_level: str | None = None,
+        specific_role: str | None = None,
+        prompt_template: str | None = None,
+        target_job_trace_id: str | None = None,
+        fit_level: FitLevel | None = None,
     ) -> Resume:
         """Generate a single synthetic resume from a named prompt template."""
         industry = industry or random.choice(INDUSTRIES)
@@ -225,7 +223,7 @@ class ResumeGenerator:
             )
             resume.metadata = ResumeMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.now(timezone.utc),
+                generated_at=datetime.now(UTC),
                 prompt_template=prompt_template,
                 target_industry=industry,
                 target_seniority=experience_level,
@@ -244,7 +242,7 @@ class ResumeGenerator:
         industry: str,
         experience_years: int,
         fit_level: FitLevel = FitLevel.GOOD,
-        template: Optional[str] = None,
+        template: str | None = None,
     ) -> Resume:
         """Generate a resume tailored to a specific job with a controlled fit level."""
         exp_level = _years_to_exp_level(experience_years)
@@ -316,6 +314,8 @@ class ResumeGenerator:
         total_attempts = 0
         lo, hi = FIT_OVERLAP_RANGE[fit_level]
 
+        candidate_seniority: SeniorityLevel = SeniorityLevel.MID
+        candidate_overlap: float = 0.0
         with logfire.span(
             "generate_resume_for_job",
             trace_id=trace_id,
@@ -375,7 +375,7 @@ class ResumeGenerator:
 
             resume.metadata = ResumeMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.now(timezone.utc),
+                generated_at=datetime.now(UTC),
                 prompt_template=prompt_template,
                 target_industry=industry,
                 target_seniority=exp_level,
@@ -393,8 +393,8 @@ class ResumeGenerator:
     def generate_batch(
         self,
         count: int = 10,
-        industries: Optional[list[str]] = None,
-        experience_levels: Optional[list[str]] = None,
+        industries: list[str] | None = None,
+        experience_levels: list[str] | None = None,
     ) -> list[Resume]:
         """Generate standalone resumes (not tied to a specific job)."""
         industries = industries or INDUSTRIES
@@ -420,7 +420,7 @@ class ResumeGenerator:
         self,
         resumes: list[Resume],
         output_dir: str = "data/generated",
-        filename: Optional[str] = None,
+        filename: str | None = None,
     ) -> Path:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
@@ -449,11 +449,11 @@ class JobDescriptionGenerator:
 
     def generate_single(
         self,
-        title: Optional[str] = None,
-        industry: Optional[str] = None,
-        seniority_level: Optional[str] = None,
-        remote_policy: Optional[str] = None,
-        prompt_template: Optional[str] = None,
+        title: str | None = None,
+        industry: str | None = None,
+        seniority_level: str | None = None,
+        remote_policy: str | None = None,
+        prompt_template: str | None = None,
     ) -> JobDescription:
         """Generate a single synthetic job description."""
         seniority_level = seniority_level or random.choice([s.label for s in SeniorityLevel])
@@ -486,7 +486,7 @@ class JobDescriptionGenerator:
             )
             job.metadata = JobDescriptionMetadata(
                 trace_id=trace_id,
-                generated_at=datetime.now(timezone.utc),
+                generated_at=datetime.now(UTC),
                 prompt_template=prompt_template or "default",
                 is_niche_role=_is_niche_role(job.title),
             )
@@ -498,8 +498,8 @@ class JobDescriptionGenerator:
     def generate_batch(
         self,
         count: int = 10,
-        seniority_levels: Optional[list[str]] = None,
-        industries: Optional[list[str]] = None,
+        seniority_levels: list[str] | None = None,
+        industries: list[str] | None = None,
     ) -> list[JobDescription]:
         """Generate a batch of job descriptions, stratified by seniority and industry."""
         seniority_levels = seniority_levels or [s.label for s in SeniorityLevel]
@@ -524,7 +524,7 @@ class JobDescriptionGenerator:
         job: JobDescription,
         resume_generator: ResumeGenerator,
         resumes_per_job: int = 5,
-        fit_levels: Optional[list[FitLevel]] = None,
+        fit_levels: list[FitLevel] | None = None,
     ) -> list[ResumeJobPair]:
         """Generate resumes at each fit level for a single job (jobs-first flow)."""
         fit_levels = fit_levels or list(FitLevel)
@@ -551,7 +551,7 @@ class JobDescriptionGenerator:
                     job_description=job,
                     metadata=ResumeJobPairMetadata(
                         trace_id=generate_trace_id("pair"),
-                        generated_at=datetime.now(timezone.utc),
+                        generated_at=datetime.now(UTC),
                         fit_level=fit_level.value,
                     ),
                 )
@@ -579,7 +579,7 @@ class JobDescriptionGenerator:
         self,
         jobs: list[JobDescription],
         output_dir: str = "data/generated",
-        filename: Optional[str] = None,
+        filename: str | None = None,
     ) -> Path:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
@@ -592,7 +592,7 @@ class JobDescriptionGenerator:
         self,
         pairs: list[ResumeJobPair],
         output_dir: str = "data/generated",
-        filename: Optional[str] = None,
+        filename: str | None = None,
     ) -> Path:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)

@@ -1,14 +1,13 @@
 """Storage utilities for JSONL format and data persistence."""
 
 import json
-from datetime import datetime, timezone
+from collections.abc import Iterator
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterator, TypeVar
+from typing import Any
 
-from pydantic import BaseModel
 import logfire
-
-T = TypeVar("T", bound=BaseModel)
+from pydantic import BaseModel
 
 
 def save_jsonl(
@@ -86,7 +85,7 @@ def iter_jsonl(file_path: str | Path) -> Iterator[dict]:
                 yield json.loads(line)
 
 
-def load_jsonl_as_models(
+def load_jsonl_as_models[T: BaseModel](
     file_path: str | Path,
     model_class: type[T],
 ) -> list[T]:
@@ -126,11 +125,11 @@ def save_invalid_records(
     file_path = output_path / filename
 
     invalid_data = []
-    for record, error in zip(records, errors):
+    for record, error in zip(records, errors, strict=False):
         invalid_data.append({
             "record": record,
             "errors": error,
-            "labeled_at": datetime.now(timezone.utc).isoformat(),
+            "labeled_at": datetime.now(UTC).isoformat(),
         })
 
     return save_jsonl(invalid_data, file_path, append=True)

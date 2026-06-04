@@ -9,15 +9,15 @@ Organized in dependency order:
 """
 
 import json
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from datetime import date, datetime
-from enum import Enum, IntEnum
+from enum import IntEnum, StrEnum
 from pathlib import Path
-from typing import Any, Optional, Type
+from typing import Any
 
 import logfire
 from pydantic import BaseModel, EmailStr, Field, ValidationError, field_validator
-
 
 # ── 1. Enums ───────────────────────────────────────────────────────────────────
 
@@ -32,19 +32,27 @@ class SeniorityLevel(IntEnum):
 
     @classmethod
     def from_years(cls, years: float) -> "SeniorityLevel":
-        if years < 2:  return cls.ENTRY
-        if years < 5:  return cls.MID
-        if years < 8:  return cls.SENIOR
-        if years < 12: return cls.LEAD
+        if years < 2:
+            return cls.ENTRY
+        if years < 5:
+            return cls.MID
+        if years < 8:
+            return cls.SENIOR
+        if years < 12:
+            return cls.LEAD
         return cls.EXECUTIVE
 
     @classmethod
     def from_title(cls, title: str) -> "SeniorityLevel":
         t = title.lower()
-        if any(k in t for k in ("executive", "director", "vp", "c-level", "chief")): return cls.EXECUTIVE
-        if any(k in t for k in ("lead", "principal")):                                return cls.LEAD
-        if any(k in t for k in ("senior", " sr ")):                                   return cls.SENIOR
-        if any(k in t for k in ("junior", " jr ", "entry")):                          return cls.ENTRY
+        if any(k in t for k in ("executive", "director", "vp", "c-level", "chief")):
+            return cls.EXECUTIVE
+        if any(k in t for k in ("lead", "principal")):
+            return cls.LEAD
+        if any(k in t for k in ("senior", " sr ")):
+            return cls.SENIOR
+        if any(k in t for k in ("junior", " jr ", "entry")):
+            return cls.ENTRY
         return cls.MID
 
     def below(self, steps: int = 1) -> "SeniorityLevel":
@@ -64,7 +72,7 @@ class SeniorityLevel(IntEnum):
         return {0: 1, 1: 3, 2: 6, 3: 8, 4: 10}[self.value]
 
 
-class FitLevel(str, Enum):
+class FitLevel(StrEnum):
     """Controlled fit levels between a resume and a job description."""
 
     EXCELLENT = "excellent"   # 80%+ skill overlap
@@ -81,8 +89,8 @@ class ContactInfo(BaseModel):
     email: EmailStr = Field(..., description="Email address")
     phone: str = Field(..., min_length=10, description="Phone number")
     location: str = Field(..., description="City, State or City, Country")
-    linkedin: Optional[str] = Field(None, description="LinkedIn profile URL")
-    portfolio: Optional[str] = Field(None, description="Portfolio or personal website URL")
+    linkedin: str | None = Field(None, description="LinkedIn profile URL")
+    portfolio: str | None = Field(None, description="Portfolio or personal website URL")
 
     @field_validator("phone")
     @classmethod
@@ -97,8 +105,8 @@ class Education(BaseModel):
     degree: str = Field(..., description="Degree type and major (e.g., 'B.S. Computer Science')")
     institution: str = Field(..., description="Name of the educational institution")
     graduation_date: date = Field(..., description="Graduation date")
-    gpa: Optional[float] = Field(None, ge=0.0, le=4.0, description="GPA on 4.0 scale")
-    relevant_coursework: Optional[list[str]] = Field(default_factory=list)
+    gpa: float | None = Field(None, ge=0.0, le=4.0, description="GPA on 4.0 scale")
+    relevant_coursework: list[str] | None = Field(default_factory=list)
 
     @field_validator("graduation_date", mode="before")
     @classmethod
@@ -112,7 +120,7 @@ class Education(BaseModel):
                         return datetime.strptime(v, fmt).date()
                     except ValueError:
                         continue
-                raise ValueError(f"Unable to parse date: {v}")
+                raise ValueError(f"Unable to parse date: {v}") from None
         return v
 
 
@@ -120,7 +128,7 @@ class Experience(BaseModel):
     company: str = Field(..., description="Company name")
     title: str = Field(..., description="Job title")
     start_date: date = Field(..., description="Start date of employment")
-    end_date: Optional[date] = Field(None, description="End date (None if current)")
+    end_date: date | None = Field(None, description="End date (None if current)")
     responsibilities: list[str] = Field(default_factory=list, min_length=1)
     achievements: list[str] = Field(default_factory=list)
 
@@ -138,7 +146,7 @@ class Experience(BaseModel):
                         return datetime.strptime(v, fmt).date()
                     except ValueError:
                         continue
-                raise ValueError(f"Unable to parse date: {v}")
+                raise ValueError(f"Unable to parse date: {v}") from None
         return v
 
     @field_validator("end_date")
@@ -156,7 +164,7 @@ class Skill(BaseModel):
     proficiency_level: str = Field(
         ..., description="Proficiency: Beginner, Intermediate, Advanced, or Expert"
     )
-    years_experience: Optional[float] = Field(None, ge=0)
+    years_experience: float | None = Field(None, ge=0)
 
     @field_validator("proficiency_level")
     @classmethod
@@ -168,24 +176,24 @@ class Skill(BaseModel):
 
 
 class ResumeMetadata(BaseModel):
-    trace_id: Optional[str] = Field(None, description="Unique trace ID")
-    generated_at: Optional[datetime] = Field(None, description="Generation timestamp")
-    prompt_template: Optional[str] = Field(None, description="Prompt template used")
-    target_industry: Optional[str] = None
-    target_seniority: Optional[str] = None
-    fit_level: Optional[FitLevel] = Field(None, description="Fit level vs target job")
-    target_job_trace_id: Optional[str] = None
+    trace_id: str | None = Field(None, description="Unique trace ID")
+    generated_at: datetime | None = Field(None, description="Generation timestamp")
+    prompt_template: str | None = Field(None, description="Prompt template used")
+    target_industry: str | None = None
+    target_seniority: str | None = None
+    fit_level: FitLevel | None = Field(None, description="Fit level vs target job")
+    target_job_trace_id: str | None = None
 
 
 class Resume(BaseModel):
     contact: ContactInfo = Field(..., description="Contact information")
-    summary: Optional[str] = Field(None, max_length=500, description="Professional summary")
+    summary: str | None = Field(None, max_length=500, description="Professional summary")
     education: list[Education] = Field(default_factory=list, min_length=1)
     experience: list[Experience] = Field(default_factory=list)
     skills: list[Skill] = Field(default_factory=list, min_length=1)
-    certifications: Optional[list[str]] = Field(default_factory=list)
-    languages: Optional[list[str]] = Field(default_factory=list)
-    metadata: Optional[ResumeMetadata] = Field(default=None)
+    certifications: list[str] | None = Field(default_factory=list)
+    languages: list[str] | None = Field(default_factory=list)
+    metadata: ResumeMetadata | None = Field(default=None)
 
 
 # ── 3. Job description models ──────────────────────────────────────────────────
@@ -222,10 +230,10 @@ class Requirements(BaseModel):
 
 
 class JobDescriptionMetadata(BaseModel):
-    trace_id: Optional[str] = Field(None, description="Unique trace ID")
-    generated_at: Optional[datetime] = Field(None, description="Generation timestamp")
-    prompt_template: Optional[str] = Field(None, description="Prompt template used")
-    is_niche_role: Optional[bool] = Field(None, description="Niche/specialized role flag")
+    trace_id: str | None = Field(None, description="Unique trace ID")
+    generated_at: datetime | None = Field(None, description="Generation timestamp")
+    prompt_template: str | None = Field(None, description="Prompt template used")
+    is_niche_role: bool | None = Field(None, description="Niche/specialized role flag")
 
 
 class JobDescription(BaseModel):
@@ -235,10 +243,10 @@ class JobDescription(BaseModel):
     requirements: Requirements
     responsibilities: list[str] = Field(default_factory=list, min_length=1)
     benefits: list[str] = Field(default_factory=list)
-    salary_range: Optional[str] = None
+    salary_range: str | None = None
     remote_policy: str = Field("On-site", description="Remote, Hybrid, or On-site")
     employment_type: str = Field("Full-time", description="Full-time, Part-time, Contract, Internship")
-    metadata: Optional[JobDescriptionMetadata] = Field(default=None)
+    metadata: JobDescriptionMetadata | None = Field(default=None)
 
     @field_validator("remote_policy")
     @classmethod
@@ -260,9 +268,9 @@ class JobDescription(BaseModel):
 # ── 4. Pair model ──────────────────────────────────────────────────────────────
 
 class ResumeJobPairMetadata(BaseModel):
-    trace_id: Optional[str] = Field(None, description="Unique trace ID for this pair")
-    generated_at: Optional[datetime] = None
-    fit_level: Optional[str] = Field(None, description="excellent, good, partial, poor, mismatch")
+    trace_id: str | None = Field(None, description="Unique trace ID for this pair")
+    generated_at: datetime | None = None
+    fit_level: str | None = Field(None, description="excellent, good, partial, poor, mismatch")
 
 
 class ResumeJobPair(BaseModel):
@@ -270,9 +278,9 @@ class ResumeJobPair(BaseModel):
 
     resume: Resume
     job_description: JobDescription
-    match_score: Optional[float] = Field(None, ge=0.0, le=1.0)
-    match_analysis: Optional[str] = None
-    metadata: Optional[ResumeJobPairMetadata] = Field(default=None)
+    match_score: float | None = Field(None, ge=0.0, le=1.0)
+    match_analysis: str | None = None
+    metadata: ResumeJobPairMetadata | None = Field(default=None)
 
 
 # ── 5. Validation types ────────────────────────────────────────────────────────
@@ -298,8 +306,8 @@ class ValidationError_:
 class ValidationResult:
     """Result of a validation operation."""
     is_valid: bool
-    data: Optional[BaseModel] = None
-    raw_data: Optional[dict] = None
+    data: BaseModel | None = None
+    raw_data: dict | None = None
     errors: list[ValidationError_] = dc_field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -328,7 +336,7 @@ class SchemaValidator:
     def validate_pair(self, data: dict) -> ValidationResult:
         return self._validate(data, ResumeJobPair)
 
-    def _validate(self, data: dict, schema: Type[BaseModel]) -> ValidationResult:
+    def _validate(self, data: dict, schema: type[BaseModel]) -> ValidationResult:
         self.validation_stats["total"] += 1
         with logfire.span("validate_data", schema=schema.__name__):
             try:

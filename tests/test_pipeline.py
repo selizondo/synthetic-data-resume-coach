@@ -1,24 +1,22 @@
 """Tests for the pipeline components."""
 
-import json
 from datetime import date
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
+from src.analysis.failure_modes import FailureCategory, FailureModeAnalyzer
 from src.schema import (
+    Company,
     ContactInfo,
     Education,
     Experience,
-    Skill,
-    Resume,
-    Company,
-    Requirements,
     JobDescription,
+    Requirements,
+    Resume,
+    SchemaValidator,
+    Skill,
+    ValidationResult,
 )
-from src.schema import SchemaValidator, ValidationResult
-from src.analysis.failure_modes import FailureModeAnalyzer, FailureCategory
 
 
 class TestResumeSchema:
@@ -586,6 +584,7 @@ class TestAPIRoutes:
     def client(self):
         """Create test client."""
         from fastapi.testclient import TestClient
+
         from src.api.main import app
 
         return TestClient(app)
@@ -641,7 +640,7 @@ class TestStorageUtils:
 
     def test_save_and_load_jsonl(self, tmp_path):
         """Test saving and loading JSONL files."""
-        from src.utils.storage import save_jsonl, load_jsonl
+        from src.utils.storage import load_jsonl, save_jsonl
 
         data = [
             {"id": 1, "name": "test1"},

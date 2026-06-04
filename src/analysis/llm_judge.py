@@ -1,12 +1,11 @@
 """LLM Judge for subtle failure detection in resume-job pairs."""
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 import logfire
-from pydantic import BaseModel, Field
 from llm_utils import instructor_complete
+from pydantic import BaseModel, Field
 
 from ..schema import JobDescription, Resume
 from ..utils.trace import generate_trace_id
@@ -18,13 +17,13 @@ class JudgmentResult(BaseModel):
     has_hallucinations: bool = Field(
         description="Whether the resume contains hallucinated or unverifiable claims"
     )
-    hallucination_details: Optional[str] = Field(
+    hallucination_details: str | None = Field(
         None, description="Details about detected hallucinations"
     )
     has_awkward_language: bool = Field(
         description="Whether the resume contains awkward or unnatural language"
     )
-    awkward_language_details: Optional[str] = Field(
+    awkward_language_details: str | None = Field(
         None, description="Details about awkward language"
     )
     overall_quality_score: float = Field(
@@ -46,8 +45,8 @@ class LLMJudgment:
     """Complete judgment for a resume-job pair."""
 
     trace_id: str
-    resume_trace_id: Optional[str]
-    job_trace_id: Optional[str]
+    resume_trace_id: str | None
+    job_trace_id: str | None
     result: JudgmentResult
     judged_at: datetime
     model_used: str
@@ -167,7 +166,7 @@ class LLMJudge:
         self,
         resume: Resume,
         job: JobDescription,
-        pair_trace_id: Optional[str] = None,
+        pair_trace_id: str | None = None,
     ) -> LLMJudgment:
         """Judge a resume-job pair using LLM.
 
@@ -240,7 +239,7 @@ Provide your evaluation in structured format."""
                 resume_trace_id=resume_trace_id,
                 job_trace_id=job_trace_id,
                 result=result,
-                judged_at=datetime.now(timezone.utc),
+                judged_at=datetime.now(UTC),
                 model_used=self.model,
             )
 

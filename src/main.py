@@ -8,14 +8,14 @@ from pathlib import Path
 
 import logfire
 from dotenv import load_dotenv
-
-from .pipeline import PipelineConfig
 from llm_utils.config import get_settings
+
 from .phase1_generation import _load_jsonl, run_generation_phase
 from .phase2_validation import run_validation_phase
 from .phase3_labeling import run_labeling_phase
 from .phase4_correction import run_correction_phase
 from .phase5_eval import run_eval_quality_phase
+from .pipeline import PipelineConfig
 from .schema import JobDescription, ResumeJobPair
 
 

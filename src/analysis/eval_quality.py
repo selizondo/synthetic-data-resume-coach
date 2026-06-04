@@ -18,11 +18,9 @@ Computes four diagnostics from failure_labels_<run>.jsonl:
 """
 
 import math
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
-
 
 BINARY_DIMS = [
     "experience_mismatch",
@@ -63,7 +61,7 @@ class LabelQualityReport(BaseModel):
     dimension_correlations: dict[str, dict[str, float]]
     monotonic_ordering_valid: bool
     ordering_violations: list[str]
-    llm_agreement: Optional[LLMAgreementStats] = None
+    llm_agreement: LLMAgreementStats | None = None
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -80,7 +78,7 @@ def _pearson_r(xs: list[float], ys: list[float]) -> float:
         return 0.0
     mx = sum(xs) / n
     my = sum(ys) / n
-    num = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    num = sum((x - mx) * (y - my) for x, y in zip(xs, ys, strict=False))
     dx = math.sqrt(sum((x - mx) ** 2 for x in xs))
     dy = math.sqrt(sum((y - my) ** 2 for y in ys))
     if dx == 0.0 or dy == 0.0:
@@ -93,7 +91,7 @@ def _cohen_kappa_binary(rule_vals: list[int], judge_vals: list[int]) -> float:
     n = len(rule_vals)
     if n == 0:
         return 0.0
-    agree = sum(r == j for r, j in zip(rule_vals, judge_vals))
+    agree = sum(r == j for r, j in zip(rule_vals, judge_vals, strict=False))
     po = agree / n
     rule_pos = sum(rule_vals) / n
     judge_pos = sum(judge_vals) / n
@@ -111,7 +109,7 @@ class LabelQualityAnalyzer:
     def analyze(
         self,
         labels: list[dict],
-        judgments: Optional[list[dict]] = None,
+        judgments: list[dict] | None = None,
         run_label: str = "",
     ) -> LabelQualityReport:
         threshold_sensitivity = self._threshold_sensitivity(labels, DEFAULT_THRESHOLDS)
@@ -123,7 +121,7 @@ class LabelQualityAnalyzer:
         return LabelQualityReport(
             run_label=run_label,
             total_pairs=len(labels),
-            generated_at=datetime.now(timezone.utc).isoformat(),
+            generated_at=datetime.now(UTC).isoformat(),
             threshold_sensitivity=threshold_sensitivity,
             fit_level_stats=fit_level_stats,
             dimension_correlations=dimension_correlations,
@@ -197,7 +195,7 @@ class LabelQualityAnalyzer:
 
     def _cohen_kappa(
         self, labels: list[dict], judgments: list[dict]
-    ) -> Optional[LLMAgreementStats]:
+    ) -> LLMAgreementStats | None:
         # Build lookup: trace_id → judgment
         j_by_id = {j["trace_id"]: j for j in judgments if "trace_id" in j}
 

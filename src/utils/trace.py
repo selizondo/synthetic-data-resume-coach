@@ -1,8 +1,7 @@
 """Trace ID generation and tracking utilities."""
 
 import uuid
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
@@ -16,7 +15,7 @@ def generate_trace_id(prefix: str = "trace") -> str:
     Returns:
         A unique trace ID string in format: prefix_timestamp_uuid
     """
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     unique_id = uuid.uuid4().hex[:8]
     return f"{prefix}_{timestamp}_{unique_id}"
 
@@ -24,7 +23,7 @@ def generate_trace_id(prefix: str = "trace") -> str:
 class TraceableMixin(BaseModel):
     """Mixin class that adds trace_id to any Pydantic model."""
 
-    trace_id: Optional[str] = Field(
+    trace_id: str | None = Field(
         default=None,
         description="Unique trace ID for tracking this record through the pipeline",
     )

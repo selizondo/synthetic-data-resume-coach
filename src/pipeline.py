@@ -10,6 +10,24 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+import logfire
+from dotenv import load_dotenv
+
+from .analysis.failure_labeler import FailureLabeler
+from .analysis.failure_modes import FailureModeAnalyzer
+from .analysis.heatmap import HeatmapGenerator
+from .analysis.llm_judge import LLMJudge
+from .correction.llm_correction import LLMCorrector
+from .generators import JobDescriptionGenerator, ResumeGenerator
+from .schema import FitLevel, SchemaValidator
+from .utils.storage import save_jsonl
+
+try:
+    from .evaluation.braintrust_eval import BraintrustEvaluator
+    _BRAINTRUST_AVAILABLE = True
+except ImportError:
+    _BRAINTRUST_AVAILABLE = False
+
 
 @dataclass
 class PipelineConfig:
@@ -22,27 +40,6 @@ class PipelineConfig:
     enable_correction: bool = True
     enable_llm_judge: bool = False
     enable_braintrust: bool = False
-from typing import Optional
-
-import logfire
-from dotenv import load_dotenv
-
-
-from .generators import JobDescriptionGenerator, ResumeGenerator
-from .schema import SchemaValidator
-from .analysis.failure_modes import FailureModeAnalyzer
-from .analysis.failure_labeler import FailureLabeler
-from .analysis.llm_judge import LLMJudge
-from .analysis.heatmap import HeatmapGenerator
-from .correction.llm_correction import LLMCorrector
-from .schema import FitLevel
-from .utils.storage import save_jsonl
-
-try:
-    from .evaluation.braintrust_eval import BraintrustEvaluator
-    _BRAINTRUST_AVAILABLE = True
-except ImportError:
-    _BRAINTRUST_AVAILABLE = False
 
 
 class Pipeline:
@@ -56,7 +53,7 @@ class Pipeline:
         FitLevel.MISMATCH,
     ]
 
-    def __init__(self, config: Optional[PipelineConfig] = None):
+    def __init__(self, config: PipelineConfig | None = None):
         """Initialize the pipeline."""
         load_dotenv()
         self.config = config or PipelineConfig()
@@ -105,8 +102,8 @@ class Pipeline:
 
     def run(
         self,
-        num_jobs: Optional[int] = None,
-        industries: Optional[list[str]] = None,
+        num_jobs: int | None = None,
+        industries: list[str] | None = None,
     ) -> dict:
         """Run the complete pipeline (jobs-first flow).
 

@@ -1,18 +1,19 @@
 """Heatmap visualization for validation analysis."""
 
 from pathlib import Path
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 import matplotlib
+
 matplotlib.use('Agg')
+import logfire
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import logfire
 
 from ..schema import ValidationResult
-from .failure_modes import FailureModeAnalyzer, FailureCategory
+from .failure_modes import FailureCategory, FailureModeAnalyzer
 
 if TYPE_CHECKING:
     from .failure_labeler import FailureLabeler
@@ -339,7 +340,7 @@ class HeatmapGenerator:
             axes[0, 1].set_title("Errors by Category")
 
             # Add count labels
-            for bar, count in zip(bars, counts):
+            for bar, count in zip(bars, counts, strict=False):
                 axes[0, 1].text(
                     bar.get_width() + 0.5,
                     bar.get_y() + bar.get_height() / 2,
@@ -652,8 +653,8 @@ class HeatmapGenerator:
             return self._create_empty_heatmap("No Labels for Niche Analysis", filename)
 
         # Split labels into niche and standard
-        niche_labels = [l for l in labeler.labels if l.is_niche_role]
-        standard_labels = [l for l in labeler.labels if not l.is_niche_role]
+        niche_labels = [lb for lb in labeler.labels if lb.is_niche_role]
+        standard_labels = [lb for lb in labeler.labels if not lb.is_niche_role]
 
         if not niche_labels or not standard_labels:
             return self._create_empty_heatmap("Insufficient Data for Niche Comparison", filename)
@@ -667,12 +668,12 @@ class HeatmapGenerator:
         def calc_rates(labels):
             n = len(labels)
             return {
-                "low_skills_overlap": sum(1 for l in labels if l.skills_overlap_ratio < 0.5) / n,
-                "experience_mismatch": sum(l.experience_mismatch for l in labels) / n,
-                "seniority_mismatch": sum(l.seniority_mismatch for l in labels) / n,
-                "missing_core_skill": sum(l.missing_core_skill for l in labels) / n,
-                "hallucinated_skill": sum(l.hallucinated_skill for l in labels) / n,
-                "awkward_language": sum(l.awkward_language_flag for l in labels) / n,
+                "low_skills_overlap": sum(1 for lb in labels if lb.skills_overlap_ratio < 0.5) / n,
+                "experience_mismatch": sum(lb.experience_mismatch for lb in labels) / n,
+                "seniority_mismatch": sum(lb.seniority_mismatch for lb in labels) / n,
+                "missing_core_skill": sum(lb.missing_core_skill for lb in labels) / n,
+                "hallucinated_skill": sum(lb.hallucinated_skill for lb in labels) / n,
+                "awkward_language": sum(lb.awkward_language_flag for lb in labels) / n,
             }
 
         niche_rates = calc_rates(niche_labels)
@@ -769,7 +770,7 @@ class HeatmapGenerator:
         ax.set_ylim(0, max(hallucination_rates) * 1.2 if hallucination_rates else 1)
 
         # Add value labels and counts
-        for bar, rate, count in zip(bars, hallucination_rates, counts):
+        for bar, rate, count in zip(bars, hallucination_rates, counts, strict=False):
             height = bar.get_height()
             ax.annotate(f'{rate:.1%}\n(n={count})',
                         xy=(bar.get_x() + bar.get_width() / 2, height),

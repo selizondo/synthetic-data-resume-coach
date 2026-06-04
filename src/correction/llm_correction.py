@@ -3,14 +3,12 @@
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Type
 
-from pydantic import BaseModel
 import logfire
 from llm_utils import instructor_complete
+from pydantic import BaseModel
 
-from ..schema import JobDescription, Resume
-from ..schema import SchemaValidator, ValidationResult
+from ..schema import JobDescription, Resume, SchemaValidator, ValidationResult
 
 
 @dataclass
@@ -18,10 +16,10 @@ class CorrectionResult:
     """Result of a correction attempt."""
 
     original_data: dict
-    corrected_data: Optional[dict] = None
+    corrected_data: dict | None = None
     is_corrected: bool = False
     attempts: int = 0
-    validation_result: Optional[ValidationResult] = None
+    validation_result: ValidationResult | None = None
     correction_history: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -93,7 +91,7 @@ class LLMCorrector:
     def _correct(
         self,
         invalid_result: ValidationResult,
-        schema: Type[BaseModel],
+        schema: type[BaseModel],
         data_type: str,
     ) -> CorrectionResult:
         """Perform iterative LLM correction.

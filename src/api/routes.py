@@ -1,8 +1,7 @@
 """API routes for the Resume Coach service."""
 
 import time
-from datetime import date, datetime, timezone
-from typing import Optional
+from datetime import UTC, date, datetime
 
 import logfire
 from fastapi import APIRouter, HTTPException
@@ -35,8 +34,8 @@ class ContactInfoInput(BaseModel):
     email: EmailStr
     phone: str = Field(..., min_length=10)
     location: str
-    linkedin: Optional[str] = None
-    portfolio: Optional[str] = None
+    linkedin: str | None = None
+    portfolio: str | None = None
 
 
 class EducationInput(BaseModel):
@@ -45,8 +44,8 @@ class EducationInput(BaseModel):
     degree: str
     institution: str
     graduation_date: str  # ISO date string
-    gpa: Optional[float] = None
-    relevant_coursework: Optional[list[str]] = None
+    gpa: float | None = None
+    relevant_coursework: list[str] | None = None
 
 
 class ExperienceInput(BaseModel):
@@ -55,7 +54,7 @@ class ExperienceInput(BaseModel):
     company: str
     title: str
     start_date: str  # ISO date string
-    end_date: Optional[str] = None  # ISO date string or null for current
+    end_date: str | None = None  # ISO date string or null for current
     responsibilities: list[str] = Field(default_factory=list, min_length=1)
     achievements: list[str] = Field(default_factory=list)
 
@@ -65,19 +64,19 @@ class SkillInput(BaseModel):
 
     name: str
     proficiency_level: str  # Beginner, Intermediate, Advanced, Expert
-    years_experience: Optional[float] = None
+    years_experience: float | None = None
 
 
 class ResumeInput(BaseModel):
     """Resume input for API."""
 
     contact: ContactInfoInput
-    summary: Optional[str] = None
+    summary: str | None = None
     education: list[EducationInput] = Field(default_factory=list, min_length=1)
     experience: list[ExperienceInput] = Field(default_factory=list)
     skills: list[SkillInput] = Field(default_factory=list, min_length=1)
-    certifications: Optional[list[str]] = None
-    languages: Optional[list[str]] = None
+    certifications: list[str] | None = None
+    languages: list[str] | None = None
 
 
 class CompanyInput(BaseModel):
@@ -108,7 +107,7 @@ class JobDescriptionInput(BaseModel):
     requirements: RequirementsInput
     responsibilities: list[str] = Field(default_factory=list, min_length=1)
     benefits: list[str] = Field(default_factory=list)
-    salary_range: Optional[str] = None
+    salary_range: str | None = None
     remote_policy: str = "On-site"
     employment_type: str = "Full-time"
 
@@ -148,9 +147,9 @@ class LLMAssessment(BaseModel):
     """LLM-based assessment (optional)."""
 
     has_hallucinations: bool
-    hallucination_details: Optional[str]
+    hallucination_details: str | None
     has_awkward_language: bool
-    awkward_language_details: Optional[str]
+    awkward_language_details: str | None
     quality_score: float
     red_flags: list[str]
 
@@ -164,7 +163,7 @@ class ReviewResumeResponse(BaseModel):
     skill_analysis: SkillAnalysis
     failure_flags: FailureFlags
     recommendations: list[str]
-    llm_assessment: Optional[LLMAssessment] = None
+    llm_assessment: LLMAssessment | None = None
     strategy_used: str = Field(description="Analysis path: 'rule_based' or 'rule_based+llm_judge'")
     latency_ms: float = Field(description="Wall-clock time for this request in milliseconds")
     analyzed_at: str
@@ -425,7 +424,7 @@ async def review_resume(request: ReviewResumeRequest):
                 llm_assessment=llm_assessment,
                 strategy_used=strategy,
                 latency_ms=round((time.perf_counter() - _start) * 1000, 1),
-                analyzed_at=datetime.now(timezone.utc).isoformat(),
+                analyzed_at=datetime.now(UTC).isoformat(),
             )
 
             logfire.info(
@@ -441,7 +440,7 @@ async def review_resume(request: ReviewResumeRequest):
 
         except Exception as e:
             logfire.error(f"Review failed: {e}", trace_id=trace_id)
-            raise HTTPException(status_code=500, detail="Internal server error")
+            raise HTTPException(status_code=500, detail="Internal server error") from e
 
 
 @router.get("/analysis/failure-rates")
@@ -478,7 +477,7 @@ async def get_failure_rates(labeled_dir: str = "data/labeled"):
                 if line:
                     records.append(json.loads(line))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to read {latest_file}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to read {latest_file}: {e}") from e
 
     if not records:
         raise HTTPException(status_code=404, detail="No records found in latest label file.")
@@ -557,4 +556,4 @@ async def get_label_quality(run_label: str = "", labeled_dir: str = "data/labele
     try:
         return json.loads(report_file.read_text())
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to read {report_file}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to read {report_file}: {e}") from e
