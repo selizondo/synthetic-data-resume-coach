@@ -14,11 +14,11 @@ This project is a production-grade synthetic data pipeline that generates resume
 
 **Generated data can be structurally broken with no visible error.** A hallucinated `null` date or a missing required field poisons the training set silently. Every pair is gated through Pydantic schema validation before it enters the labeled dataset. Invalid pairs are quarantined to `failed_pairs_<run>.jsonl` for correction rather than silently dropped.
 
-**Invalid records need a correction signal, not a gold standard.** There's no human-labeled "right answer" to correct toward. The correction loop re-prompts the LLM with its own Pydantic error messages (up to 3 retries), using the validator output as the feedback signal. Before/after deltas are logged per run.
+**Invalid records need a correction signal, not a gold standard.** There's no human-labeled "right answer" to correct toward. The correction loop re-prompts the LLM with its own Pydantic error messages (up to 3 retries), using the validator output as the feedback signal. Before/after deltas are logged per run. See [docs/correction_loop_proof.md](docs/correction_loop_proof.md) for results and the explanation of why the loop doesn't fire in normal runs.
 
 **Crash recovery without re-generation.** Phase 1 writes each item to JSONL immediately. If the process is killed mid-run (rate-limit, OOM), `--resume <run_label>` picks up at the exact item where it stopped.
 
-**Rule-based labeler, not LLM-based.** The six failure metrics are deterministic, instant, and free. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but rules gate correctness first.
+**Rule-based labeler, not LLM-based.** The six failure metrics are deterministic, instant, and free. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but rules gate correctness first. See [docs/tradeoffs.md](docs/tradeoffs.md) for the full rationale behind each design choice.
 
 **API responses include `strategy_used` and `latency_ms`.** Callers can alert on latency regression or distinguish `rule_based` from `rule_based+llm_judge` paths without parsing logs.
 
@@ -121,7 +121,7 @@ Failure detection must work across all five styles — a hallucination detector 
 | Average skill overlap | 0.50 across all fit levels |
 | Test suite | 57 tests, fully offline (no LLM calls) |
 
-A 31.6% pass rate is expected — Poor and Mismatch pairs fail the labeler by design (they intentionally lack required skills). The signal is whether the rate holds stable across runs and whether failure modes track the fit level distribution.
+A 31.6% pass rate is expected — Poor and Mismatch pairs fail the labeler by design (they intentionally lack required skills). The signal is whether the rate holds stable across runs and whether failure modes track the fit level distribution. Labeler accuracy is verified in [docs/spot_check.md](docs/spot_check.md) (10-pair manual verification, 100% agreement). Configuration changes and their before/after impact are tracked in [docs/iteration_log.md](docs/iteration_log.md). Known failure modes and edge cases are documented in [docs/failures.md](docs/failures.md).
 
 **Failure rates by mode (50-job run):**
 
@@ -214,8 +214,6 @@ python -m src.main --num-jobs 10 --enable-llm-judge
 # Run Phase 5 label quality report against a completed run
 python -m src.main --eval-quality --resume <run_label>
 ```
-
-See [docs/tradeoffs.md](docs/tradeoffs.md) for design decisions and [docs/failures.md](docs/failures.md) for known failure modes.
 
 **Blog post:** [docs/blog_post.md](docs/blog_post.md)
 
