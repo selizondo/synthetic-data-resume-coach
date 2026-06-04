@@ -182,12 +182,14 @@ data/
 ├── validated/
 │   ├── validated_data_<run_label>.json       # validation summary + valid trace IDs
 │   ├── schema_failure_modes_<run_label>.json # errors categorized by type
+│   ├── corrections_<run_label>.json          # before/after delta per corrected record — only written when correction loop processes invalid records (not written in normal runs: 100% schema pass via instructor means Phase 4 skips)
 │   └── visualizations/
 │       ├── resume_field_validation_<run_label>.png
 │       └── job_field_validation_<run_label>.png
 ├── labeled/
-│   ├── failure_labels_<run_label>.jsonl   # 6 rule-based metrics per pair
-│   ├── failed_pairs_<run_label>.jsonl     # pairs that failed labeling (if any)
+│   ├── failure_labels_<run_label>.jsonl       # 6 rule-based metrics per pair
+│   ├── failed_pairs_<run_label>.jsonl         # pairs that failed labeling (if any)
+│   ├── label_quality_<run_label>.json         # per-metric quality report — produced by --eval-quality flag
 │   └── visualizations/
 │       ├── failure_mode_correlation_<run_label>.png
 │       ├── failure_by_fit_level_<run_label>.png
@@ -218,6 +220,17 @@ python -m src.main --num-jobs 10 --enable-llm-judge
 # Run Phase 5 label quality report against a completed run
 python -m src.main --eval-quality --resume <run_label>
 ```
+
+### FastAPI Endpoints
+
+`make serve` starts the API on `127.0.0.1:8000`. Interactive docs at `/docs`.
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Liveness check — returns `{"status": "healthy"}` |
+| `POST` | `/review-resume` | Label a resume–job pair on demand; returns `fit_score`, `overall_fit`, `strategy_used`, `latency_ms` |
+| `GET` | `/analysis/failure-rates` | Aggregate failure rates from a completed run; requires `run_label` query param |
+| `GET` | `/analysis/label-quality` | Per-metric quality report from a completed `--eval-quality` run; requires `run_label` query param; reads `label_quality_<run_label>.json` |
 
 ---
 
