@@ -2,9 +2,7 @@
 
 Picture a hiring manager reviewing 500 resumes. Most fail immediately — wrong skills, seniority mismatch, buzzword-dense summaries with nothing behind them. Building an AI system that catches those failures requires training data that *actually has* those failure modes built in. That's the hard part.
 
-This post documents a 4-phase pipeline that generates synthetic resume-job pairs with controlled fit levels, validates them structurally, labels them for 6 failure modes, and attempts to correct the ones that fail. The pipeline found a problem you won't anticipate: 100% of generated resumes passed Pydantic schema validation. 42% failed quality labels. And the `career_changer` writing template failed at more than twice the rate of the `technical` template — same LLM, same jobs, same instructions.
-
-One thing to take away: why "structurally valid" and "actually usable" are different thresholds, and which failure mode matters most when you're trying to control fit level.
+This post documents a 4-phase pipeline that generates synthetic resume-job pairs with controlled fit levels, validates them structurally, labels them for 6 failure modes, and corrects failures through iterative LLM re-prompting. It covers two runs — a weak model baseline and a stronger model with a generation-time quality gate — and what changed between them.
 
 ---
 
@@ -17,154 +15,136 @@ LLM Generation
          └─ Correction Loop  (data-driven retry on failed records)
 ```
 
-**What it generates:** job descriptions across 50+ roles, resumes at 5 controlled fit levels (excellent, good, partial, poor, mismatch), across 5 writing templates (formal, casual, technical, achievement-focused, career-changer).
+**What it generates:** 50 job descriptions across diverse industries, 5 resumes per job at controlled fit levels (excellent, good, partial, poor, mismatch), across 5 writing templates (formal, casual, technical, achievement_focused, career_changer).
 
-**Evaluation stack:** Jaccard similarity, experience mismatch, seniority mismatch, missing core skills, hallucinated skills, awkward language — all computed per pair.
-
-**Two runs compared:**
-
-| Model | Jobs | Pairs | Validation rate | Pass rate | Gen time |
-|---|---|---|---|---|---|
-| `llama-3.3-70b-versatile` | 6 | 12 | 100% | 83.3% | ~279 min |
-| `llama-3.1-8b-instant` | 50 | 198 | 100% | 61.1% | ~83 min |
+**Evaluation stack:** Jaccard similarity, experience mismatch, seniority mismatch, missing core skills, hallucinated skills, awkward language — all computed per pair by a rule-based labeler.
 
 ---
 
-## Finding 1: 100% Validation Rate, 61% Pass Rate — These Are Different Things
+## Two Runs
 
-Both runs validated 100% of generated records. Zero schema failures. The 8B run still scored 61.1% overall quality pass rate.
-
-Structural validation answers: *does this conform to the schema?* Quality labeling answers: *does this resume actually behave the way it's supposed to for this fit level?*
-
-These diverge because LLMs are excellent at producing structurally valid output. Instructor + Pydantic virtually eliminates schema failures. But producing a resume that *correctly represents* a "poor fit" for a specific job — intentional skill gaps, seniority misalignment, controlled overlap — is a harder semantic task that schema rules can't enforce.
-
-**The rule:** schema validation is a floor, not a ceiling. 100% validation rate with 39% failure rate means your generator reliably produces well-formed data that often fails at what it's supposed to do. Evaluate fitness separately from structure.
-
----
-
-## Finding 2: career_changer Fails 2× More Often — and It's Structural, Not Random
-
-Failure rates by writing template (8B model, 198 pairs):
-
-| Template | Pairs | Failure Rate |
+| | Run 1 | Run 2 |
 |---|---|---|
-| `career_changer` | 45 | **55.6%** |
-| `technical` | 33 | 42.4% |
-| `formal` | 41 | 36.6% |
-| `achievement_focused` | 41 | 36.6% |
-| `casual` | 38 | **21.1%** |
+| Model | `llama-3.1-8b-instant` | `gpt-4o-mini` |
+| Generation quality gate | None | Overlap retry loop (≤3 attempts) |
+| Jobs | 50 | 50 |
+| Pairs | 198 | 250 |
+| Schema validation rate | 100% | 100% |
+| Quality pass rate | 61.1% | 31.6% |
+| Mismatch avg Jaccard | 0.582 | **0.000** |
 
-The `career_changer` template asks the LLM to generate a resume for someone transitioning from a different field. That means intentionally generating skill gaps, limited direct experience, and transferable skills that partially but not fully match the job. The LLM struggles with this — it defaults to producing competent candidates.
-
-The `technical` template landing second-highest (42.4%) is notable: highly specific skill lists make it easier for the model to produce a "wrong" result by including a recognizable but mismatched technology. `casual` performs best because vague, conversational phrasing is harder to falsify against a structured job description.
-
-The 70B model shows the same directional pattern (career_changer 33% vs. technical 20%) at higher overall quality. The gap narrows but doesn't close with a more capable model — suggesting the challenge is the task itself, not the model's capacity.
-
-**The rule:** templates that require the LLM to be *deliberately bad* at matching a job are harder to control than templates that produce good candidates. If your evaluation depends on diverse fit levels, the failure rate will be template-specific — not uniform across writing styles.
+The schema validation rate is identical. Everything else differs.
 
 ---
 
-## Finding 3: The LLM Can't Reliably Produce "Mismatch" Resumes
+## Finding 1: A Higher Pass Rate Isn't Better
 
-Controlled fit level generation is the core design challenge. The pipeline targets 5 fit levels, with "mismatch" meaning less than 20% skill overlap. Actual results:
+Run 1 scored 61.1% quality pass rate. Run 2 scored 31.6%. At first glance this looks like a regression. It's the opposite.
 
-| Fit Level | 8B Avg Overlap | 70B Avg Overlap | Target |
+The pass rate measures how many pairs correctly represent their intended fit level. With `llama-3.1-8b`, "mismatch" pairs averaged 0.582 Jaccard overlap — meaning the model ignored the instruction to generate a mismatched resume and produced a reasonable partial fit instead. Those pairs were failing silently: structurally valid, semantically wrong. Many of them scored well enough on the labeler to pass.
+
+With `gpt-4o-mini` and the retry loop, "mismatch" pairs average 0.000 Jaccard. They fail the labeler correctly — by design. Poor and mismatch pairs are *supposed* to fail. A pass rate of 31.6% with five fit levels means excellent and good pairs are passing and the rest are failing as intended.
+
+**The rule:** a higher pass rate from a weaker model often means the fit level targeting is broken, not that the data is better. Evaluate labeler pass rate per fit level, not overall.
+
+---
+
+## Finding 2: The Retry Loop Fixed Mismatch — Completely
+
+The central problem in Run 1: LLMs optimize for coherence. A plausible-sounding resume inherently tends toward reasonable skill overlap. "Generate a mismatch resume" is an instruction that works against the model's learned behavior.
+
+Avg Jaccard by fit level, both runs:
+
+| Fit Level | Run 1 (llama-3.1-8b) | Run 2 (gpt-4o-mini + retry) | Target |
 |---|---|---|---|
-| excellent | 0.916 | 0.867 | ≥ 80% |
-| good | 0.805 | 1.000 | 60–80% |
-| partial | 0.766 | 0.833 | 40–60% |
-| poor | 0.627 | 0.600 | 20–40% |
-| mismatch | **0.582** | **0.300** | < 20% |
+| excellent | 0.916 | **0.979** | ≥ 0.80 |
+| good | 0.805 | **0.745** | 0.60–0.80 |
+| partial | 0.766 | **0.548** | 0.40–0.60 |
+| poor | 0.627 | **0.244** | 0.20–0.40 |
+| mismatch | 0.582 | **0.000** | < 0.20 |
 
-The 70B model gets "mismatch" to 0.30 average overlap — outside the target (< 0.20) but directionally correct. The 8B model produces 0.58 average overlap for "mismatch" pairs. The model intended to generate a resume with almost no skill overlap and produced one that's a reasonable partial fit.
+Run 1 missed every target below "good". Run 2 hits all five.
 
-This is the central limitation: LLMs optimize for coherence and helpfulness during training. A plausible-sounding resume inherently tends toward reasonable skill match. Generating *intentionally poor* resumes is an instruction that works against the model's learned behavior.
+The fix was a post-generation quality gate: after each resume is generated, compute Jaccard against the job's required skills. If the overlap falls outside the fit level's target range, re-prompt with a correction message (up to 3 retries). Without this gate, the LLM defaults to generating competent candidates regardless of fit level instruction. See [docs/correction_loop_proof.md](correction_loop_proof.md) for the correction loop results.
 
-**The rule:** the harder the fit level is to fake, the more you need explicit negative examples or stricter skill-exclusion instructions in the prompt. "Generate a poor fit resume" is not sufficient. You need: "Do not include any of these skills: {required_skills}. Do not match the required experience level of {level}."
-
----
-
-## Finding 4: Seniority Mismatch Is the Dominant Failure Mode
-
-Failure rates by mode (8B model, 198 pairs):
-
-| Failure Mode | Rate |
-|---|---|
-| `seniority_mismatch` | **19.7%** |
-| `low_skills_overlap` | 14.6% |
-| `missing_core_skill` | 11.6% |
-| `experience_mismatch` | 3.0% |
-| `hallucinated_skill` | 0.5% |
-| `awkward_language` | **0.0%** |
-
-Seniority mismatch (19.7%) leads all failure modes by a clear margin. The same pattern holds in the 70B run (16.7%). Two models, consistent result — this is a generation behavior, not a model artifact.
-
-The cause: the LLM tends to generate mid-level candidates regardless of fit level instruction. An "excellent fit mismatch" still needs a plausible-sounding candidate, and plausible defaults to mid-level. Generating an entry-level candidate for a senior role — or vice versa — requires the model to produce something that sounds underqualified or overqualified, which feels incoherent from a generation standpoint.
-
-`awkward_language` scored 0.0% across all templates. LLMs don't produce buzzword-heavy AI-generated text when instructed to write as a human candidate. This failure mode may not be useful for LLM-generated synthetic data — it's designed for detecting real human resumes, not controlled synthetic generation.
-
-**The rule:** add an explicit seniority constraint to every generation prompt: "The candidate's seniority level must be {target_level}. If the job requires Senior, generate a Mid-level candidate." Without this, seniority mismatch will be the dominant failure mode regardless of fit level.
+**The rule:** "generate a poor fit resume" is not sufficient. You need a verification step that checks whether the generated resume actually satisfies the fit constraint, with a correction signal when it doesn't.
 
 ---
 
-## Finding 5: Model Choice Trades Quality for Speed — But Not Proportionally
+## Finding 3: Template Bias Narrowed But Didn't Disappear
 
-| Model | Pairs generated | Generation time | Pass rate | Cost |
-|---|---|---|---|---|
-| `llama-3.3-70b-versatile` | 12 | ~279 min | 83.3% | ~$0.54 |
-| `llama-3.1-8b-instant` | 198 | ~83 min | 61.1% | ~$0.008 |
+Run 1 finding: `career_changer` failed at more than twice the rate of `technical` (55.6% vs 42.4%). Run 2 with a stronger model:
 
-The 70B model produces ~22pp better pass rates. It also takes ~55× longer per pair (279 min / 12 pairs vs. 83 min / 198 pairs) and costs ~68× more.
+| Template | Run 1 (llama-3.1-8b) | Run 2 (gpt-4o-mini) |
+|---|---|---|
+| `career_changer` | 55.6% | 70.9% |
+| `technical` | 42.4% | 61.4% |
+| `formal` | 36.6% | 68.8% |
+| `achievement_focused` | 36.6% | 70.8% |
+| `casual` | 21.1% | 71.4% |
 
-The 279 minutes is not inference time — it's rate-limit throttling on Groq's free tier. The 70B model triggers more aggressive rate limiting than the 8B. The same quality gap at less cost is available by running 70B at lower volume or on a paid tier.
+Two things happened. The 2× gap narrowed to 1.15× — `career_changer` no longer stands out. And overall failure rates rose across all templates. Both are explained by the retry loop.
 
-For iterative pipeline development, 8B at ~$0.008/run is the right choice. Switch to 70B for final evaluation once generation prompts are stable. The 22pp quality gap is worth paying for validation, not experimentation.
+The retry loop fixed fit level targeting, which means poor and mismatch pairs now correctly fail. With Run 1, those pairs were passing at inflated rates (0.582 overlap for "mismatch"). Now they fail correctly, which raises the failure rate for every template. The templates converge because the per-template variation in Run 1 was partly noise from broken fit level generation.
+
+The `career_changer` gap narrowing is significant: it suggests part of the original 2× bias was the 8B model struggling to simultaneously honor a writing style constraint and a fit level constraint. A stronger model handles both better. The residual gap (70.9% vs 61.4%) reflects genuine task difficulty — `career_changer` resumes are structurally harder to generate because they require intentional skill gaps from someone with transferable-but-not-direct experience.
+
+**The rule:** template bias is real but partially model-dependent. Separate the model capacity effect from the task difficulty effect before drawing conclusions about which templates need prompt fixes.
 
 ---
 
-## Practical Guide: Fixing the Top 3 Failure Modes
+## Finding 4: Dominant Failure Mode Shifted Once Fit Levels Were Fixed
 
-### Fix seniority mismatch (19.4%)
+Failure rates by mode, both runs:
 
-Add explicit level constraint to the generation prompt:
+| Failure Mode | Run 1 (llama-3.1-8b) | Run 2 (gpt-4o-mini) |
+|---|---|---|
+| `missing_core_skill` | 11.6% | **43.2%** |
+| `seniority_mismatch` | **19.7%** | 26.0% |
+| `low_skills_overlap` | 14.6% | 56.0% |
+| `experience_mismatch` | 3.0% | 12.8% |
+| `awkward_language` | 0.0% | 5.6% |
+| `hallucinated_skill` | 0.5% | 0.8% |
+
+In Run 1, seniority mismatch led (19.7%). In Run 2, missing core skill dominates at 43.2%. This isn't a new problem — it's the same problem becoming visible once the bigger problem (broken fit level targeting) is fixed.
+
+When mismatch pairs have 0.582 Jaccard, they're not missing core skills — they accidentally match enough skills to avoid that flag. Fix the overlap and the missing core skill flag fires correctly on poor and mismatch pairs. The 43.2% rate is expected: poor fit resumes intentionally exclude top required skills.
+
+`awkward_language` appearing at 5.6% (up from 0%) is a side effect of `gpt-4o-mini` generating more naturally-structured resumes — longer summary sections with more varied vocabulary occasionally trip the buzzword density detector. Not a quality problem; a detector calibration note.
+
+**The rule:** fixing one failure mode can unmask others. After each prompt or model change, re-run the full labeler to see what was previously hidden.
+
+---
+
+## Finding 5: Seniority Mismatch Persists Across Both Models
+
+Seniority mismatch is 19.7% in Run 1 and 26.0% in Run 2 — it increased with the stronger model. The cause is the same in both runs: the LLM defaults to generating mid-level candidates. An "excellent fit" for a senior role needs a senior candidate; the model generates a plausible-sounding mid-level one instead.
+
+The fix is explicit: add a seniority constraint to every generation prompt.
+
 ```
-Seniority level: {target_seniority}
-IMPORTANT: The candidate's demonstrated experience level must be {target_seniority}.
+The candidate's seniority level must be {target_seniority}.
+If the job requires Senior, generate a candidate who is demonstrably Senior-level.
 Do not generate a candidate who appears qualified for a different seniority level.
 ```
 
-### Fix mismatch fit level overlap (actual: 0.58, target: < 0.20)
-
-Add explicit skill exclusion:
-```
-This is a MISMATCH resume. The candidate must NOT have these required skills: {required_skills[:3]}.
-Replace required skills with unrelated skills from a different field.
-Target Jaccard similarity: < 0.20.
-```
-
-### Fix career_changer failure rate (64.3%)
-
-The template conflates two tasks: write a career-changer resume AND match a specific fit level. Separate them:
-1. Generate the base career-changer persona (industry, years, transferable skills)
-2. Then apply fit-level constraints as a second prompt pass
-
-One-shot generation of both simultaneously overloads the model's ability to honor both constraints at once.
+The retry loop handles overlap. Seniority requires the same pattern: generate, check, retry with a correction message if the inferred seniority doesn't match the target. This is not yet implemented — it's the next iteration. See [docs/iteration_log.md](iteration_log.md) for the documented change history.
 
 ---
 
 ## Takeaways
 
-**1. Structural validation and quality labeling are different evaluations.** 100% schema pass rate is a floor. 61% quality pass rate is the actual signal. Run both.
+**1. A higher pass rate from a weaker model means fit level targeting is broken.** Run 1's 61.1% looked good. Run 2's 31.6% is correct. Check overlap by fit level, not overall.
 
-**2. Templates that require intentional failure are the hardest to generate.** `career_changer` (56% failure) vs. `casual` (21% failure). The LLM's helpfulness bias works against you when you need bad candidates.
+**2. Verification beats instruction.** "Generate a mismatch resume" doesn't work reliably. Generate, compute Jaccard, retry with a correction if it fails. Mismatch went from 0.582 to 0.000.
 
-**3. The LLM can't reliably produce mismatch resumes without explicit exclusions.** "Generate a poor fit" is insufficient. Specify which skills to exclude and which seniority level to misalign with.
+**3. Template bias is partially model-dependent.** The career_changer 2× gap narrowed to 1.15× with a stronger model. Some of it was model capacity, not task difficulty.
 
-**4. Seniority mismatch is the dominant failure mode across models.** 19.7% (8B) and 16.7% (70B). Add explicit seniority instructions or it will stay the top failure mode regardless of model size.
+**4. Fixing fit level targeting unmasks the next failure mode.** Missing core skill jumped from 11.6% to 43.2% once overlap was correct. Run the full labeler after every change.
 
-**5. Use a smaller model for iteration, a larger model for validation.** 8B at $0.003/run for prompt development. 70B for the final evaluation run where quality numbers matter.
+**5. Seniority mismatch is persistent.** 19.7% → 26.0% across models. Requires the same verification-loop approach applied to overlap.
 
-**6. Awkward language detection won't fire on LLM-generated data.** 0% across all templates. This failure mode is designed for human resumes — LLMs don't produce buzzword-dense text when instructed to write naturally.
+**6. Awkward language detection needs calibration for LLM-generated data.** 0% → 5.6% isn't a quality regression — it's a detector sensitivity issue when the model writes longer, more varied summaries.
 
 ---
 
@@ -174,21 +154,28 @@ One-shot generation of both simultaneously overloads the model's ability to hono
 git clone git@github.com:selizondo/synthetic-data-resume-coach.git
 cd synthetic-data-resume-coach
 
-pip install -r requirements.txt
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 cp .env.example .env
-# Set LLM_API_KEY and LLM_MODEL in .env
+# Set LLM_API_KEY and LLM_MODEL in .env (default: OpenAI gpt-4o-mini)
 
-# Full 4-phase pipeline
-python src/main.py --batch-label my-run
-
-# Individual phases
-python src/main.py --phase 1 --batch-label my-run   # generation
-python src/main.py --phase 2 --batch-label my-run   # validation
-python src/main.py --phase 3 --batch-label my-run   # labeling
-python src/main.py --phase 4 --batch-label my-run   # correction
-
-# View results across runs
-python src/main.py stats
+make bootstrap    # install all deps
+make test         # 57 tests, ~10s, no API calls
+make generate     # 10 jobs × 5 fit levels = 50 pairs
+make serve        # FastAPI at 127.0.0.1:8000 — interactive docs at /docs
 ```
 
-Results land in `data/output/<batch-label>/`. Each phase is independently re-runnable. Pipeline summaries in `data/pipeline_summary_*.json` give per-phase timing and aggregate statistics.
+For the full 50-job run:
+
+```bash
+python -m src.main --num-jobs 50 --no-heatmaps
+
+# Resume a run interrupted mid-way
+python -m src.main --phase 2-4 --resume <run_label>
+
+# Run label quality analysis on a completed run
+python -m src.main --eval-quality --resume <run_label>
+```
+
+Output lands in `data/`. Each phase writes its own JSONL files stamped with the run label — see the README for the full output structure. Pipeline summaries in `data/pipeline_summary_<run_label>.json` give per-phase timing and aggregate statistics. The labeler accuracy is verified in [docs/spot_check.md](spot_check.md).
