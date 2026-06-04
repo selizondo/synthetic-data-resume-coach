@@ -69,6 +69,21 @@ NICHE_ROLES = {
     "compiler", "kernel", "hpc", "mlops", "devsecops", "sre", "reliability",
 }
 
+# Explicit titles that guarantee niche detection fires. Used to seed ~20% of
+# generated jobs so the niche_vs_standard chart always has both categories.
+NICHE_JOB_TITLES = [
+    "MLOps Engineer",
+    "Site Reliability Engineer",
+    "Blockchain Developer",
+    "Robotics Software Engineer",
+    "Bioinformatics Scientist",
+    "Embedded Systems Engineer",
+    "DevSecOps Engineer",
+    "HPC Systems Engineer",
+    "AI Ethics Researcher",
+    "Cryptography Engineer",
+]
+
 def _detect_resume_seniority(resume) -> SeniorityLevel:
     """Infer candidate seniority from resume — mirrors FailureLabeler logic."""
     from datetime import date

@@ -15,7 +15,7 @@ from pathlib import Path
 
 from openai import RateLimitError
 
-from .generators import JobDescriptionGenerator, ResumeGenerator
+from .generators import NICHE_JOB_TITLES, JobDescriptionGenerator, ResumeGenerator
 from .schema import FitLevel, JobDescription, Resume, ResumeJobPair
 
 _CIRCUIT_BREAKER_THRESHOLD = 2  # consecutive rate-limit failures before stopping
@@ -119,11 +119,15 @@ def run_generation_phase(
     if jobs_needed > 0:
         print(f"  Generating {jobs_needed} job descriptions "
               f"({len(jobs)}/{num_jobs} already done)...")
+        # Seed every 5th job with a niche title so niche_vs_standard chart has data.
+        # Cycle through NICHE_JOB_TITLES so longer runs get varied niche roles.
         consecutive_rl = 0
         for i in range(len(jobs), num_jobs):
+            niche_title = NICHE_JOB_TITLES[i % len(NICHE_JOB_TITLES)] if i % 5 == 4 else None
             try:
                 job = job_gen.generate_single(
-                    industry=industries[i % len(industries)] if industries else None
+                    title=niche_title,
+                    industry=industries[i % len(industries)] if industries else None,
                 )
                 consecutive_rl = 0
                 jobs.append(job)

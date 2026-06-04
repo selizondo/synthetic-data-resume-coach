@@ -1,9 +1,28 @@
 """Phase 2 — Schema validation and error categorization."""
 
+import json
+from collections import defaultdict
 from pathlib import Path
 
 from .schema import JobDescription, Resume, SchemaValidator
 from .utils.storage import save_jsonl
+
+
+def _categorize_error(error_type: str, field: str) -> str:
+    """Map a Pydantic error type + field to one of the four spec categories."""
+    t = error_type.lower()
+    f = field.lower()
+    if "missing" in t or "required" in t:
+        return "missing_required_fields"
+    if any(k in f for k in ("date", "start_date", "end_date", "graduation")):
+        if "order" in t or "after" in t or "before" in t:
+            return "logical_inconsistencies"
+        return "format_violations"
+    if any(k in f for k in ("email", "phone", "gpa")):
+        return "format_violations"
+    if "type" in t or "int" in t or "float" in t or "str" in t:
+        return "type_mismatches"
+    return "format_violations"
 
 
 def run_validation_phase(
@@ -71,6 +90,49 @@ def run_validation_phase(
         print(f"  Saved → {invalid_file}")
 
     print(f"\n  Phase 2 complete: {len(invalid_resumes)} invalid resumes, {len(invalid_jobs)} invalid jobs")
+
+    # ── Step 2.3b: Write validated_data summary ───────────────────────────────
+    valid_resume_ids = [r.raw_data.get("metadata", {}).get("trace_id") for r in resume_results if r.is_valid]
+    valid_job_ids   = [r.raw_data.get("metadata", {}).get("trace_id") for r in job_results if r.is_valid]
+    validated_summary = {
+        "run_label": run_label,
+        "resumes": {"total": len(resumes), "valid": len(valid_resume_ids), "invalid": len(invalid_resumes), "rate": resume_summary.get("valid_rate", 1.0)},
+        "jobs":    {"total": len(jobs),    "valid": len(valid_job_ids),   "invalid": len(invalid_jobs),   "rate": job_summary.get("valid_rate", 1.0)},
+        "valid_resume_trace_ids": valid_resume_ids,
+        "valid_job_trace_ids":    valid_job_ids,
+    }
+    validated_file = validated_dir / f"validated_data_{run_label}.json"
+    validated_file.write_text(json.dumps(validated_summary, indent=2, default=str))
+    files["validated_data"] = str(validated_file)
+    print(f"  Saved → {validated_file}")
+
+    # ── Step 2.3c: Write schema_failure_modes summary ─────────────────────────
+    error_categories: dict[str, dict] = defaultdict(lambda: {"count": 0, "fields": defaultdict(int)})
+    all_invalid = (
+        [("resume", r) for r in invalid_resumes] +
+        [("job", r) for r in invalid_jobs]
+    )
+    for _dtype, result in all_invalid:
+        for err in result.errors:
+            category = _categorize_error(err.error_type, err.field)
+            error_categories[category]["count"] += 1
+            error_categories[category]["fields"][err.field] += 1
+
+    failure_modes = {
+        cat: {
+            "count": v["count"],
+            "top_fields": sorted(v["fields"].items(), key=lambda x: x[1], reverse=True)[:3],
+        }
+        for cat, v in error_categories.items()
+    }
+    schema_failure_file = validated_dir / f"schema_failure_modes_{run_label}.json"
+    schema_failure_file.write_text(json.dumps({
+        "run_label": run_label,
+        "total_invalid_records": len(all_invalid),
+        "failure_modes": failure_modes,
+    }, indent=2, default=str))
+    files["schema_failure_modes"] = str(schema_failure_file)
+    print(f"  Saved → {schema_failure_file}")
 
     # ── Step 2.4: Generate field-level validation heatmaps ───────────────────
     if generate_heatmaps:
