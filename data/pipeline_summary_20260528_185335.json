@@ -85,19 +85,14 @@
     }
   },
   "stage_times_seconds": {
-    "phase2_validation": 2.76,
-    "phase3_labeling": 2.86
+    "phase2_validation": 0.35,
+    "phase3_labeling": 0.94
   },
   "files": {
-    "resume_validation_heatmap": "data/validated/visualizations/resume_field_validation_20260528_185335.png",
-    "job_validation_heatmap": "data/validated/visualizations/job_field_validation_20260528_185335.png",
+    "validated_data": "data/validated/validated_data_20260528_185335.json",
+    "schema_failure_modes": "data/validated/schema_failure_modes_20260528_185335.json",
     "failure_labels": "data/labeled/failure_labels_20260528_185335.jsonl",
-    "failed_pairs": "data/labeled/failed_pairs_20260528_185335.jsonl",
-    "failure_mode_correlation": "data/labeled/visualizations/failure_mode_correlation_20260528_185335.png",
-    "failure_by_template": "data/labeled/visualizations/failure_by_template_20260528_185335.png",
-    "failure_by_fit_level": "data/labeled/visualizations/failure_by_fit_level_20260528_185335.png",
-    "niche_vs_standard": "data/labeled/visualizations/niche_vs_standard_20260528_185335.png",
-    "hallucination_by_seniority": "data/labeled/visualizations/hallucination_by_seniority_20260528_185335.png"
+    "failed_pairs": "data/labeled/failed_pairs_20260528_185335.jsonl"
   },
-  "total_time_seconds": 5.81
+  "total_time_seconds": 1.49
 }

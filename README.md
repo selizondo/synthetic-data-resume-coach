@@ -180,6 +180,8 @@ data/
 │   ├── pairs_<run_label>.jsonl       # one ResumeJobPair per line (5 fit levels per job)
 │   └── resumes_<run_label>.jsonl     # extracted resumes (one per pair)
 ├── validated/
+│   ├── validated_data_<run_label>.json       # validation summary + valid trace IDs
+│   ├── schema_failure_modes_<run_label>.json # errors categorized by type
 │   └── visualizations/
 │       ├── resume_field_validation_<run_label>.png
 │       └── job_field_validation_<run_label>.png

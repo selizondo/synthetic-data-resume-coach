@@ -1,0 +1,6 @@
+{
+  "run_label": "20260528_185335",
+  "total_invalid_records": 0,
+  "failure_modes": {},
+  "_note": "Empty failure_modes means all records passed Pydantic validation. instructor enforces the schema at LLM output time, preventing schema errors regardless of model. See docs/correction_loop_proof.md for correction loop results on synthetically injected failures."
+}
