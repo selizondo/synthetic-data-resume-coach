@@ -1,0 +1,1 @@
+{"date": "20260602_232545", "component": "pipeline", "change": "", "reason": "", "config": {"num_jobs": 5, "resumes_per_job": 5, "model": "gpt-3.5-turbo"}, "before": {}, "after": {"jobs_generated": 5, "pairs_generated": 25, "resume_valid_rate": null, "labeling_pass_rate": 0.36, "correction_success_rate": null, "total_time_seconds": 200.36}, "delta": {}, "keep": true}

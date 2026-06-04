@@ -1,0 +1,3069 @@
+
+============================================================
+RESUME COACH — SYNTHETIC DATA PIPELINE
+============================================================
+  run_label : 20260528_185335
+  num_jobs  : 50
+  resumes   : 5 per job  (250 total pairs)
+  model     : gpt-4o-mini
+  output    : data
+  phases    : 1–4
+
+──────────────────────────────────────────────────
+PHASE 1 — Generation
+──────────────────────────────────────────────────
+18:53:35.194 JobDescriptionGenerator initialized
+18:53:35.196 ResumeGenerator initialized
+  Generating 50 job descriptions (0/50 already done)...
+18:53:35.200 generate_job_description
+18:53:42.173   Job description generated
+  [1/50] Manufacturing Associate @ Precision Manufacturing Solutions... OK
+18:53:42.179 generate_job_description
+18:53:47.846   Job description generated
+  [2/50] Chief Operations Officer (COO) @ Innovative Solutions Inc.... OK
+18:53:47.847 generate_job_description
+18:53:52.783   Job description generated
+  [3/50] Lead Media Strategist @ Visionary Media Group... OK
+18:53:52.787 generate_job_description
+18:54:01.696   Job description generated
+  [4/50] Lead Product Designer @ Creative Solutions Inc.... OK
+18:54:01.699 generate_job_description
+18:54:07.366   Job description generated
+  [5/50] Chief Sales Officer @ InnovateTech Solutions... OK
+18:54:07.369 generate_job_description
+18:54:11.697   Job description generated
+  [6/50] Chief Academic Officer @ Innovative Learning Solutions... OK
+18:54:11.701 generate_job_description
+18:54:17.971   Job description generated
+  [7/50] Mid-Level Consultant @ Insight Strategies... OK
+18:54:17.972 generate_job_description
+18:54:24.815   Job description generated
+  [8/50] Lead Financial Analyst @ FinTech Innovations Inc.... OK
+18:54:24.816 generate_job_description
+18:54:29.654   Job description generated
+  [9/50] Chief Technology Officer (CTO) @ Innovative Engineering Solutions... OK
+18:54:29.658 generate_job_description
+18:54:35.025   Job description generated
+  [10/50] Lead Financial Analyst @ FinTech Innovations Inc.... OK
+18:54:35.026 generate_job_description
+18:54:40.706   Job description generated
+  [11/50] Operations Assistant @ Tech Solutions Co.... OK
+18:54:40.707 generate_job_description
+18:54:45.289   Job description generated
+  [12/50] Lead Manufacturing Engineer @ Precision Manufacturing Solutions... OK
+18:54:45.290 generate_job_description
+18:54:50.039   Job description generated
+  [13/50] Marketing Coordinator @ Innovate Marketing Solutions... OK
+18:54:50.041 generate_job_description
+18:54:55.449   Job description generated
+  [14/50] Senior Software Engineer @ Tech Innovations Inc.... OK
+18:54:55.451 generate_job_description
+18:55:00.674   Job description generated
+  [15/50] Senior Software Engineer @ Tech Innovators Inc.... OK
+18:55:00.676 generate_job_description
+18:55:05.180   Job description generated
+  [16/50] Lead Curriculum Developer @ Innovative Learning Solutions... OK
+18:55:05.182 generate_job_description
+18:55:10.350   Job description generated
+  [17/50] Lead Manufacturing Engineer @ Innovative Manufacturing Solutions... OK
+18:55:10.351 generate_job_description
+18:55:14.869   Job description generated
+  [18/50] Assistant Educator @ Bright Futures Academy... OK
+18:55:14.870 generate_job_description
+18:55:19.742   Job description generated
+  [19/50] Chief Data Scientist @ DataVision Technologies... OK
+18:55:19.743 generate_job_description
+18:55:24.031   Job description generated
+  [20/50] Senior Financial Analyst @ FinTech Innovations Inc.... OK
+18:55:24.033 generate_job_description
+18:55:28.632   Job description generated
+  [21/50] Mid-Level Consultant @ Stratagem Consulting... OK
+18:55:28.633 generate_job_description
+18:55:34.363   Job description generated
+  [22/50] Chief Operations Officer @ Apex Innovations... OK
+18:55:34.364 generate_job_description
+18:55:38.493   Job description generated
+  [23/50] Financial Analyst @ Innovate Finance Solutions... OK
+18:55:38.495 generate_job_description
+18:55:42.315   Job description generated
+  [24/50] Operations Coordinator @ Innovative Solutions Corp... OK
+18:55:42.318 generate_job_description
+18:55:46.528   Job description generated
+  [25/50] Healthcare Administrative Assistant @ HealthFirst Solutions... OK
+18:55:46.529 generate_job_description
+18:55:50.374   Job description generated
+  [26/50] Junior Data Scientist @ Data Insights Corp... OK
+18:55:50.376 generate_job_description
+18:55:55.101   Job description generated
+  [27/50] Lead Manufacturing Engineer @ Precision Dynamics Corp... OK
+18:55:55.103 generate_job_description
+18:56:00.862   Job description generated
+  [28/50] Mid-Level Graphic Designer @ Creative Solutions Inc.... OK
+18:56:00.865 generate_job_description
+18:56:05.482   Job description generated
+  [29/50] Senior UX/UI Designer @ Creative Innovations Inc.... OK
+18:56:05.484 generate_job_description
+18:56:10.485   Job description generated
+  [30/50] Lead Consultant @ Innovate Consulting Group... OK
+18:56:10.487 generate_job_description
+18:56:15.878   Job description generated
+  [31/50] Senior Software Engineer @ Tech Innovations Inc.... OK
+18:56:15.880 generate_job_description
+18:56:20.565   Job description generated
+  [32/50] Lead Manufacturing Engineer @ Precision Manufacturing Solutions... OK
+18:56:20.566 generate_job_description
+18:56:25.457   Job description generated
+  [33/50] Senior Healthcare Analyst @ HealthInnovate Solutions... OK
+18:56:25.458 generate_job_description
+18:56:31.265   Job description generated
+  [34/50] Lead Curriculum Developer @ Innovate Education Solutions... OK
+18:56:31.267 generate_job_description
+18:56:36.480   Job description generated
+  [35/50] Healthcare Data Analyst @ HealthTech Innovations... OK
+18:56:36.482 generate_job_description
+18:56:41.600   Job description generated
+  [36/50] Chief Technology Officer (CTO) @ Innovatech Solutions... OK
+18:56:41.602 generate_job_description
+18:56:45.202   Job description generated
+  [37/50] Financial Analyst @ FinTech Innovations Inc.... OK
+18:56:45.203 generate_job_description
+18:56:49.756   Job description generated
+  [38/50] Senior Curriculum Developer @ Innovative Learning Solutions... OK
+18:56:49.757 generate_job_description
+18:56:53.832   Job description generated
+  [39/50] Sales Associate @ TechWave Solutions... OK
+18:56:53.834 generate_job_description
+18:56:57.952   Job description generated
+  [40/50] Mid-Level Graphic Designer @ Creative Horizons... OK
+18:56:57.953 generate_job_description
+18:57:03.441   Job description generated
+  [41/50] Senior Data Scientist @ Innovate Analytics... OK
+18:57:03.443 generate_job_description
+18:57:08.390   Job description generated
+  [42/50] Executive Consultant @ Apex Strategy Group... OK
+18:57:08.392 generate_job_description
+18:57:13.081   Job description generated
+  [43/50] Lead Manufacturing Engineer @ Innovative Manufacturing Solutions... OK
+18:57:13.082 generate_job_description
+18:57:17.862   Job description generated
+  [44/50] Chief Financial Officer (CFO) @ FinTech Innovations Inc.... OK
+18:57:17.864 generate_job_description
+18:57:23.238   Job description generated
+  [45/50] Lead Software Engineer @ TechInnovate Inc.... OK
+18:57:23.240 generate_job_description
+18:57:29.875   Job description generated
+  [46/50] Senior Healthcare Analyst @ HealthTech Solutions... OK
+18:57:29.877 generate_job_description
+18:57:33.961   Job description generated
+  [47/50] Financial Analyst @ FinTech Innovations... OK
+18:57:33.962 generate_job_description
+18:57:38.225   Job description generated
+  [48/50] Sales Associate @ Tech Innovations Inc.... OK
+18:57:38.229 generate_job_description
+18:57:45.650   Job description generated
+  [49/50] Chief Data Officer @ Data Innovations Inc.... OK
+18:57:45.652 generate_job_description
+18:57:49.893   Job description generated
+  [50/50] Senior Financial Analyst @ Eagle Financial Services... OK
+
+  Generating resumes (250 needed across 50 jobs)...
+18:57:49.923 generate_resume_for_job
+18:57:56.544   Resume generated for job
+18:57:56.550 Generated resume 1/5 for job
+18:57:56.551 generate_resume_for_job
+18:58:03.763   Quality check failed, retrying
+18:58:11.555   Resume generated for job
+18:58:11.557 Generated resume 2/5 for job
+18:58:11.559 generate_resume_for_job
+18:58:20.013   Quality check failed, retrying
+18:58:36.250   Resume generated for job
+18:58:36.252 Generated resume 3/5 for job
+18:58:36.253 generate_resume_for_job
+18:58:42.013   Quality check failed, retrying
+18:58:47.650   Quality check failed, retrying
+18:58:47.651   Resume generated for job
+18:58:47.653 Generated resume 4/5 for job
+18:58:47.654 generate_resume_for_job
+18:58:57.787   Resume generated for job
+18:58:57.789 Generated resume 5/5 for job
+  [1/50] Manufacturing Associate → 5 resumes [excellent, good, partial, poor, mismatch]
+18:58:57.796 generate_resume_for_job
+18:59:14.494   Resume generated for job
+18:59:14.497 Generated resume 1/5 for job
+18:59:14.499 generate_resume_for_job
+18:59:24.212   Quality check failed, retrying
+18:59:37.202   Resume generated for job
+18:59:37.204 Generated resume 2/5 for job
+18:59:37.205 generate_resume_for_job
+18:59:46.804   Resume generated for job
+18:59:46.805 Generated resume 3/5 for job
+18:59:46.806 generate_resume_for_job
+18:59:54.727   Resume generated for job
+18:59:54.729 Generated resume 4/5 for job
+18:59:54.730 generate_resume_for_job
+19:00:02.300   Quality check failed, retrying
+19:00:10.885   Quality check failed, retrying
+19:00:10.886   Resume generated for job
+19:00:10.887 Generated resume 5/5 for job
+  [2/50] Chief Operations Officer (COO) → 5 resumes [excellent, good, partial, poor, mismatch]
+19:00:10.893 generate_resume_for_job
+19:00:18.277   Resume generated for job
+19:00:18.278 Generated resume 1/5 for job
+19:00:18.279 generate_resume_for_job
+19:00:24.962   Resume generated for job
+19:00:24.963 Generated resume 2/5 for job
+19:00:24.964 generate_resume_for_job
+19:00:39.165   Quality check failed, retrying
+19:01:05.193   Resume generated for job
+19:01:05.194 Generated resume 3/5 for job
+19:01:05.194 generate_resume_for_job
+19:01:13.914   Resume generated for job
+19:01:13.916 Generated resume 4/5 for job
+19:01:13.916 generate_resume_for_job
+19:01:24.669   Quality check failed, retrying
+19:01:43.720   Quality check failed, retrying
+19:01:43.721   Resume generated for job
+19:01:43.722 Generated resume 5/5 for job
+  [3/50] Lead Media Strategist → 5 resumes [excellent, good, partial, poor, mismatch]
+19:01:43.725 generate_resume_for_job
+19:01:53.511   Resume generated for job
+19:01:53.512 Generated resume 1/5 for job
+19:01:53.513 generate_resume_for_job
+19:02:09.214   Quality check failed, retrying
+19:02:29.806   Quality check failed, retrying
+19:02:29.808   Resume generated for job
+19:02:29.810 Generated resume 2/5 for job
+19:02:29.811 generate_resume_for_job
+19:02:41.459   Resume generated for job
+19:02:41.460 Generated resume 3/5 for job
+19:02:41.461 generate_resume_for_job
+19:02:51.661   Resume generated for job
+19:02:51.662 Generated resume 4/5 for job
+19:02:51.663 generate_resume_for_job
+19:03:02.242   Quality check failed, retrying
+19:03:13.214   Quality check failed, retrying
+19:03:13.215   Resume generated for job
+19:03:13.216 Generated resume 5/5 for job
+  [4/50] Lead Product Designer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:03:13.219 generate_resume_for_job
+19:03:23.525   Resume generated for job
+19:03:23.527 Generated resume 1/5 for job
+19:03:23.528 generate_resume_for_job
+19:03:38.578   Resume generated for job
+19:03:38.581 Generated resume 2/5 for job
+19:03:38.582 generate_resume_for_job
+19:03:58.137   Resume generated for job
+19:03:58.138 Generated resume 3/5 for job
+19:03:58.139 generate_resume_for_job
+19:04:07.762   Resume generated for job
+19:04:07.764 Generated resume 4/5 for job
+19:04:07.765 generate_resume_for_job
+19:04:31.111   Quality check failed, retrying
+19:04:40.733   Quality check failed, retrying
+19:04:40.734   Resume generated for job
+19:04:40.735 Generated resume 5/5 for job
+  [5/50] Chief Sales Officer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:04:40.739 generate_resume_for_job
+19:04:48.483   Resume generated for job
+19:04:48.486 Generated resume 1/5 for job
+19:04:48.487 generate_resume_for_job
+19:04:54.939   Quality check failed, retrying
+19:05:03.065   Quality check failed, retrying
+19:05:03.067   Resume generated for job
+19:05:03.069 Generated resume 2/5 for job
+19:05:03.070 generate_resume_for_job
+19:05:12.167   Quality check failed, retrying
+19:05:27.944   Quality check failed, retrying
+19:05:27.944   Resume generated for job
+19:05:27.945 Generated resume 3/5 for job
+19:05:27.946 generate_resume_for_job
+19:05:38.084   Resume generated for job
+19:05:38.086 Generated resume 4/5 for job
+19:05:38.087 generate_resume_for_job
+19:05:47.606   Quality check failed, retrying
+19:05:57.128   Quality check failed, retrying
+19:05:57.131   Resume generated for job
+19:05:57.132 Generated resume 5/5 for job
+  [6/50] Chief Academic Officer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:05:57.138 generate_resume_for_job
+19:06:11.873   Resume generated for job
+19:06:11.874 Generated resume 1/5 for job
+19:06:11.875 generate_resume_for_job
+19:06:20.558   Quality check failed, retrying
+19:06:27.819   Quality check failed, retrying
+19:06:27.820   Resume generated for job
+19:06:27.821 Generated resume 2/5 for job
+19:06:27.822 generate_resume_for_job
+19:06:44.742   Resume generated for job
+19:06:44.744 Generated resume 3/5 for job
+19:06:44.744 generate_resume_for_job
+19:06:56.732   Quality check failed, retrying
+19:07:10.735   Quality check failed, retrying
+19:07:10.737   Resume generated for job
+19:07:10.739 Generated resume 4/5 for job
+19:07:10.739 generate_resume_for_job
+19:07:30.250   Resume generated for job
+19:07:30.252 Generated resume 5/5 for job
+  [7/50] Mid-Level Consultant → 5 resumes [excellent, good, partial, poor, mismatch]
+19:07:30.258 generate_resume_for_job
+19:07:40.041   Resume generated for job
+19:07:40.042 Generated resume 1/5 for job
+19:07:40.043 generate_resume_for_job
+19:07:48.639   Resume generated for job
+19:07:48.640 Generated resume 2/5 for job
+19:07:48.641 generate_resume_for_job
+19:08:08.298   Quality check failed, retrying
+19:08:18.384   Quality check failed, retrying
+19:08:18.384   Resume generated for job
+19:08:18.385 Generated resume 3/5 for job
+19:08:18.386 generate_resume_for_job
+19:08:25.812   Resume generated for job
+19:08:25.813 Generated resume 4/5 for job
+19:08:25.813 generate_resume_for_job
+19:08:39.946   Quality check failed, retrying
+19:08:58.969   Quality check failed, retrying
+19:08:58.970   Resume generated for job
+19:08:58.971 Generated resume 5/5 for job
+  [8/50] Lead Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:08:58.974 generate_resume_for_job
+19:09:06.722   Resume generated for job
+19:09:06.723 Generated resume 1/5 for job
+19:09:06.723 generate_resume_for_job
+19:09:15.491   Resume generated for job
+19:09:15.493 Generated resume 2/5 for job
+19:09:15.493 generate_resume_for_job
+19:09:29.884   Resume generated for job
+19:09:29.887 Generated resume 3/5 for job
+19:09:29.888 generate_resume_for_job
+19:09:37.866   Resume generated for job
+19:09:37.867 Generated resume 4/5 for job
+19:09:37.867 generate_resume_for_job
+19:09:59.627   Quality check failed, retrying
+19:10:09.957   Quality check failed, retrying
+19:10:09.958   Resume generated for job
+19:10:09.959 Generated resume 5/5 for job
+  [9/50] Chief Technology Officer (CTO) → 5 resumes [excellent, good, partial, poor, mismatch]
+19:10:09.966 generate_resume_for_job
+19:10:19.172   Resume generated for job
+19:10:19.173 Generated resume 1/5 for job
+19:10:19.174 generate_resume_for_job
+19:10:28.407   Resume generated for job
+19:10:28.409 Generated resume 2/5 for job
+19:10:28.410 generate_resume_for_job
+19:10:39.649   Quality check failed, retrying
+19:10:57.714   Quality check failed, retrying
+19:10:57.715   Resume generated for job
+19:10:57.716 Generated resume 3/5 for job
+19:10:57.717 generate_resume_for_job
+19:11:08.015   Resume generated for job
+19:11:08.016 Generated resume 4/5 for job
+19:11:08.017 generate_resume_for_job
+19:11:18.549   Quality check failed, retrying
+19:11:29.644   Quality check failed, retrying
+19:11:29.645   Resume generated for job
+19:11:29.646 Generated resume 5/5 for job
+  [10/50] Lead Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:11:29.650 generate_resume_for_job
+19:11:49.992   Quality check failed, retrying
+19:12:00.338   Quality check failed, retrying
+19:12:00.339   Resume generated for job
+19:12:00.340 Generated resume 1/5 for job
+19:12:00.341 generate_resume_for_job
+19:12:18.699   Quality check failed, retrying
+19:12:28.071   Resume generated for job
+19:12:28.072 Generated resume 2/5 for job
+19:12:28.072 generate_resume_for_job
+19:12:39.503   Quality check failed, retrying
+19:12:49.721   Resume generated for job
+19:12:49.722 Generated resume 3/5 for job
+19:12:49.723 generate_resume_for_job
+19:13:01.071   Resume generated for job
+19:13:01.073 Generated resume 4/5 for job
+19:13:01.074 generate_resume_for_job
+19:13:22.289   Resume generated for job
+19:13:22.291 Generated resume 5/5 for job
+  [11/50] Operations Assistant → 5 resumes [excellent, good, partial, poor, mismatch]
+19:13:22.296 generate_resume_for_job
+19:13:31.778   Resume generated for job
+19:13:31.780 Generated resume 1/5 for job
+19:13:31.781 generate_resume_for_job
+19:13:41.406   Resume generated for job
+19:13:41.407 Generated resume 2/5 for job
+19:13:41.408 generate_resume_for_job
+19:13:53.621   Resume generated for job
+19:13:53.623 Generated resume 3/5 for job
+19:13:53.624 generate_resume_for_job
+19:14:17.026   Quality check failed, retrying
+19:14:28.105   Resume generated for job
+19:14:28.107 Generated resume 4/5 for job
+19:14:28.109 generate_resume_for_job
+19:14:44.298   Quality check failed, retrying
+19:14:52.526   Quality check failed, retrying
+19:14:52.527   Resume generated for job
+19:14:52.528 Generated resume 5/5 for job
+  [12/50] Lead Manufacturing Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:14:52.533 generate_resume_for_job
+19:15:04.877   Resume generated for job
+19:15:04.878 Generated resume 1/5 for job
+19:15:04.880 generate_resume_for_job
+19:15:15.996   Quality check failed, retrying
+19:15:27.408   Resume generated for job
+19:15:27.409 Generated resume 2/5 for job
+19:15:27.410 generate_resume_for_job
+19:15:39.597   Quality check failed, retrying
+19:16:02.938   Quality check failed, retrying
+19:16:02.939   Resume generated for job
+19:16:02.940 Generated resume 3/5 for job
+19:16:02.940 generate_resume_for_job
+19:16:13.133   Resume generated for job
+19:16:13.135 Generated resume 4/5 for job
+19:16:13.136 generate_resume_for_job
+19:16:25.676   Resume generated for job
+19:16:25.680 Generated resume 5/5 for job
+  [13/50] Marketing Coordinator → 5 resumes [excellent, good, partial, poor, mismatch]
+19:16:25.686 generate_resume_for_job
+19:16:35.733   Resume generated for job
+19:16:35.734 Generated resume 1/5 for job
+19:16:35.736 generate_resume_for_job
+19:16:44.723   Resume generated for job
+19:16:44.724 Generated resume 2/5 for job
+19:16:44.725 generate_resume_for_job
+19:17:07.320   Resume generated for job
+19:17:07.322 Generated resume 3/5 for job
+19:17:07.322 generate_resume_for_job
+19:17:14.549   Resume generated for job
+19:17:14.550 Generated resume 4/5 for job
+19:17:14.551 generate_resume_for_job
+19:17:22.503   Quality check failed, retrying
+19:17:30.799   Quality check failed, retrying
+19:17:30.799   Resume generated for job
+19:17:30.800 Generated resume 5/5 for job
+  [14/50] Senior Software Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:17:30.803 generate_resume_for_job
+19:17:41.633   Quality check failed, retrying
+19:17:52.301   Resume generated for job
+19:17:52.302 Generated resume 1/5 for job
+19:17:52.302 generate_resume_for_job
+19:18:11.421   Resume generated for job
+19:18:11.423 Generated resume 2/5 for job
+19:18:11.424 generate_resume_for_job
+19:18:23.879   Resume generated for job
+19:18:23.880 Generated resume 3/5 for job
+19:18:23.880 generate_resume_for_job
+19:18:32.070   Resume generated for job
+19:18:32.072 Generated resume 4/5 for job
+19:18:32.074 generate_resume_for_job
+19:18:40.540   Quality check failed, retrying
+19:18:47.280   Quality check failed, retrying
+19:18:47.281   Resume generated for job
+19:18:47.282 Generated resume 5/5 for job
+  [15/50] Senior Software Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:18:47.285 generate_resume_for_job
+19:18:57.053   Resume generated for job
+19:18:57.054 Generated resume 1/5 for job
+19:18:57.055 generate_resume_for_job
+19:19:15.254   Quality check failed, retrying
+19:19:23.243   Quality check failed, retrying
+19:19:23.244   Resume generated for job
+19:19:23.246 Generated resume 2/5 for job
+19:19:23.247 generate_resume_for_job
+19:19:52.314   Resume generated for job
+19:19:52.316 Generated resume 3/5 for job
+19:19:52.317 generate_resume_for_job
+19:20:04.098   Resume generated for job
+19:20:04.100 Generated resume 4/5 for job
+19:20:04.101 generate_resume_for_job
+19:20:16.959   Quality check failed, retrying
+19:20:29.908   Quality check failed, retrying
+19:20:29.910   Resume generated for job
+19:20:29.911 Generated resume 5/5 for job
+  [16/50] Lead Curriculum Developer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:20:29.917 generate_resume_for_job
+19:20:46.015   Resume generated for job
+19:20:46.017 Generated resume 1/5 for job
+19:20:46.018 generate_resume_for_job
+19:20:57.862   Resume generated for job
+19:20:57.864 Generated resume 2/5 for job
+19:20:57.865 generate_resume_for_job
+19:21:14.268   Resume generated for job
+19:21:14.270 Generated resume 3/5 for job
+19:21:14.271 generate_resume_for_job
+19:21:24.590   Resume generated for job
+19:21:24.593 Generated resume 4/5 for job
+19:21:24.594 generate_resume_for_job
+19:21:44.250   Quality check failed, retrying
+19:22:05.139   Quality check failed, retrying
+19:22:05.140   Resume generated for job
+19:22:05.141 Generated resume 5/5 for job
+  [17/50] Lead Manufacturing Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:22:05.147 generate_resume_for_job
+19:22:16.200   Resume generated for job
+19:22:16.202 Generated resume 1/5 for job
+19:22:16.203 generate_resume_for_job
+19:22:28.487   Quality check failed, retrying
+19:22:40.268   Quality check failed, retrying
+19:22:40.269   Resume generated for job
+19:22:40.270 Generated resume 2/5 for job
+19:22:40.271 generate_resume_for_job
+19:22:59.862   Resume generated for job
+19:22:59.864 Generated resume 3/5 for job
+19:22:59.866 generate_resume_for_job
+19:23:07.814   Quality check failed, retrying
+19:23:14.157   Quality check failed, retrying
+19:23:14.158   Resume generated for job
+19:23:14.160 Generated resume 4/5 for job
+19:23:14.161 generate_resume_for_job
+19:23:25.629   Resume generated for job
+19:23:25.631 Generated resume 5/5 for job
+  [18/50] Assistant Educator → 5 resumes [excellent, good, partial, poor, mismatch]
+19:23:25.638 generate_resume_for_job
+19:23:34.846   Resume generated for job
+19:23:34.848 Generated resume 1/5 for job
+19:23:34.849 generate_resume_for_job
+19:23:45.039   Quality check failed, retrying
+19:23:53.770   Quality check failed, retrying
+19:23:53.770   Resume generated for job
+19:23:53.771 Generated resume 2/5 for job
+19:23:53.771 generate_resume_for_job
+19:24:05.876   Resume generated for job
+19:24:05.879 Generated resume 3/5 for job
+19:24:05.880 generate_resume_for_job
+19:24:16.935   Resume generated for job
+19:24:16.937 Generated resume 4/5 for job
+19:24:16.938 generate_resume_for_job
+19:24:33.866   Quality check failed, retrying
+19:24:47.652   Quality check failed, retrying
+19:24:47.653   Resume generated for job
+19:24:47.655 Generated resume 5/5 for job
+  [19/50] Chief Data Scientist → 5 resumes [excellent, good, partial, poor, mismatch]
+19:24:47.661 generate_resume_for_job
+19:25:06.830   Resume generated for job
+19:25:06.833 Generated resume 1/5 for job
+19:25:06.834 generate_resume_for_job
+19:25:15.297   Quality check failed, retrying
+19:25:24.517   Quality check failed, retrying
+19:25:24.519   Resume generated for job
+19:25:24.520 Generated resume 2/5 for job
+19:25:24.521 generate_resume_for_job
+19:25:50.248   Quality check failed, retrying
+19:26:16.432   Resume generated for job
+19:26:16.434 Generated resume 3/5 for job
+19:26:16.435 generate_resume_for_job
+19:26:23.195   Resume generated for job
+19:26:23.198 Generated resume 4/5 for job
+19:26:23.199 generate_resume_for_job
+19:26:31.184   Quality check failed, retrying
+19:26:38.958   Quality check failed, retrying
+19:26:38.959   Resume generated for job
+19:26:38.961 Generated resume 5/5 for job
+  [20/50] Senior Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:26:38.967 generate_resume_for_job
+19:26:47.769   Resume generated for job
+19:26:47.772 Generated resume 1/5 for job
+19:26:47.773 generate_resume_for_job
+19:26:53.784   Quality check failed, retrying
+19:27:06.200   Resume generated for job
+19:27:06.201 Generated resume 2/5 for job
+19:27:06.201 generate_resume_for_job
+19:27:16.037   Quality check failed, retrying
+19:27:24.874   Quality check failed, retrying
+19:27:24.877   Resume generated for job
+19:27:24.878 Generated resume 3/5 for job
+19:27:24.879 generate_resume_for_job
+19:27:36.309   Resume generated for job
+19:27:36.310 Generated resume 4/5 for job
+19:27:36.311 generate_resume_for_job
+19:27:49.524   Resume generated for job
+19:27:49.526 Generated resume 5/5 for job
+  [21/50] Mid-Level Consultant → 5 resumes [excellent, good, partial, poor, mismatch]
+19:27:49.532 generate_resume_for_job
+19:28:04.883   Resume generated for job
+19:28:04.886 Generated resume 1/5 for job
+19:28:04.887 generate_resume_for_job
+19:28:13.793   Quality check failed, retrying
+19:28:22.393   Quality check failed, retrying
+19:28:22.394   Resume generated for job
+19:28:22.395 Generated resume 2/5 for job
+19:28:22.396 generate_resume_for_job
+19:28:34.129   Resume generated for job
+19:28:34.130 Generated resume 3/5 for job
+19:28:34.131 generate_resume_for_job
+19:28:51.531   Resume generated for job
+19:28:51.532 Generated resume 4/5 for job
+19:28:51.532 generate_resume_for_job
+19:29:13.083   Quality check failed, retrying
+19:29:24.394   Quality check failed, retrying
+19:29:24.396   Resume generated for job
+19:29:24.398 Generated resume 5/5 for job
+  [22/50] Chief Operations Officer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:29:24.403 generate_resume_for_job
+19:29:33.817   Resume generated for job
+19:29:33.819 Generated resume 1/5 for job
+19:29:33.821 generate_resume_for_job
+19:29:43.631   Quality check failed, retrying
+19:29:52.097   Quality check failed, retrying
+19:29:52.098   Resume generated for job
+19:29:52.100 Generated resume 2/5 for job
+19:29:52.101 generate_resume_for_job
+19:30:02.543   Quality check failed, retrying
+19:30:24.081   Quality check failed, retrying
+19:30:24.087   Resume generated for job
+19:30:24.089 Generated resume 3/5 for job
+19:30:24.090 generate_resume_for_job
+19:30:31.542   Quality check failed, retrying
+19:30:38.987   Quality check failed, retrying
+19:30:38.988   Resume generated for job
+19:30:38.989 Generated resume 4/5 for job
+19:30:38.990 generate_resume_for_job
+19:30:54.378   Resume generated for job
+19:30:54.380 Generated resume 5/5 for job
+  [23/50] Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:30:54.386 generate_resume_for_job
+19:31:04.571   Resume generated for job
+19:31:04.572 Generated resume 1/5 for job
+19:31:04.573 generate_resume_for_job
+19:31:13.477   Quality check failed, retrying
+19:31:23.037   Resume generated for job
+19:31:23.038 Generated resume 2/5 for job
+19:31:23.039 generate_resume_for_job
+19:31:33.778   Quality check failed, retrying
+19:31:44.326   Quality check failed, retrying
+19:31:44.327   Resume generated for job
+19:31:44.329 Generated resume 3/5 for job
+19:31:44.330 generate_resume_for_job
+19:31:53.108   Quality check failed, retrying
+19:32:01.750   Quality check failed, retrying
+19:32:01.751   Resume generated for job
+19:32:01.753 Generated resume 4/5 for job
+19:32:01.754 generate_resume_for_job
+19:32:14.147   Resume generated for job
+19:32:14.149 Generated resume 5/5 for job
+  [24/50] Operations Coordinator → 5 resumes [excellent, good, partial, poor, mismatch]
+19:32:14.157 generate_resume_for_job
+19:32:25.052   Resume generated for job
+19:32:25.055 Generated resume 1/5 for job
+19:32:25.055 generate_resume_for_job
+19:32:36.731   Quality check failed, retrying
+19:32:47.479   Quality check failed, retrying
+19:32:47.481   Resume generated for job
+19:32:47.483 Generated resume 2/5 for job
+19:32:47.484 generate_resume_for_job
+19:33:01.308   Resume generated for job
+19:33:01.309 Generated resume 3/5 for job
+19:33:01.310 generate_resume_for_job
+19:33:09.545   Quality check failed, retrying
+19:33:28.337   Resume generated for job
+19:33:28.339 Generated resume 4/5 for job
+19:33:28.339 generate_resume_for_job
+19:33:42.244   Resume generated for job
+19:33:42.244 Generated resume 5/5 for job
+  [25/50] Healthcare Administrative Assistant → 5 resumes [excellent, good, partial, poor, mismatch]
+19:33:42.247 generate_resume_for_job
+19:33:54.153   Resume generated for job
+19:33:54.154 Generated resume 1/5 for job
+19:33:54.155 generate_resume_for_job
+19:34:16.850   Resume generated for job
+19:34:16.852 Generated resume 2/5 for job
+19:34:16.853 generate_resume_for_job
+19:34:26.861   Quality check failed, retrying
+19:34:49.910   Quality check failed, retrying
+19:34:49.912   Resume generated for job
+19:34:49.914 Generated resume 3/5 for job
+19:34:49.915 generate_resume_for_job
+19:35:10.671   Quality check failed, retrying
+19:35:19.240   Quality check failed, retrying
+19:35:19.241   Resume generated for job
+19:35:19.242 Generated resume 4/5 for job
+19:35:19.242 generate_resume_for_job
+19:35:41.956   Resume generated for job
+19:35:41.958 Generated resume 5/5 for job
+  [26/50] Junior Data Scientist → 5 resumes [excellent, good, partial, poor, mismatch]
+19:35:41.964 generate_resume_for_job
+19:35:51.197   Resume generated for job
+19:35:51.199 Generated resume 1/5 for job
+19:35:51.200 generate_resume_for_job
+19:35:59.179   Resume generated for job
+19:35:59.182 Generated resume 2/5 for job
+19:35:59.183 generate_resume_for_job
+19:36:14.458   Resume generated for job
+19:36:14.460 Generated resume 3/5 for job
+19:36:14.461 generate_resume_for_job
+19:36:25.565   Resume generated for job
+19:36:25.568 Generated resume 4/5 for job
+19:36:25.569 generate_resume_for_job
+19:36:36.969   Quality check failed, retrying
+19:36:59.393   Quality check failed, retrying
+19:36:59.394   Resume generated for job
+19:36:59.396 Generated resume 5/5 for job
+  [27/50] Lead Manufacturing Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:36:59.401 generate_resume_for_job
+19:37:15.676   Resume generated for job
+19:37:15.677 Generated resume 1/5 for job
+19:37:15.678 generate_resume_for_job
+19:37:33.680   Quality check failed, retrying
+19:37:40.561   Quality check failed, retrying
+19:37:40.563   Resume generated for job
+19:37:40.564 Generated resume 2/5 for job
+19:37:40.565 generate_resume_for_job
+19:37:50.414   Quality check failed, retrying
+19:38:06.981   Quality check failed, retrying
+19:38:06.983   Resume generated for job
+19:38:06.985 Generated resume 3/5 for job
+19:38:06.986 generate_resume_for_job
+19:38:21.417   Quality check failed, retrying
+19:38:33.707   Quality check failed, retrying
+19:38:33.708   Resume generated for job
+19:38:33.709 Generated resume 4/5 for job
+19:38:33.710 generate_resume_for_job
+19:38:43.232   Resume generated for job
+19:38:43.235 Generated resume 5/5 for job
+  [28/50] Mid-Level Graphic Designer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:38:43.240 generate_resume_for_job
+19:38:50.909   Resume generated for job
+19:38:50.911 Generated resume 1/5 for job
+19:38:50.913 generate_resume_for_job
+19:38:57.784   Quality check failed, retrying
+19:39:05.654   Resume generated for job
+19:39:05.656 Generated resume 2/5 for job
+19:39:05.657 generate_resume_for_job
+19:39:15.488   Quality check failed, retrying
+19:39:28.390   Quality check failed, retrying
+19:39:28.391   Resume generated for job
+19:39:28.392 Generated resume 3/5 for job
+19:39:28.393 generate_resume_for_job
+19:39:36.068   Resume generated for job
+19:39:36.070 Generated resume 4/5 for job
+19:39:36.071 generate_resume_for_job
+19:39:53.848   Resume generated for job
+19:39:53.849 Generated resume 5/5 for job
+  [29/50] Senior UX/UI Designer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:39:53.853 generate_resume_for_job
+19:40:03.394   Resume generated for job
+19:40:03.396 Generated resume 1/5 for job
+19:40:03.398 generate_resume_for_job
+19:40:12.075   Quality check failed, retrying
+19:40:20.351   Quality check failed, retrying
+19:40:20.353   Resume generated for job
+19:40:20.357 Generated resume 2/5 for job
+19:40:20.358 generate_resume_for_job
+19:40:34.447   Resume generated for job
+19:40:34.452 Generated resume 3/5 for job
+19:40:34.453 generate_resume_for_job
+19:40:59.936   Resume generated for job
+19:40:59.937 Generated resume 4/5 for job
+19:40:59.938 generate_resume_for_job
+19:41:34.654   Quality check failed, retrying
+19:41:59.334   Quality check failed, retrying
+19:41:59.335   Resume generated for job
+19:41:59.336 Generated resume 5/5 for job
+  [30/50] Lead Consultant → 5 resumes [excellent, good, partial, poor, mismatch]
+19:41:59.340 generate_resume_for_job
+19:42:11.124   Resume generated for job
+19:42:11.125 Generated resume 1/5 for job
+19:42:11.126 generate_resume_for_job
+19:42:31.861   Resume generated for job
+19:42:31.863 Generated resume 2/5 for job
+19:42:31.864 generate_resume_for_job
+19:42:52.929   Resume generated for job
+19:42:52.931 Generated resume 3/5 for job
+19:42:52.931 generate_resume_for_job
+19:43:08.895   Resume generated for job
+19:43:08.897 Generated resume 4/5 for job
+19:43:08.897 generate_resume_for_job
+19:43:18.488   Resume generated for job
+19:43:18.489 Generated resume 5/5 for job
+  [31/50] Senior Software Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:43:18.492 generate_resume_for_job
+19:43:39.522   Resume generated for job
+19:43:39.525 Generated resume 1/5 for job
+19:43:39.526 generate_resume_for_job
+19:43:49.515   Resume generated for job
+19:43:49.516 Generated resume 2/5 for job
+19:43:49.516 generate_resume_for_job
+19:44:03.034   Quality check failed, retrying
+19:44:15.440   Resume generated for job
+19:44:15.442 Generated resume 3/5 for job
+19:44:15.443 generate_resume_for_job
+19:44:27.394   Resume generated for job
+19:44:27.395 Generated resume 4/5 for job
+19:44:27.395 generate_resume_for_job
+19:44:39.592   Quality check failed, retrying
+19:44:49.609   Quality check failed, retrying
+19:44:49.611   Resume generated for job
+19:44:49.612 Generated resume 5/5 for job
+  [32/50] Lead Manufacturing Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:44:49.618 generate_resume_for_job
+19:44:59.258   Resume generated for job
+19:44:59.260 Generated resume 1/5 for job
+19:44:59.261 generate_resume_for_job
+19:45:09.492   Resume generated for job
+19:45:09.494 Generated resume 2/5 for job
+19:45:09.495 generate_resume_for_job
+19:45:21.169   Quality check failed, retrying
+19:45:39.492   Quality check failed, retrying
+19:45:39.493   Resume generated for job
+19:45:39.494 Generated resume 3/5 for job
+19:45:39.495 generate_resume_for_job
+19:45:48.083   Resume generated for job
+19:45:48.085 Generated resume 4/5 for job
+19:45:48.086 generate_resume_for_job
+19:45:57.294   Quality check failed, retrying
+19:46:10.582   Quality check failed, retrying
+19:46:10.583   Resume generated for job
+19:46:10.584 Generated resume 5/5 for job
+  [33/50] Senior Healthcare Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:46:10.589 generate_resume_for_job
+19:46:29.810   Resume generated for job
+19:46:29.812 Generated resume 1/5 for job
+19:46:29.814 generate_resume_for_job
+19:46:39.788   Resume generated for job
+19:46:39.791 Generated resume 2/5 for job
+19:46:39.792 generate_resume_for_job
+19:46:56.173   Resume generated for job
+19:46:56.175 Generated resume 3/5 for job
+19:46:56.175 generate_resume_for_job
+19:47:07.943   Resume generated for job
+19:47:07.945 Generated resume 4/5 for job
+19:47:07.945 generate_resume_for_job
+19:47:28.836   Quality check failed, retrying
+19:47:42.355   Quality check failed, retrying
+19:47:42.356   Resume generated for job
+19:47:42.359 Generated resume 5/5 for job
+  [34/50] Lead Curriculum Developer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:47:42.364 generate_resume_for_job
+19:47:55.344   Quality check failed, retrying
+19:48:06.728   Quality check failed, retrying
+19:48:06.730   Resume generated for job
+19:48:06.732 Generated resume 1/5 for job
+19:48:06.733 generate_resume_for_job
+19:48:18.297   Quality check failed, retrying
+19:48:43.038   Quality check failed, retrying
+19:48:43.040   Resume generated for job
+19:48:43.042 Generated resume 2/5 for job
+19:48:43.043 generate_resume_for_job
+19:48:56.084   Quality check failed, retrying
+19:49:08.064   Quality check failed, retrying
+19:49:08.066   Resume generated for job
+19:49:08.068 Generated resume 3/5 for job
+19:49:08.069 generate_resume_for_job
+19:49:16.331   Quality check failed, retrying
+19:49:25.060   Quality check failed, retrying
+19:49:25.061   Resume generated for job
+19:49:25.061 Generated resume 4/5 for job
+19:49:25.062 generate_resume_for_job
+19:49:41.712   Resume generated for job
+19:49:41.713 Generated resume 5/5 for job
+  [35/50] Healthcare Data Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:49:41.716 generate_resume_for_job
+19:49:53.630   Resume generated for job
+19:49:53.631 Generated resume 1/5 for job
+19:49:53.632 generate_resume_for_job
+19:50:05.208   Resume generated for job
+19:50:05.209 Generated resume 2/5 for job
+19:50:05.210 generate_resume_for_job
+19:50:13.459   Resume generated for job
+19:50:13.461 Generated resume 3/5 for job
+19:50:13.461 generate_resume_for_job
+19:50:21.923   Resume generated for job
+19:50:21.924 Generated resume 4/5 for job
+19:50:21.925 generate_resume_for_job
+19:50:31.785   Resume generated for job
+19:50:31.786 Generated resume 5/5 for job
+  [36/50] Chief Technology Officer (CTO) → 5 resumes [excellent, good, partial, poor, mismatch]
+19:50:31.792 generate_resume_for_job
+19:50:38.693   Quality check failed, retrying
+19:50:53.196   Resume generated for job
+19:50:53.198 Generated resume 1/5 for job
+19:50:53.200 generate_resume_for_job
+19:51:00.496   Quality check failed, retrying
+19:51:07.631   Quality check failed, retrying
+19:51:07.632   Resume generated for job
+19:51:07.634 Generated resume 2/5 for job
+19:51:07.635 generate_resume_for_job
+19:51:13.705   Resume generated for job
+19:51:13.706 Generated resume 3/5 for job
+19:51:13.707 generate_resume_for_job
+19:51:29.119   Resume generated for job
+19:51:29.120 Generated resume 4/5 for job
+19:51:29.121 generate_resume_for_job
+19:51:42.059   Resume generated for job
+19:51:42.061 Generated resume 5/5 for job
+  [37/50] Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+19:51:42.068 generate_resume_for_job
+19:51:50.095   Resume generated for job
+19:51:50.098 Generated resume 1/5 for job
+19:51:50.099 generate_resume_for_job
+19:51:57.952   Quality check failed, retrying
+19:52:06.175   Quality check failed, retrying
+19:52:06.177   Resume generated for job
+19:52:06.179 Generated resume 2/5 for job
+19:52:06.180 generate_resume_for_job
+19:52:16.386   Quality check failed, retrying
+19:52:25.597   Quality check failed, retrying
+19:52:25.599   Resume generated for job
+19:52:25.600 Generated resume 3/5 for job
+19:52:25.601 generate_resume_for_job
+19:52:32.049   Resume generated for job
+19:52:32.051 Generated resume 4/5 for job
+19:52:32.052 generate_resume_for_job
+19:52:40.137   Quality check failed, retrying
+19:52:55.869   Quality check failed, retrying
+19:52:55.871   Resume generated for job
+19:52:55.873 Generated resume 5/5 for job
+  [38/50] Senior Curriculum Developer → 5 resumes [excellent, good, partial, poor, mismatch]
+19:52:55.879 generate_resume_for_job
+19:53:04.927   Resume generated for job
+19:53:04.930 Generated resume 1/5 for job
+19:53:04.931 generate_resume_for_job
+19:53:21.444   Quality check failed, retrying
+19:53:33.510   Resume generated for job
+19:53:33.512 Generated resume 2/5 for job
+19:53:33.513 generate_resume_for_job
+19:53:51.924   Quality check failed, retrying
+19:54:02.987   Quality check failed, retrying
+19:54:02.988   Resume generated for job
+19:54:02.990 Generated resume 3/5 for job
+19:54:02.991 generate_resume_for_job
+19:54:09.437   Quality check failed, retrying
+19:54:20.898   Quality check failed, retrying
+19:54:20.900   Resume generated for job
+19:54:20.901 Generated resume 4/5 for job
+19:54:20.902 generate_resume_for_job
+19:54:31.554   Resume generated for job
+19:54:31.557 Generated resume 5/5 for job
+  [39/50] Sales Associate → 5 resumes [excellent, good, partial, poor, mismatch]
+19:54:31.563 generate_resume_for_job
+19:54:39.839   Quality check failed, retrying
+19:54:48.145   Resume generated for job
+19:54:48.147 Generated resume 1/5 for job
+19:54:48.148 generate_resume_for_job
+19:55:03.100   Quality check failed, retrying
+19:55:10.895   Quality check failed, retrying
+19:55:10.896   Resume generated for job
+19:55:10.897 Generated resume 2/5 for job
+19:55:10.897 generate_resume_for_job
+19:55:16.811   Quality check failed, retrying
+19:55:22.815   Quality check failed, retrying
+19:55:22.816   Resume generated for job
+19:55:22.817 Generated resume 3/5 for job
+19:55:22.818 generate_resume_for_job
+20:15:50.120   Quality check failed, retrying
+20:17:04.539   Resume generated for job
+20:17:04.541 Generated resume 4/5 for job
+20:17:04.542 generate_resume_for_job
+20:17:12.961   Resume generated for job
+20:17:12.963 Generated resume 5/5 for job
+  [40/50] Mid-Level Graphic Designer → 5 resumes [excellent, good, partial, poor, mismatch]
+20:17:12.991 generate_resume_for_job
+20:17:21.657   Resume generated for job
+20:17:21.658 Generated resume 1/5 for job
+20:17:21.659 generate_resume_for_job
+20:17:29.387   Quality check failed, retrying
+20:17:40.034   Quality check failed, retrying
+20:17:40.035   Resume generated for job
+20:17:40.036 Generated resume 2/5 for job
+20:17:40.037 generate_resume_for_job
+20:17:57.158   Resume generated for job
+20:17:57.159 Generated resume 3/5 for job
+20:17:57.160 generate_resume_for_job
+20:18:10.404   Resume generated for job
+20:18:10.405 Generated resume 4/5 for job
+20:18:10.406 generate_resume_for_job
+20:18:25.519   Quality check failed, retrying
+20:18:34.350   Resume generated for job
+20:18:34.350 Generated resume 5/5 for job
+  [41/50] Senior Data Scientist → 5 resumes [excellent, good, partial, poor, mismatch]
+20:18:34.354 generate_resume_for_job
+20:18:47.716   Resume generated for job
+20:18:47.717 Generated resume 1/5 for job
+20:18:47.718 generate_resume_for_job
+20:18:56.074   Quality check failed, retrying
+20:19:11.027   Resume generated for job
+20:19:11.028 Generated resume 2/5 for job
+20:19:11.029 generate_resume_for_job
+20:19:31.608   Resume generated for job
+20:19:31.609 Generated resume 3/5 for job
+20:19:31.610 generate_resume_for_job
+20:19:40.852   Resume generated for job
+20:19:40.853 Generated resume 4/5 for job
+20:19:40.854 generate_resume_for_job
+20:19:49.940   Quality check failed, retrying
+20:20:10.836   Quality check failed, retrying
+20:20:10.837   Resume generated for job
+20:20:10.837 Generated resume 5/5 for job
+  [42/50] Executive Consultant → 5 resumes [excellent, good, partial, poor, mismatch]
+20:20:10.840 generate_resume_for_job
+20:20:18.409   Resume generated for job
+20:20:18.410 Generated resume 1/5 for job
+20:20:18.410 generate_resume_for_job
+20:20:26.499   Quality check failed, retrying
+20:20:33.050   Resume generated for job
+20:20:33.051 Generated resume 2/5 for job
+20:20:33.051 generate_resume_for_job
+20:20:44.831   Quality check failed, retrying
+20:20:55.631   Resume generated for job
+20:20:55.632 Generated resume 3/5 for job
+20:20:55.633 generate_resume_for_job
+20:21:09.259   Resume generated for job
+20:21:09.260 Generated resume 4/5 for job
+20:21:09.260 generate_resume_for_job
+20:21:23.544   Quality check failed, retrying
+20:21:30.955   Quality check failed, retrying
+20:21:30.956   Resume generated for job
+20:21:30.956 Generated resume 5/5 for job
+  [43/50] Lead Manufacturing Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+20:21:30.959 generate_resume_for_job
+20:21:38.591   Quality check failed, retrying
+20:21:44.837   Resume generated for job
+20:21:44.838 Generated resume 1/5 for job
+20:21:44.839 generate_resume_for_job
+20:21:51.142   Resume generated for job
+20:21:51.143 Generated resume 2/5 for job
+20:21:51.144 generate_resume_for_job
+20:21:59.990   Resume generated for job
+20:21:59.991 Generated resume 3/5 for job
+20:21:59.991 generate_resume_for_job
+20:22:08.491   Resume generated for job
+20:22:08.492 Generated resume 4/5 for job
+20:22:08.492 generate_resume_for_job
+20:22:16.170   Quality check failed, retrying
+20:22:23.340   Quality check failed, retrying
+20:22:23.341   Resume generated for job
+20:22:23.342 Generated resume 5/5 for job
+  [44/50] Chief Financial Officer (CFO) → 5 resumes [excellent, good, partial, poor, mismatch]
+20:22:23.345 generate_resume_for_job
+20:22:29.895   Resume generated for job
+20:22:29.896 Generated resume 1/5 for job
+20:22:29.897 generate_resume_for_job
+20:22:35.732   Quality check failed, retrying
+20:22:44.233   Quality check failed, retrying
+20:22:44.234   Resume generated for job
+20:22:44.235 Generated resume 2/5 for job
+20:22:44.235 generate_resume_for_job
+20:22:54.881   Quality check failed, retrying
+20:23:07.168   Quality check failed, retrying
+20:23:07.169   Resume generated for job
+20:23:07.170 Generated resume 3/5 for job
+20:23:07.170 generate_resume_for_job
+20:23:17.509   Resume generated for job
+20:23:17.510 Generated resume 4/5 for job
+20:23:17.510 generate_resume_for_job
+20:23:26.011   Quality check failed, retrying
+20:23:33.721   Quality check failed, retrying
+20:23:33.722   Resume generated for job
+20:23:33.722 Generated resume 5/5 for job
+  [45/50] Lead Software Engineer → 5 resumes [excellent, good, partial, poor, mismatch]
+20:23:33.725 generate_resume_for_job
+20:23:40.961   Quality check failed, retrying
+20:23:55.097   Quality check failed, retrying
+20:23:55.098   Resume generated for job
+20:23:55.100 Generated resume 1/5 for job
+20:23:55.100 generate_resume_for_job
+20:24:03.028   Quality check failed, retrying
+20:24:17.845   Quality check failed, retrying
+20:24:17.846   Resume generated for job
+20:24:17.846 Generated resume 2/5 for job
+20:24:17.847 generate_resume_for_job
+20:24:26.230   Quality check failed, retrying
+20:24:34.938   Quality check failed, retrying
+20:24:34.939   Resume generated for job
+20:24:34.940 Generated resume 3/5 for job
+20:24:34.941 generate_resume_for_job
+20:24:41.353   Resume generated for job
+20:24:41.354 Generated resume 4/5 for job
+20:24:41.355 generate_resume_for_job
+20:24:52.590   Quality check failed, retrying
+20:24:59.799   Quality check failed, retrying
+20:24:59.800   Resume generated for job
+20:24:59.801 Generated resume 5/5 for job
+  [46/50] Senior Healthcare Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+20:24:59.805 generate_resume_for_job
+20:25:07.732   Resume generated for job
+20:25:07.733 Generated resume 1/5 for job
+20:25:07.734 generate_resume_for_job
+20:25:15.663   Quality check failed, retrying
+20:25:22.614   Quality check failed, retrying
+20:25:22.615   Resume generated for job
+20:25:22.616 Generated resume 2/5 for job
+20:25:22.617 generate_resume_for_job
+20:25:34.018   Quality check failed, retrying
+20:25:39.222   Quality check failed, retrying
+20:25:39.222   Resume generated for job
+20:25:39.223 Generated resume 3/5 for job
+20:25:39.224 generate_resume_for_job
+20:25:50.460   Quality check failed, retrying
+20:25:59.517   Resume generated for job
+20:25:59.518 Generated resume 4/5 for job
+20:25:59.519 generate_resume_for_job
+20:26:06.931   Resume generated for job
+20:26:06.932 Generated resume 5/5 for job
+  [47/50] Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+20:26:06.936 generate_resume_for_job
+20:26:14.775   Resume generated for job
+20:26:14.776 Generated resume 1/5 for job
+20:26:14.777 generate_resume_for_job
+20:26:21.532   Resume generated for job
+20:26:21.534 Generated resume 2/5 for job
+20:26:21.534 generate_resume_for_job
+20:26:27.399   Resume generated for job
+20:26:27.400 Generated resume 3/5 for job
+20:26:27.401 generate_resume_for_job
+20:26:33.546   Quality check failed, retrying
+20:26:45.961   Quality check failed, retrying
+20:26:45.961   Resume generated for job
+20:26:45.962 Generated resume 4/5 for job
+20:26:45.963 generate_resume_for_job
+20:26:54.596   Resume generated for job
+20:26:54.598 Generated resume 5/5 for job
+  [48/50] Sales Associate → 5 resumes [excellent, good, partial, poor, mismatch]
+20:26:54.601 generate_resume_for_job
+20:27:02.544   Resume generated for job
+20:27:02.545 Generated resume 1/5 for job
+20:27:02.546 generate_resume_for_job
+20:27:10.491   Resume generated for job
+20:27:10.492 Generated resume 2/5 for job
+20:27:10.493 generate_resume_for_job
+20:27:18.367   Quality check failed, retrying
+20:27:35.164   Resume generated for job
+20:27:35.165 Generated resume 3/5 for job
+20:27:35.165 generate_resume_for_job
+20:27:46.632   Resume generated for job
+20:27:46.634 Generated resume 4/5 for job
+20:27:46.634 generate_resume_for_job
+20:28:12.437   Resume generated for job
+20:28:12.438 Generated resume 5/5 for job
+  [49/50] Chief Data Officer → 5 resumes [excellent, good, partial, poor, mismatch]
+20:28:12.443 generate_resume_for_job
+20:28:23.906   Resume generated for job
+20:28:23.906 Generated resume 1/5 for job
+20:28:23.907 generate_resume_for_job
+20:28:52.817   Quality check failed, retrying
+20:29:16.306   Quality check failed, retrying
+20:29:16.307   Resume generated for job
+20:29:16.308 Generated resume 2/5 for job
+20:29:16.309 generate_resume_for_job
+20:29:37.230   Quality check failed, retrying
+20:29:52.996   Quality check failed, retrying
+20:29:52.997   Resume generated for job
+20:29:52.997 Generated resume 3/5 for job
+20:29:52.998 generate_resume_for_job
+20:29:59.755   Resume generated for job
+20:29:59.756 Generated resume 4/5 for job
+20:29:59.757 generate_resume_for_job
+20:30:08.954   Quality check failed, retrying
+20:30:25.294   Resume generated for job
+20:30:25.295 Generated resume 5/5 for job
+  [50/50] Senior Financial Analyst → 5 resumes [excellent, good, partial, poor, mismatch]
+
+  Phase 1 complete: 50 jobs, 250 pairs generated
+
+──────────────────────────────────────────────────
+PHASE 2 — Schema Validation
+──────────────────────────────────────────────────
+  Validating 250 resumes...
+20:30:25.354 validate_batch
+20:30:25.358   validate_data
+20:30:25.359     Validation successful
+20:30:25.360   validate_data
+20:30:25.361     Validation successful
+20:30:25.362   validate_data
+20:30:25.362     Validation successful
+20:30:25.363   validate_data
+20:30:25.364     Validation successful
+20:30:25.364   validate_data
+20:30:25.365     Validation successful
+20:30:25.366   validate_data
+20:30:25.366     Validation successful
+20:30:25.367   validate_data
+20:30:25.367     Validation successful
+20:30:25.368   validate_data
+20:30:25.369     Validation successful
+20:30:25.370   validate_data
+20:30:25.371     Validation successful
+20:30:25.372   validate_data
+20:30:25.372     Validation successful
+20:30:25.374   validate_data
+20:30:25.375     Validation successful
+20:30:25.377   validate_data
+20:30:25.378     Validation successful
+20:30:25.379   validate_data
+20:30:25.380     Validation successful
+20:30:25.380   validate_data
+20:30:25.382     Validation successful
+20:30:25.382   validate_data
+20:30:25.383     Validation successful
+20:30:25.384   validate_data
+20:30:25.385     Validation successful
+20:30:25.386   validate_data
+20:30:25.387     Validation successful
+20:30:25.388   validate_data
+20:30:25.389     Validation successful
+20:30:25.389   validate_data
+20:30:25.390     Validation successful
+20:30:25.391   validate_data
+20:30:25.392     Validation successful
+20:30:25.393   validate_data
+20:30:25.394     Validation successful
+20:30:25.395   validate_data
+20:30:25.396     Validation successful
+20:30:25.397   validate_data
+20:30:25.398     Validation successful
+20:30:25.399   validate_data
+20:30:25.400     Validation successful
+20:30:25.401   validate_data
+20:30:25.402     Validation successful
+20:30:25.403   validate_data
+20:30:25.404     Validation successful
+20:30:25.405   validate_data
+20:30:25.406     Validation successful
+20:30:25.407   validate_data
+20:30:25.408     Validation successful
+20:30:25.410   validate_data
+20:30:25.412     Validation successful
+20:30:25.413   validate_data
+20:30:25.414     Validation successful
+20:30:25.415   validate_data
+20:30:25.416     Validation successful
+20:30:25.417   validate_data
+20:30:25.419     Validation successful
+20:30:25.420   validate_data
+20:30:25.421     Validation successful
+20:30:25.423   validate_data
+20:30:25.424     Validation successful
+20:30:25.425   validate_data
+20:30:25.427     Validation successful
+20:30:25.428   validate_data
+20:30:25.431     Validation successful
+20:30:25.432   validate_data
+20:30:25.433     Validation successful
+20:30:25.434   validate_data
+20:30:25.434     Validation successful
+20:30:25.435   validate_data
+20:30:25.437     Validation successful
+20:30:25.438   validate_data
+20:30:25.439     Validation successful
+20:30:25.440   validate_data
+20:30:25.441     Validation successful
+20:30:25.442   validate_data
+20:30:25.444     Validation successful
+20:30:25.445   validate_data
+20:30:25.446     Validation successful
+20:30:25.447   validate_data
+20:30:25.448     Validation successful
+20:30:25.449   validate_data
+20:30:25.450     Validation successful
+20:30:25.451   validate_data
+20:30:25.451     Validation successful
+20:30:25.452   validate_data
+20:30:25.453     Validation successful
+20:30:25.454   validate_data
+20:30:25.455     Validation successful
+20:30:25.455   validate_data
+20:30:25.456     Validation successful
+20:30:25.457   validate_data
+20:30:25.458     Validation successful
+20:30:25.459   validate_data
+20:30:25.459     Validation successful
+20:30:25.460   validate_data
+20:30:25.461     Validation successful
+20:30:25.462   validate_data
+20:30:25.463     Validation successful
+20:30:25.463   validate_data
+20:30:25.464     Validation successful
+20:30:25.465   validate_data
+20:30:25.467     Validation successful
+20:30:25.467   validate_data
+20:30:25.469     Validation successful
+20:30:25.469   validate_data
+20:30:25.470     Validation successful
+20:30:25.471   validate_data
+20:30:25.472     Validation successful
+20:30:25.474   validate_data
+20:30:25.475     Validation successful
+20:30:25.476   validate_data
+20:30:25.477     Validation successful
+20:30:25.478   validate_data
+20:30:25.480     Validation successful
+20:30:25.481   validate_data
+20:30:25.483     Validation successful
+20:30:25.484   validate_data
+20:30:25.485     Validation successful
+20:30:25.486   validate_data
+20:30:25.487     Validation successful
+20:30:25.489   validate_data
+20:30:25.490     Validation successful
+20:30:25.492   validate_data
+20:30:25.493     Validation successful
+20:30:25.494   validate_data
+20:30:25.494     Validation successful
+20:30:25.495   validate_data
+20:30:25.496     Validation successful
+20:30:25.496   validate_data
+20:30:25.497     Validation successful
+20:30:25.498   validate_data
+20:30:25.498     Validation successful
+20:30:25.499   validate_data
+20:30:25.500     Validation successful
+20:30:25.501   validate_data
+20:30:25.501     Validation successful
+20:30:25.503   validate_data
+20:30:25.504     Validation successful
+20:30:25.505   validate_data
+20:30:25.506     Validation successful
+20:30:25.507   validate_data
+20:30:25.507     Validation successful
+20:30:25.508   validate_data
+20:30:25.509     Validation successful
+20:30:25.510   validate_data
+20:30:25.511     Validation successful
+20:30:25.512   validate_data
+20:30:25.512     Validation successful
+20:30:25.513   validate_data
+20:30:25.514     Validation successful
+20:30:25.515   validate_data
+20:30:25.515     Validation successful
+20:30:25.516   validate_data
+20:30:25.516     Validation successful
+20:30:25.517   validate_data
+20:30:25.517     Validation successful
+20:30:25.518   validate_data
+20:30:25.519     Validation successful
+20:30:25.519   validate_data
+20:30:25.520     Validation successful
+20:30:25.521   validate_data
+20:30:25.522     Validation successful
+20:30:25.523   validate_data
+20:30:25.524     Validation successful
+20:30:25.526   validate_data
+20:30:25.527     Validation successful
+20:30:25.528   validate_data
+20:30:25.529     Validation successful
+20:30:25.530   validate_data
+20:30:25.531     Validation successful
+20:30:25.532   validate_data
+20:30:25.533     Validation successful
+20:30:25.534   validate_data
+20:30:25.536     Validation successful
+20:30:25.537   validate_data
+20:30:25.538     Validation successful
+20:30:25.539   validate_data
+20:30:25.540     Validation successful
+20:30:25.541   validate_data
+20:30:25.542     Validation successful
+20:30:25.543   validate_data
+20:30:25.544     Validation successful
+20:30:25.545   validate_data
+20:30:25.546     Validation successful
+20:30:25.547   validate_data
+20:30:25.548     Validation successful
+20:30:25.548   validate_data
+20:30:25.549     Validation successful
+20:30:25.550   validate_data
+20:30:25.551     Validation successful
+20:30:25.552   validate_data
+20:30:25.553     Validation successful
+20:30:25.554   validate_data
+20:30:25.555     Validation successful
+20:30:25.555   validate_data
+20:30:25.556     Validation successful
+20:30:25.557   validate_data
+20:30:25.558     Validation successful
+20:30:25.560   validate_data
+20:30:25.561     Validation successful
+20:30:25.561   validate_data
+20:30:25.563     Validation successful
+20:30:25.564   validate_data
+20:30:25.565     Validation successful
+20:30:25.567   validate_data
+20:30:25.568     Validation successful
+20:30:25.570   validate_data
+20:30:25.572     Validation successful
+20:30:25.574   validate_data
+20:30:25.576     Validation successful
+20:30:25.582   validate_data
+20:30:25.583     Validation successful
+20:30:25.592   validate_data
+20:30:25.595     Validation successful
+20:30:25.597   validate_data
+20:30:25.598     Validation successful
+20:30:25.603   validate_data
+20:30:25.606     Validation successful
+20:30:25.611   validate_data
+20:30:25.615     Validation successful
+20:30:25.617   validate_data
+20:30:25.618     Validation successful
+20:30:25.619   validate_data
+20:30:25.620     Validation successful
+20:30:25.623   validate_data
+20:30:25.627     Validation successful
+20:30:25.630   validate_data
+20:30:25.635     Validation successful
+20:30:25.636   validate_data
+20:30:25.637     Validation successful
+20:30:25.638   validate_data
+20:30:25.640     Validation successful
+20:30:25.642   validate_data
+20:30:25.643     Validation successful
+20:30:25.646   validate_data
+20:30:25.648     Validation successful
+20:30:25.650   validate_data
+20:30:25.654     Validation successful
+20:30:25.655   validate_data
+20:30:25.656     Validation successful
+20:30:25.657   validate_data
+20:30:25.658     Validation successful
+20:30:25.659   validate_data
+20:30:25.660     Validation successful
+20:30:25.661   validate_data
+20:30:25.663     Validation successful
+20:30:25.664   validate_data
+20:30:25.665     Validation successful
+20:30:25.666   validate_data
+20:30:25.667     Validation successful
+20:30:25.668   validate_data
+20:30:25.669     Validation successful
+20:30:25.670   validate_data
+20:30:25.671     Validation successful
+20:30:25.671   validate_data
+20:30:25.672     Validation successful
+20:30:25.673   validate_data
+20:30:25.674     Validation successful
+20:30:25.675   validate_data
+20:30:25.676     Validation successful
+20:30:25.680   validate_data
+20:30:25.681     Validation successful
+20:30:25.682   validate_data
+20:30:25.683     Validation successful
+20:30:25.684   validate_data
+20:30:25.685     Validation successful
+20:30:25.686   validate_data
+20:30:25.687     Validation successful
+20:30:25.688   validate_data
+20:30:25.689     Validation successful
+20:30:25.690   validate_data
+20:30:25.691     Validation successful
+20:30:25.692   validate_data
+20:30:25.693     Validation successful
+20:30:25.695   validate_data
+20:30:25.696     Validation successful
+20:30:25.697   validate_data
+20:30:25.698     Validation successful
+20:30:25.700   validate_data
+20:30:25.701     Validation successful
+20:30:25.702   validate_data
+20:30:25.703     Validation successful
+20:30:25.704   validate_data
+20:30:25.705     Validation successful
+20:30:25.706   validate_data
+20:30:25.707     Validation successful
+20:30:25.708   validate_data
+20:30:25.709     Validation successful
+20:30:25.710   validate_data
+20:30:25.711     Validation successful
+20:30:25.713   validate_data
+20:30:25.714     Validation successful
+20:30:25.716   validate_data
+20:30:25.718     Validation successful
+20:30:25.719   validate_data
+20:30:25.722     Validation successful
+20:30:25.724   validate_data
+20:30:25.725     Validation successful
+20:30:25.725   validate_data
+20:30:25.726     Validation successful
+20:30:25.727   validate_data
+20:30:25.728     Validation successful
+20:30:25.729   validate_data
+20:30:25.729     Validation successful
+20:30:25.730   validate_data
+20:30:25.731     Validation successful
+20:30:25.732   validate_data
+20:30:25.733     Validation successful
+20:30:25.734   validate_data
+20:30:25.735     Validation successful
+20:30:25.736   validate_data
+20:30:25.736     Validation successful
+20:30:25.737   validate_data
+20:30:25.738     Validation successful
+20:30:25.739   validate_data
+20:30:25.740     Validation successful
+20:30:25.740   validate_data
+20:30:25.741     Validation successful
+20:30:25.742   validate_data
+20:30:25.743     Validation successful
+20:30:25.744   validate_data
+20:30:25.745     Validation successful
+20:30:25.746   validate_data
+20:30:25.746     Validation successful
+20:30:25.747   validate_data
+20:30:25.748     Validation successful
+20:30:25.748   validate_data
+20:30:25.749     Validation successful
+20:30:25.751   validate_data
+20:30:25.752     Validation successful
+20:30:25.752   validate_data
+20:30:25.753     Validation successful
+20:30:25.754   validate_data
+20:30:25.754     Validation successful
+20:30:25.755   validate_data
+20:30:25.757     Validation successful
+20:30:25.757   validate_data
+20:30:25.758     Validation successful
+20:30:25.759   validate_data
+20:30:25.759     Validation successful
+20:30:25.760   validate_data
+20:30:25.761     Validation successful
+20:30:25.761   validate_data
+20:30:25.762     Validation successful
+20:30:25.763   validate_data
+20:30:25.764     Validation successful
+20:30:25.764   validate_data
+20:30:25.765     Validation successful
+20:30:25.766   validate_data
+20:30:25.767     Validation successful
+20:30:25.767   validate_data
+20:30:25.770     Validation successful
+20:30:25.771   validate_data
+20:30:25.772     Validation successful
+20:30:25.773   validate_data
+20:30:25.774     Validation successful
+20:30:25.775   validate_data
+20:30:25.776     Validation successful
+20:30:25.777   validate_data
+20:30:25.778     Validation successful
+20:30:25.778   validate_data
+20:30:25.779     Validation successful
+20:30:25.781   validate_data
+20:30:25.782     Validation successful
+20:30:25.782   validate_data
+20:30:25.784     Validation successful
+20:30:25.786   validate_data
+20:30:25.788     Validation successful
+20:30:25.790   validate_data
+20:30:25.792     Validation successful
+20:30:25.793   validate_data
+20:30:25.794     Validation successful
+20:30:25.795   validate_data
+20:30:25.796     Validation successful
+20:30:25.797   validate_data
+20:30:25.798     Validation successful
+20:30:25.798   validate_data
+20:30:25.799     Validation successful
+20:30:25.800   validate_data
+20:30:25.801     Validation successful
+20:30:25.802   validate_data
+20:30:25.803     Validation successful
+20:30:25.803   validate_data
+20:30:25.804     Validation successful
+20:30:25.805   validate_data
+20:30:25.806     Validation successful
+20:30:25.806   validate_data
+20:30:25.808     Validation successful
+20:30:25.809   validate_data
+20:30:25.810     Validation successful
+20:30:25.810   validate_data
+20:30:25.812     Validation successful
+20:30:25.813   validate_data
+20:30:25.814     Validation successful
+20:30:25.815   validate_data
+20:30:25.815     Validation successful
+20:30:25.816   validate_data
+20:30:25.817     Validation successful
+20:30:25.817   validate_data
+20:30:25.818     Validation successful
+20:30:25.819   validate_data
+20:30:25.820     Validation successful
+20:30:25.821   validate_data
+20:30:25.821     Validation successful
+20:30:25.822   validate_data
+20:30:25.823     Validation successful
+20:30:25.824   validate_data
+20:30:25.824     Validation successful
+20:30:25.825   validate_data
+20:30:25.826     Validation successful
+20:30:25.827   validate_data
+20:30:25.828     Validation successful
+20:30:25.828   validate_data
+20:30:25.829     Validation successful
+20:30:25.830   validate_data
+20:30:25.831     Validation successful
+20:30:25.832   validate_data
+20:30:25.833     Validation successful
+20:30:25.834   validate_data
+20:30:25.835     Validation successful
+20:30:25.836   validate_data
+20:30:25.837     Validation successful
+20:30:25.838   validate_data
+20:30:25.839     Validation successful
+20:30:25.840   validate_data
+20:30:25.841     Validation successful
+20:30:25.842   validate_data
+20:30:25.843     Validation successful
+20:30:25.845   validate_data
+20:30:25.846     Validation successful
+20:30:25.847   validate_data
+20:30:25.848     Validation successful
+20:30:25.850   validate_data
+20:30:25.851     Validation successful
+20:30:25.852   validate_data
+20:30:25.853     Validation successful
+20:30:25.853   validate_data
+20:30:25.855     Validation successful
+20:30:25.856   validate_data
+20:30:25.856     Validation successful
+20:30:25.857   validate_data
+20:30:25.858     Validation successful
+20:30:25.859   validate_data
+20:30:25.860     Validation successful
+20:30:25.860   validate_data
+20:30:25.861     Validation successful
+20:30:25.862   validate_data
+20:30:25.863     Validation successful
+20:30:25.864   validate_data
+20:30:25.864     Validation successful
+20:30:25.865   validate_data
+20:30:25.866     Validation successful
+20:30:25.868   validate_data
+20:30:25.869     Validation successful
+20:30:25.870   validate_data
+20:30:25.871     Validation successful
+20:30:25.872   validate_data
+20:30:25.874     Validation successful
+20:30:25.875   validate_data
+20:30:25.876     Validation successful
+20:30:25.876   validate_data
+20:30:25.877     Validation successful
+20:30:25.878   validate_data
+20:30:25.879     Validation successful
+20:30:25.880   validate_data
+20:30:25.881     Validation successful
+20:30:25.882   validate_data
+20:30:25.883     Validation successful
+20:30:25.883   validate_data
+20:30:25.885     Validation successful
+20:30:25.885   validate_data
+20:30:25.886     Validation successful
+20:30:25.887   validate_data
+20:30:25.888     Validation successful
+20:30:25.889   validate_data
+20:30:25.890     Validation successful
+20:30:25.890   validate_data
+20:30:25.891     Validation successful
+20:30:25.892   validate_data
+20:30:25.893     Validation successful
+20:30:25.894   validate_data
+20:30:25.896     Validation successful
+20:30:25.897   validate_data
+20:30:25.898     Validation successful
+20:30:25.899   validate_data
+20:30:25.901     Validation successful
+20:30:25.901   validate_data
+20:30:25.902     Validation successful
+20:30:25.903   validate_data
+20:30:25.903     Validation successful
+20:30:25.904   validate_data
+20:30:25.905     Validation successful
+20:30:25.906 Batch validation complete
+  ✓ Resumes: 250/250 valid (100.0%) — target >90%
+  Validating 50 job descriptions...
+20:30:25.908 validate_batch
+20:30:25.909   validate_data
+20:30:25.910     Validation successful
+20:30:25.911   validate_data
+20:30:25.911     Validation successful
+20:30:25.912   validate_data
+20:30:25.912     Validation successful
+20:30:25.913   validate_data
+20:30:25.914     Validation successful
+20:30:25.914   validate_data
+20:30:25.915     Validation successful
+20:30:25.915   validate_data
+20:30:25.916     Validation successful
+20:30:25.916   validate_data
+20:30:25.917     Validation successful
+20:30:25.917   validate_data
+20:30:25.918     Validation successful
+20:30:25.918   validate_data
+20:30:25.919     Validation successful
+20:30:25.919   validate_data
+20:30:25.920     Validation successful
+20:30:25.920   validate_data
+20:30:25.921     Validation successful
+20:30:25.921   validate_data
+20:30:25.922     Validation successful
+20:30:25.923   validate_data
+20:30:25.924     Validation successful
+20:30:25.925   validate_data
+20:30:25.926     Validation successful
+20:30:25.944   validate_data
+20:30:25.949     Validation successful
+20:30:25.950   validate_data
+20:30:25.950     Validation successful
+20:30:25.951   validate_data
+20:30:25.951     Validation successful
+20:30:25.952   validate_data
+20:30:25.952     Validation successful
+20:30:25.953   validate_data
+20:30:25.953     Validation successful
+20:30:25.954   validate_data
+20:30:25.955     Validation successful
+20:30:25.957   validate_data
+20:30:25.958     Validation successful
+20:30:25.959   validate_data
+20:30:25.960     Validation successful
+20:30:25.961   validate_data
+20:30:25.962     Validation successful
+20:30:25.964   validate_data
+20:30:25.965     Validation successful
+20:30:25.966   validate_data
+20:30:25.966     Validation successful
+20:30:25.967   validate_data
+20:30:25.968     Validation successful
+20:30:25.969   validate_data
+20:30:25.969     Validation successful
+20:30:25.970   validate_data
+20:30:25.971     Validation successful
+20:30:25.972   validate_data
+20:30:25.972     Validation successful
+20:30:25.973   validate_data
+20:30:25.973     Validation successful
+20:30:25.974   validate_data
+20:30:25.975     Validation successful
+20:30:25.975   validate_data
+20:30:25.976     Validation successful
+20:30:25.977   validate_data
+20:30:25.977     Validation successful
+20:30:25.979   validate_data
+20:30:25.979     Validation successful
+20:30:25.980   validate_data
+20:30:25.981     Validation successful
+20:30:25.982   validate_data
+20:30:25.983     Validation successful
+20:30:25.984   validate_data
+20:30:25.985     Validation successful
+20:30:25.986   validate_data
+20:30:25.987     Validation successful
+20:30:25.988   validate_data
+20:30:25.988     Validation successful
+20:30:25.989   validate_data
+20:30:25.990     Validation successful
+20:30:25.991   validate_data
+20:30:25.991     Validation successful
+20:30:25.992   validate_data
+20:30:25.993     Validation successful
+20:30:25.994   validate_data
+20:30:25.994     Validation successful
+20:30:25.995   validate_data
+20:30:25.995     Validation successful
+20:30:25.995   validate_data
+20:30:25.996     Validation successful
+20:30:25.997   validate_data
+20:30:25.997     Validation successful
+20:30:25.997   validate_data
+20:30:25.998     Validation successful
+20:30:25.999   validate_data
+20:30:25.999     Validation successful
+20:30:26.000   validate_data
+20:30:26.001     Validation successful
+20:30:26.001   validate_data
+20:30:26.002     Validation successful
+20:30:26.002 Batch validation complete
+  ✓ Jobs: 50/50 valid (100.0%) — target >90%
+
+  Phase 2 complete: 0 invalid resumes, 0 invalid jobs
+
+──────────────────────────────────────────────────
+PHASE 3 — Failure Mode Labeling
+──────────────────────────────────────────────────
+  Labeling 250 resume-job pairs...
+20:30:26.023 phase3_labeling
+20:30:26.056   label_pairs
+20:30:26.059     label_failure_modes
+20:30:26.064       Labeled failure modes
+20:30:26.071     Labeled pair 1/250
+20:30:26.072     label_failure_modes
+20:30:26.073       Labeled failure modes
+20:30:26.076     Labeled pair 2/250
+20:30:26.077     label_failure_modes
+20:30:26.078       Labeled failure modes
+20:30:26.079     Labeled pair 3/250
+20:30:26.080     label_failure_modes
+20:30:26.081       Labeled failure modes
+20:30:26.082     Labeled pair 4/250
+20:30:26.083     label_failure_modes
+20:30:26.084       Labeled failure modes
+20:30:26.086     Labeled pair 5/250
+20:30:26.087     label_failure_modes
+20:30:26.089       Labeled failure modes
+20:30:26.090     Labeled pair 6/250
+20:30:26.090     label_failure_modes
+20:30:26.092       Labeled failure modes
+20:30:26.094     Labeled pair 7/250
+20:30:26.095     label_failure_modes
+20:30:26.097       Labeled failure modes
+20:30:26.099     Labeled pair 8/250
+20:30:26.099     label_failure_modes
+20:30:26.101       Labeled failure modes
+20:30:26.102     Labeled pair 9/250
+20:30:26.102     label_failure_modes
+20:30:26.103       Labeled failure modes
+20:30:26.104     Labeled pair 10/250
+20:30:26.105     label_failure_modes
+20:30:26.106       Labeled failure modes
+20:30:26.106     Labeled pair 11/250
+20:30:26.107     label_failure_modes
+20:30:26.110       Labeled failure modes
+20:30:26.112     Labeled pair 12/250
+20:30:26.113     label_failure_modes
+20:30:26.115       Labeled failure modes
+20:30:26.118     Labeled pair 13/250
+20:30:26.119     label_failure_modes
+20:30:26.122       Labeled failure modes
+20:30:26.123     Labeled pair 14/250
+20:30:26.124     label_failure_modes
+20:30:26.126       Labeled failure modes
+20:30:26.127     Labeled pair 15/250
+20:30:26.128     label_failure_modes
+20:30:26.131       Labeled failure modes
+20:30:26.132     Labeled pair 16/250
+20:30:26.134     label_failure_modes
+20:30:26.136       Labeled failure modes
+20:30:26.138     Labeled pair 17/250
+20:30:26.139     label_failure_modes
+20:30:26.143       Labeled failure modes
+20:30:26.144     Labeled pair 18/250
+20:30:26.148     label_failure_modes
+20:30:26.150       Labeled failure modes
+20:30:26.152     Labeled pair 19/250
+20:30:26.152     label_failure_modes
+20:30:26.154       Labeled failure modes
+20:30:26.154     Labeled pair 20/250
+20:30:26.155     label_failure_modes
+20:30:26.156       Labeled failure modes
+20:30:26.157     Labeled pair 21/250
+20:30:26.158     label_failure_modes
+20:30:26.161       Labeled failure modes
+20:30:26.162     Labeled pair 22/250
+20:30:26.164     label_failure_modes
+20:30:26.165       Labeled failure modes
+20:30:26.166     Labeled pair 23/250
+20:30:26.167     label_failure_modes
+20:30:26.169       Labeled failure modes
+20:30:26.170     Labeled pair 24/250
+20:30:26.171     label_failure_modes
+20:30:26.172       Labeled failure modes
+20:30:26.172     Labeled pair 25/250
+20:30:26.173     label_failure_modes
+20:30:26.174       Labeled failure modes
+20:30:26.174     Labeled pair 26/250
+20:30:26.174     label_failure_modes
+20:30:26.176       Labeled failure modes
+20:30:26.176     Labeled pair 27/250
+20:30:26.177     label_failure_modes
+20:30:26.178       Labeled failure modes
+20:30:26.179     Labeled pair 28/250
+20:30:26.179     label_failure_modes
+20:30:26.181       Labeled failure modes
+20:30:26.182     Labeled pair 29/250
+20:30:26.182     label_failure_modes
+20:30:26.185       Labeled failure modes
+20:30:26.186     Labeled pair 30/250
+20:30:26.187     label_failure_modes
+20:30:26.188       Labeled failure modes
+20:30:26.189     Labeled pair 31/250
+20:30:26.190     label_failure_modes
+20:30:26.191       Labeled failure modes
+20:30:26.192     Labeled pair 32/250
+20:30:26.193     label_failure_modes
+20:30:26.194       Labeled failure modes
+20:30:26.195     Labeled pair 33/250
+20:30:26.196     label_failure_modes
+20:30:26.197       Labeled failure modes
+20:30:26.198     Labeled pair 34/250
+20:30:26.199     label_failure_modes
+20:30:26.201       Labeled failure modes
+20:30:26.202     Labeled pair 35/250
+20:30:26.203     label_failure_modes
+20:30:26.205       Labeled failure modes
+20:30:26.206     Labeled pair 36/250
+20:30:26.206     label_failure_modes
+20:30:26.208       Labeled failure modes
+20:30:26.208     Labeled pair 37/250
+20:30:26.209     label_failure_modes
+20:30:26.210       Labeled failure modes
+20:30:26.210     Labeled pair 38/250
+20:30:26.210     label_failure_modes
+20:30:26.211       Labeled failure modes
+20:30:26.212     Labeled pair 39/250
+20:30:26.212     label_failure_modes
+20:30:26.213       Labeled failure modes
+20:30:26.214     Labeled pair 40/250
+20:30:26.214     label_failure_modes
+20:30:26.215       Labeled failure modes
+20:30:26.216     Labeled pair 41/250
+20:30:26.216     label_failure_modes
+20:30:26.217       Labeled failure modes
+20:30:26.218     Labeled pair 42/250
+20:30:26.219     label_failure_modes
+20:30:26.220       Labeled failure modes
+20:30:26.220     Labeled pair 43/250
+20:30:26.221     label_failure_modes
+20:30:26.223       Labeled failure modes
+20:30:26.224     Labeled pair 44/250
+20:30:26.225     label_failure_modes
+20:30:26.225       Labeled failure modes
+20:30:26.226     Labeled pair 45/250
+20:30:26.226     label_failure_modes
+20:30:26.228       Labeled failure modes
+20:30:26.229     Labeled pair 46/250
+20:30:26.230     label_failure_modes
+20:30:26.231       Labeled failure modes
+20:30:26.233     Labeled pair 47/250
+20:30:26.233     label_failure_modes
+20:30:26.235       Labeled failure modes
+20:30:26.236     Labeled pair 48/250
+20:30:26.236     label_failure_modes
+20:30:26.238       Labeled failure modes
+20:30:26.239     Labeled pair 49/250
+20:30:26.240     label_failure_modes
+20:30:26.242       Labeled failure modes
+20:30:26.243     Labeled pair 50/250
+20:30:26.244     label_failure_modes
+20:30:26.245       Labeled failure modes
+20:30:26.246     Labeled pair 51/250
+20:30:26.247     label_failure_modes
+20:30:26.248       Labeled failure modes
+20:30:26.249     Labeled pair 52/250
+20:30:26.250     label_failure_modes
+20:30:26.251       Labeled failure modes
+20:30:26.251     Labeled pair 53/250
+20:30:26.252     label_failure_modes
+20:30:26.253       Labeled failure modes
+20:30:26.253     Labeled pair 54/250
+20:30:26.254     label_failure_modes
+20:30:26.255       Labeled failure modes
+20:30:26.256     Labeled pair 55/250
+20:30:26.257     label_failure_modes
+20:30:26.258       Labeled failure modes
+20:30:26.259     Labeled pair 56/250
+20:30:26.259     label_failure_modes
+20:30:26.261       Labeled failure modes
+20:30:26.261     Labeled pair 57/250
+20:30:26.262     label_failure_modes
+20:30:26.263       Labeled failure modes
+20:30:26.264     Labeled pair 58/250
+20:30:26.264     label_failure_modes
+20:30:26.266       Labeled failure modes
+20:30:26.266     Labeled pair 59/250
+20:30:26.267     label_failure_modes
+20:30:26.267       Labeled failure modes
+20:30:26.268     Labeled pair 60/250
+20:30:26.268     label_failure_modes
+20:30:26.269       Labeled failure modes
+20:30:26.270     Labeled pair 61/250
+20:30:26.270     label_failure_modes
+20:30:26.271       Labeled failure modes
+20:30:26.271     Labeled pair 62/250
+20:30:26.272     label_failure_modes
+20:30:26.273       Labeled failure modes
+20:30:26.274     Labeled pair 63/250
+20:30:26.274     label_failure_modes
+20:30:26.275       Labeled failure modes
+20:30:26.275     Labeled pair 64/250
+20:30:26.276     label_failure_modes
+20:30:26.277       Labeled failure modes
+20:30:26.277     Labeled pair 65/250
+20:30:26.278     label_failure_modes
+20:30:26.279       Labeled failure modes
+20:30:26.280     Labeled pair 66/250
+20:30:26.281     label_failure_modes
+20:30:26.282       Labeled failure modes
+20:30:26.283     Labeled pair 67/250
+20:30:26.284     label_failure_modes
+20:30:26.286       Labeled failure modes
+20:30:26.287     Labeled pair 68/250
+20:30:26.288     label_failure_modes
+20:30:26.289       Labeled failure modes
+20:30:26.290     Labeled pair 69/250
+20:30:26.291     label_failure_modes
+20:30:26.293       Labeled failure modes
+20:30:26.294     Labeled pair 70/250
+20:30:26.295     label_failure_modes
+20:30:26.296       Labeled failure modes
+20:30:26.296     Labeled pair 71/250
+20:30:26.297     label_failure_modes
+20:30:26.299       Labeled failure modes
+20:30:26.300     Labeled pair 72/250
+20:30:26.300     label_failure_modes
+20:30:26.302       Labeled failure modes
+20:30:26.302     Labeled pair 73/250
+20:30:26.303     label_failure_modes
+20:30:26.304       Labeled failure modes
+20:30:26.304     Labeled pair 74/250
+20:30:26.305     label_failure_modes
+20:30:26.306       Labeled failure modes
+20:30:26.307     Labeled pair 75/250
+20:30:26.308     label_failure_modes
+20:30:26.309       Labeled failure modes
+20:30:26.310     Labeled pair 76/250
+20:30:26.311     label_failure_modes
+20:30:26.312       Labeled failure modes
+20:30:26.313     Labeled pair 77/250
+20:30:26.314     label_failure_modes
+20:30:26.315       Labeled failure modes
+20:30:26.316     Labeled pair 78/250
+20:30:26.316     label_failure_modes
+20:30:26.317       Labeled failure modes
+20:30:26.318     Labeled pair 79/250
+20:30:26.318     label_failure_modes
+20:30:26.319       Labeled failure modes
+20:30:26.320     Labeled pair 80/250
+20:30:26.321     label_failure_modes
+20:30:26.323       Labeled failure modes
+20:30:26.323     Labeled pair 81/250
+20:30:26.324     label_failure_modes
+20:30:26.325       Labeled failure modes
+20:30:26.325     Labeled pair 82/250
+20:30:26.326     label_failure_modes
+20:30:26.327       Labeled failure modes
+20:30:26.328     Labeled pair 83/250
+20:30:26.329     label_failure_modes
+20:30:26.330       Labeled failure modes
+20:30:26.331     Labeled pair 84/250
+20:30:26.332     label_failure_modes
+20:30:26.333       Labeled failure modes
+20:30:26.334     Labeled pair 85/250
+20:30:26.335     label_failure_modes
+20:30:26.337       Labeled failure modes
+20:30:26.338     Labeled pair 86/250
+20:30:26.338     label_failure_modes
+20:30:26.340       Labeled failure modes
+20:30:26.340     Labeled pair 87/250
+20:30:26.341     label_failure_modes
+20:30:26.343       Labeled failure modes
+20:30:26.343     Labeled pair 88/250
+20:30:26.344     label_failure_modes
+20:30:26.345       Labeled failure modes
+20:30:26.346     Labeled pair 89/250
+20:30:26.347     label_failure_modes
+20:30:26.348       Labeled failure modes
+20:30:26.349     Labeled pair 90/250
+20:30:26.349     label_failure_modes
+20:30:26.350       Labeled failure modes
+20:30:26.351     Labeled pair 91/250
+20:30:26.351     label_failure_modes
+20:30:26.352       Labeled failure modes
+20:30:26.353     Labeled pair 92/250
+20:30:26.353     label_failure_modes
+20:30:26.354       Labeled failure modes
+20:30:26.355     Labeled pair 93/250
+20:30:26.355     label_failure_modes
+20:30:26.356       Labeled failure modes
+20:30:26.357     Labeled pair 94/250
+20:30:26.357     label_failure_modes
+20:30:26.359       Labeled failure modes
+20:30:26.360     Labeled pair 95/250
+20:30:26.360     label_failure_modes
+20:30:26.362       Labeled failure modes
+20:30:26.363     Labeled pair 96/250
+20:30:26.363     label_failure_modes
+20:30:26.364       Labeled failure modes
+20:30:26.365     Labeled pair 97/250
+20:30:26.365     label_failure_modes
+20:30:26.366       Labeled failure modes
+20:30:26.367     Labeled pair 98/250
+20:30:26.367     label_failure_modes
+20:30:26.368       Labeled failure modes
+20:30:26.369     Labeled pair 99/250
+20:30:26.369     label_failure_modes
+20:30:26.370       Labeled failure modes
+20:30:26.371     Labeled pair 100/250
+20:30:26.372     label_failure_modes
+20:30:26.373       Labeled failure modes
+20:30:26.374     Labeled pair 101/250
+20:30:26.374     label_failure_modes
+20:30:26.376       Labeled failure modes
+20:30:26.377     Labeled pair 102/250
+20:30:26.377     label_failure_modes
+20:30:26.378       Labeled failure modes
+20:30:26.379     Labeled pair 103/250
+20:30:26.380     label_failure_modes
+20:30:26.381       Labeled failure modes
+20:30:26.382     Labeled pair 104/250
+20:30:26.382     label_failure_modes
+20:30:26.383       Labeled failure modes
+20:30:26.384     Labeled pair 105/250
+20:30:26.385     label_failure_modes
+20:30:26.386       Labeled failure modes
+20:30:26.386     Labeled pair 106/250
+20:30:26.387     label_failure_modes
+20:30:26.388       Labeled failure modes
+20:30:26.389     Labeled pair 107/250
+20:30:26.390     label_failure_modes
+20:30:26.392       Labeled failure modes
+20:30:26.393     Labeled pair 108/250
+20:30:26.394     label_failure_modes
+20:30:26.396       Labeled failure modes
+20:30:26.397     Labeled pair 109/250
+20:30:26.398     label_failure_modes
+20:30:26.399       Labeled failure modes
+20:30:26.400     Labeled pair 110/250
+20:30:26.400     label_failure_modes
+20:30:26.401       Labeled failure modes
+20:30:26.402     Labeled pair 111/250
+20:30:26.402     label_failure_modes
+20:30:26.403       Labeled failure modes
+20:30:26.404     Labeled pair 112/250
+20:30:26.404     label_failure_modes
+20:30:26.405       Labeled failure modes
+20:30:26.406     Labeled pair 113/250
+20:30:26.406     label_failure_modes
+20:30:26.407       Labeled failure modes
+20:30:26.408     Labeled pair 114/250
+20:30:26.408     label_failure_modes
+20:30:26.409       Labeled failure modes
+20:30:26.410     Labeled pair 115/250
+20:30:26.410     label_failure_modes
+20:30:26.412       Labeled failure modes
+20:30:26.413     Labeled pair 116/250
+20:30:26.413     label_failure_modes
+20:30:26.415       Labeled failure modes
+20:30:26.415     Labeled pair 117/250
+20:30:26.416     label_failure_modes
+20:30:26.417       Labeled failure modes
+20:30:26.417     Labeled pair 118/250
+20:30:26.417     label_failure_modes
+20:30:26.418       Labeled failure modes
+20:30:26.419     Labeled pair 119/250
+20:30:26.419     label_failure_modes
+20:30:26.420       Labeled failure modes
+20:30:26.421     Labeled pair 120/250
+20:30:26.421     label_failure_modes
+20:30:26.422       Labeled failure modes
+20:30:26.423     Labeled pair 121/250
+20:30:26.424     label_failure_modes
+20:30:26.425       Labeled failure modes
+20:30:26.426     Labeled pair 122/250
+20:30:26.426     label_failure_modes
+20:30:26.427       Labeled failure modes
+20:30:26.428     Labeled pair 123/250
+20:30:26.429     label_failure_modes
+20:30:26.430       Labeled failure modes
+20:30:26.431     Labeled pair 124/250
+20:30:26.432     label_failure_modes
+20:30:26.433       Labeled failure modes
+20:30:26.434     Labeled pair 125/250
+20:30:26.435     label_failure_modes
+20:30:26.437       Labeled failure modes
+20:30:26.440     Labeled pair 126/250
+20:30:26.441     label_failure_modes
+20:30:26.444       Labeled failure modes
+20:30:26.445     Labeled pair 127/250
+20:30:26.445     label_failure_modes
+20:30:26.446       Labeled failure modes
+20:30:26.447     Labeled pair 128/250
+20:30:26.447     label_failure_modes
+20:30:26.448       Labeled failure modes
+20:30:26.449     Labeled pair 129/250
+20:30:26.449     label_failure_modes
+20:30:26.450       Labeled failure modes
+20:30:26.450     Labeled pair 130/250
+20:30:26.451     label_failure_modes
+20:30:26.452       Labeled failure modes
+20:30:26.453     Labeled pair 131/250
+20:30:26.453     label_failure_modes
+20:30:26.455       Labeled failure modes
+20:30:26.455     Labeled pair 132/250
+20:30:26.456     label_failure_modes
+20:30:26.457       Labeled failure modes
+20:30:26.457     Labeled pair 133/250
+20:30:26.458     label_failure_modes
+20:30:26.459       Labeled failure modes
+20:30:26.459     Labeled pair 134/250
+20:30:26.460     label_failure_modes
+20:30:26.461       Labeled failure modes
+20:30:26.462     Labeled pair 135/250
+20:30:26.462     label_failure_modes
+20:30:26.464       Labeled failure modes
+20:30:26.464     Labeled pair 136/250
+20:30:26.465     label_failure_modes
+20:30:26.466       Labeled failure modes
+20:30:26.467     Labeled pair 137/250
+20:30:26.467     label_failure_modes
+20:30:26.468       Labeled failure modes
+20:30:26.468     Labeled pair 138/250
+20:30:26.469     label_failure_modes
+20:30:26.469       Labeled failure modes
+20:30:26.470     Labeled pair 139/250
+20:30:26.470     label_failure_modes
+20:30:26.471       Labeled failure modes
+20:30:26.472     Labeled pair 140/250
+20:30:26.473     label_failure_modes
+20:30:26.474       Labeled failure modes
+20:30:26.475     Labeled pair 141/250
+20:30:26.476     label_failure_modes
+20:30:26.477       Labeled failure modes
+20:30:26.477     Labeled pair 142/250
+20:30:26.478     label_failure_modes
+20:30:26.480       Labeled failure modes
+20:30:26.481     Labeled pair 143/250
+20:30:26.482     label_failure_modes
+20:30:26.483       Labeled failure modes
+20:30:26.484     Labeled pair 144/250
+20:30:26.485     label_failure_modes
+20:30:26.487       Labeled failure modes
+20:30:26.487     Labeled pair 145/250
+20:30:26.488     label_failure_modes
+20:30:26.490       Labeled failure modes
+20:30:26.491     Labeled pair 146/250
+20:30:26.492     label_failure_modes
+20:30:26.494       Labeled failure modes
+20:30:26.495     Labeled pair 147/250
+20:30:26.496     label_failure_modes
+20:30:26.497       Labeled failure modes
+20:30:26.498     Labeled pair 148/250
+20:30:26.498     label_failure_modes
+20:30:26.499       Labeled failure modes
+20:30:26.500     Labeled pair 149/250
+20:30:26.500     label_failure_modes
+20:30:26.501       Labeled failure modes
+20:30:26.502     Labeled pair 150/250
+20:30:26.502     label_failure_modes
+20:30:26.503       Labeled failure modes
+20:30:26.504     Labeled pair 151/250
+20:30:26.504     label_failure_modes
+20:30:26.505       Labeled failure modes
+20:30:26.505     Labeled pair 152/250
+20:30:26.506     label_failure_modes
+20:30:26.506       Labeled failure modes
+20:30:26.507     Labeled pair 153/250
+20:30:26.507     label_failure_modes
+20:30:26.508       Labeled failure modes
+20:30:26.509     Labeled pair 154/250
+20:30:26.509     label_failure_modes
+20:30:26.510       Labeled failure modes
+20:30:26.511     Labeled pair 155/250
+20:30:26.511     label_failure_modes
+20:30:26.512       Labeled failure modes
+20:30:26.513     Labeled pair 156/250
+20:30:26.513     label_failure_modes
+20:30:26.514       Labeled failure modes
+20:30:26.515     Labeled pair 157/250
+20:30:26.515     label_failure_modes
+20:30:26.516       Labeled failure modes
+20:30:26.516     Labeled pair 158/250
+20:30:26.517     label_failure_modes
+20:30:26.518       Labeled failure modes
+20:30:26.518     Labeled pair 159/250
+20:30:26.518     label_failure_modes
+20:30:26.519       Labeled failure modes
+20:30:26.520     Labeled pair 160/250
+20:30:26.520     label_failure_modes
+20:30:26.521       Labeled failure modes
+20:30:26.521     Labeled pair 161/250
+20:30:26.522     label_failure_modes
+20:30:26.523       Labeled failure modes
+20:30:26.524     Labeled pair 162/250
+20:30:26.525     label_failure_modes
+20:30:26.525       Labeled failure modes
+20:30:26.526     Labeled pair 163/250
+20:30:26.526     label_failure_modes
+20:30:26.527       Labeled failure modes
+20:30:26.528     Labeled pair 164/250
+20:30:26.529     label_failure_modes
+20:30:26.530       Labeled failure modes
+20:30:26.532     Labeled pair 165/250
+20:30:26.532     label_failure_modes
+20:30:26.534       Labeled failure modes
+20:30:26.535     Labeled pair 166/250
+20:30:26.536     label_failure_modes
+20:30:26.538       Labeled failure modes
+20:30:26.539     Labeled pair 167/250
+20:30:26.539     label_failure_modes
+20:30:26.542       Labeled failure modes
+20:30:26.543     Labeled pair 168/250
+20:30:26.544     label_failure_modes
+20:30:26.546       Labeled failure modes
+20:30:26.548     Labeled pair 169/250
+20:30:26.548     label_failure_modes
+20:30:26.550       Labeled failure modes
+20:30:26.552     Labeled pair 170/250
+20:30:26.552     label_failure_modes
+20:30:26.554       Labeled failure modes
+20:30:26.555     Labeled pair 171/250
+20:30:26.555     label_failure_modes
+20:30:26.557       Labeled failure modes
+20:30:26.558     Labeled pair 172/250
+20:30:26.559     label_failure_modes
+20:30:26.561       Labeled failure modes
+20:30:26.562     Labeled pair 173/250
+20:30:26.563     label_failure_modes
+20:30:26.566       Labeled failure modes
+20:30:26.567     Labeled pair 174/250
+20:30:26.568     label_failure_modes
+20:30:26.569       Labeled failure modes
+20:30:26.571     Labeled pair 175/250
+20:30:26.572     label_failure_modes
+20:30:26.573       Labeled failure modes
+20:30:26.574     Labeled pair 176/250
+20:30:26.577     label_failure_modes
+20:30:26.579       Labeled failure modes
+20:30:26.580     Labeled pair 177/250
+20:30:26.581     label_failure_modes
+20:30:26.583       Labeled failure modes
+20:30:26.586     Labeled pair 178/250
+20:30:26.586     label_failure_modes
+20:30:26.588       Labeled failure modes
+20:30:26.589     Labeled pair 179/250
+20:30:26.590     label_failure_modes
+20:30:26.592       Labeled failure modes
+20:30:26.593     Labeled pair 180/250
+20:30:26.594     label_failure_modes
+20:30:26.597       Labeled failure modes
+20:30:26.599     Labeled pair 181/250
+20:30:26.600     label_failure_modes
+20:30:26.603       Labeled failure modes
+20:30:26.605     Labeled pair 182/250
+20:30:26.606     label_failure_modes
+20:30:26.609       Labeled failure modes
+20:30:26.611     Labeled pair 183/250
+20:30:26.611     label_failure_modes
+20:30:26.613       Labeled failure modes
+20:30:26.614     Labeled pair 184/250
+20:30:26.615     label_failure_modes
+20:30:26.616       Labeled failure modes
+20:30:26.617     Labeled pair 185/250
+20:30:26.617     label_failure_modes
+20:30:26.618       Labeled failure modes
+20:30:26.618     Labeled pair 186/250
+20:30:26.619     label_failure_modes
+20:30:26.620       Labeled failure modes
+20:30:26.621     Labeled pair 187/250
+20:30:26.622     label_failure_modes
+20:30:26.625       Labeled failure modes
+20:30:26.626     Labeled pair 188/250
+20:30:26.626     label_failure_modes
+20:30:26.628       Labeled failure modes
+20:30:26.629     Labeled pair 189/250
+20:30:26.630     label_failure_modes
+20:30:26.631       Labeled failure modes
+20:30:26.632     Labeled pair 190/250
+20:30:26.633     label_failure_modes
+20:30:26.636       Labeled failure modes
+20:30:26.637     Labeled pair 191/250
+20:30:26.638     label_failure_modes
+20:30:26.639       Labeled failure modes
+20:30:26.641     Labeled pair 192/250
+20:30:26.642     label_failure_modes
+20:30:26.643       Labeled failure modes
+20:30:26.644     Labeled pair 193/250
+20:30:26.645     label_failure_modes
+20:30:26.646       Labeled failure modes
+20:30:26.646     Labeled pair 194/250
+20:30:26.646     label_failure_modes
+20:30:26.647       Labeled failure modes
+20:30:26.648     Labeled pair 195/250
+20:30:26.648     label_failure_modes
+20:30:26.649       Labeled failure modes
+20:30:26.650     Labeled pair 196/250
+20:30:26.650     label_failure_modes
+20:30:26.651       Labeled failure modes
+20:30:26.651     Labeled pair 197/250
+20:30:26.652     label_failure_modes
+20:30:26.652       Labeled failure modes
+20:30:26.653     Labeled pair 198/250
+20:30:26.654     label_failure_modes
+20:30:26.655       Labeled failure modes
+20:30:26.656     Labeled pair 199/250
+20:30:26.656     label_failure_modes
+20:30:26.658       Labeled failure modes
+20:30:26.659     Labeled pair 200/250
+20:30:26.660     label_failure_modes
+20:30:26.661       Labeled failure modes
+20:30:26.662     Labeled pair 201/250
+20:30:26.662     label_failure_modes
+20:30:26.664       Labeled failure modes
+20:30:26.664     Labeled pair 202/250
+20:30:26.665     label_failure_modes
+20:30:26.667       Labeled failure modes
+20:30:26.668     Labeled pair 203/250
+20:30:26.668     label_failure_modes
+20:30:26.670       Labeled failure modes
+20:30:26.670     Labeled pair 204/250
+20:30:26.671     label_failure_modes
+20:30:26.672       Labeled failure modes
+20:30:26.672     Labeled pair 205/250
+20:30:26.673     label_failure_modes
+20:30:26.674       Labeled failure modes
+20:30:26.675     Labeled pair 206/250
+20:30:26.676     label_failure_modes
+20:30:26.678       Labeled failure modes
+20:30:26.680     Labeled pair 207/250
+20:30:26.681     label_failure_modes
+20:30:26.683       Labeled failure modes
+20:30:26.684     Labeled pair 208/250
+20:30:26.684     label_failure_modes
+20:30:26.686       Labeled failure modes
+20:30:26.687     Labeled pair 209/250
+20:30:26.688     label_failure_modes
+20:30:26.689       Labeled failure modes
+20:30:26.691     Labeled pair 210/250
+20:30:26.691     label_failure_modes
+20:30:26.693       Labeled failure modes
+20:30:26.694     Labeled pair 211/250
+20:30:26.694     label_failure_modes
+20:30:26.696       Labeled failure modes
+20:30:26.696     Labeled pair 212/250
+20:30:26.697     label_failure_modes
+20:30:26.698       Labeled failure modes
+20:30:26.698     Labeled pair 213/250
+20:30:26.699     label_failure_modes
+20:30:26.700       Labeled failure modes
+20:30:26.701     Labeled pair 214/250
+20:30:26.702     label_failure_modes
+20:30:26.704       Labeled failure modes
+20:30:26.704     Labeled pair 215/250
+20:30:26.705     label_failure_modes
+20:30:26.706       Labeled failure modes
+20:30:26.706     Labeled pair 216/250
+20:30:26.707     label_failure_modes
+20:30:26.708       Labeled failure modes
+20:30:26.709     Labeled pair 217/250
+20:30:26.709     label_failure_modes
+20:30:26.711       Labeled failure modes
+20:30:26.712     Labeled pair 218/250
+20:30:26.712     label_failure_modes
+20:30:26.715       Labeled failure modes
+20:30:26.716     Labeled pair 219/250
+20:30:26.717     label_failure_modes
+20:30:26.719       Labeled failure modes
+20:30:26.734     Labeled pair 220/250
+20:30:26.737     label_failure_modes
+20:30:26.738       Labeled failure modes
+20:30:26.739     Labeled pair 221/250
+20:30:26.740     label_failure_modes
+20:30:26.742       Labeled failure modes
+20:30:26.743     Labeled pair 222/250
+20:30:26.744     label_failure_modes
+20:30:26.746       Labeled failure modes
+20:30:26.748     Labeled pair 223/250
+20:30:26.749     label_failure_modes
+20:30:26.751       Labeled failure modes
+20:30:26.752     Labeled pair 224/250
+20:30:26.753     label_failure_modes
+20:30:26.755       Labeled failure modes
+20:30:26.756     Labeled pair 225/250
+20:30:26.757     label_failure_modes
+20:30:26.759       Labeled failure modes
+20:30:26.761     Labeled pair 226/250
+20:30:26.761     label_failure_modes
+20:30:26.763       Labeled failure modes
+20:30:26.764     Labeled pair 227/250
+20:30:26.765     label_failure_modes
+20:30:26.766       Labeled failure modes
+20:30:26.766     Labeled pair 228/250
+20:30:26.767     label_failure_modes
+20:30:26.769       Labeled failure modes
+20:30:26.770     Labeled pair 229/250
+20:30:26.771     label_failure_modes
+20:30:26.771       Labeled failure modes
+20:30:26.772     Labeled pair 230/250
+20:30:26.773     label_failure_modes
+20:30:26.774       Labeled failure modes
+20:30:26.775     Labeled pair 231/250
+20:30:26.775     label_failure_modes
+20:30:26.777       Labeled failure modes
+20:30:26.778     Labeled pair 232/250
+20:30:26.779     label_failure_modes
+20:30:26.782       Labeled failure modes
+20:30:26.783     Labeled pair 233/250
+20:30:26.785     label_failure_modes
+20:30:26.786       Labeled failure modes
+20:30:26.787     Labeled pair 234/250
+20:30:26.788     label_failure_modes
+20:30:26.789       Labeled failure modes
+20:30:26.790     Labeled pair 235/250
+20:30:26.791     label_failure_modes
+20:30:26.792       Labeled failure modes
+20:30:26.793     Labeled pair 236/250
+20:30:26.794     label_failure_modes
+20:30:26.795       Labeled failure modes
+20:30:26.797     Labeled pair 237/250
+20:30:26.798     label_failure_modes
+20:30:26.800       Labeled failure modes
+20:30:26.800     Labeled pair 238/250
+20:30:26.801     label_failure_modes
+20:30:26.802       Labeled failure modes
+20:30:26.803     Labeled pair 239/250
+20:30:26.804     label_failure_modes
+20:30:26.805       Labeled failure modes
+20:30:26.806     Labeled pair 240/250
+20:30:26.807     label_failure_modes
+20:30:26.808       Labeled failure modes
+20:30:26.809     Labeled pair 241/250
+20:30:26.809     label_failure_modes
+20:30:26.810       Labeled failure modes
+20:30:26.811     Labeled pair 242/250
+20:30:26.811     label_failure_modes
+20:30:26.812       Labeled failure modes
+20:30:26.812     Labeled pair 243/250
+20:30:26.813     label_failure_modes
+20:30:26.814       Labeled failure modes
+20:30:26.814     Labeled pair 244/250
+20:30:26.815     label_failure_modes
+20:30:26.816       Labeled failure modes
+20:30:26.817     Labeled pair 245/250
+20:30:26.817     label_failure_modes
+20:30:26.818       Labeled failure modes
+20:30:26.819     Labeled pair 246/250
+20:30:26.819     label_failure_modes
+20:30:26.821       Labeled failure modes
+20:30:26.821     Labeled pair 247/250
+20:30:26.822     label_failure_modes
+20:30:26.823       Labeled failure modes
+20:30:26.824     Labeled pair 248/250
+20:30:26.825     label_failure_modes
+20:30:26.825       Labeled failure modes
+20:30:26.826     Labeled pair 249/250
+20:30:26.826     label_failure_modes
+20:30:26.828       Labeled failure modes
+20:30:26.829     Labeled pair 250/250
+  [1/250] pair_2026052... PASS
+20:30:26.830   pair_labeled
+  [2/250] pair_2026052... PASS
+20:30:26.832   pair_labeled
+  [3/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.833   pair_labeled
+  [4/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.834   pair_labeled
+  [5/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.835   pair_labeled
+  [6/250] pair_2026052... PASS
+20:30:26.836   pair_labeled
+  [7/250] pair_2026052... PASS
+20:30:26.837   pair_labeled
+  [8/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:26.838   pair_labeled
+  [9/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.839   pair_labeled
+  [10/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.840   pair_labeled
+  [11/250] pair_2026052... PASS
+20:30:26.841   pair_labeled
+  [12/250] pair_2026052... PASS
+20:30:26.842   pair_labeled
+  [13/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.842   pair_labeled
+  [14/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.844   pair_labeled
+  [15/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.845   pair_labeled
+  [16/250] pair_2026052... PASS
+20:30:26.846   pair_labeled
+  [17/250] pair_2026052... PASS
+20:30:26.846   pair_labeled
+  [18/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.847   pair_labeled
+  [19/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.848   pair_labeled
+  [20/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.848   pair_labeled
+  [21/250] pair_2026052... FAIL [seniority_mismatch]
+20:30:26.849   pair_labeled
+  [22/250] pair_2026052... PASS
+20:30:26.850   pair_labeled
+  [23/250] pair_2026052... FAIL [overlap=0.43, exp_mismatch, seniority_mismatch]
+20:30:26.850   pair_labeled
+  [24/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.851   pair_labeled
+  [25/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.851   pair_labeled
+  [26/250] pair_2026052... PASS
+20:30:26.852   pair_labeled
+  [27/250] pair_2026052... PASS
+20:30:26.853   pair_labeled
+  [28/250] pair_2026052... FAIL [seniority_mismatch]
+20:30:26.855   pair_labeled
+  [29/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.856   pair_labeled
+  [30/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.856   pair_labeled
+  [31/250] pair_2026052... PASS
+20:30:26.857   pair_labeled
+  [32/250] pair_2026052... PASS
+20:30:26.858   pair_labeled
+  [33/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.858   pair_labeled
+  [34/250] pair_2026052... FAIL [overlap=0.25, seniority_mismatch, missing_core]
+20:30:26.859   pair_labeled
+  [35/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.860   pair_labeled
+  [36/250] pair_2026052... PASS
+20:30:26.861   pair_labeled
+  [37/250] pair_2026052... PASS
+20:30:26.862   pair_labeled
+  [38/250] pair_2026052... PASS
+20:30:26.862   pair_labeled
+  [39/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.863   pair_labeled
+  [40/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.864   pair_labeled
+  [41/250] pair_2026052... PASS
+20:30:26.865   pair_labeled
+  [42/250] pair_2026052... FAIL [awkward_lang]
+20:30:26.865   pair_labeled
+  [43/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:26.866   pair_labeled
+  [44/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.867   pair_labeled
+  [45/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.868   pair_labeled
+  [46/250] pair_2026052... PASS
+20:30:26.869   pair_labeled
+  [47/250] pair_2026052... PASS
+20:30:26.870   pair_labeled
+  [48/250] pair_2026052... PASS
+20:30:26.870   pair_labeled
+  [49/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.871   pair_labeled
+  [50/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.872   pair_labeled
+  [51/250] pair_2026052... FAIL [seniority_mismatch, awkward_lang]
+20:30:26.874   pair_labeled
+  [52/250] pair_2026052... PASS
+20:30:26.875   pair_labeled
+  [53/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.876   pair_labeled
+  [54/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.877   pair_labeled
+  [55/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.878   pair_labeled
+  [56/250] pair_2026052... FAIL [awkward_lang]
+20:30:26.878   pair_labeled
+  [57/250] pair_2026052... PASS
+20:30:26.879   pair_labeled
+  [58/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.880   pair_labeled
+  [59/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.881   pair_labeled
+  [60/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.882   pair_labeled
+  [61/250] pair_2026052... PASS
+20:30:26.883   pair_labeled
+  [62/250] pair_2026052... PASS
+20:30:26.884   pair_labeled
+  [63/250] pair_2026052... PASS
+20:30:26.885   pair_labeled
+  [64/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.886   pair_labeled
+  [65/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.887   pair_labeled
+  [66/250] pair_2026052... PASS
+20:30:26.888   pair_labeled
+  [67/250] pair_2026052... PASS
+20:30:26.889   pair_labeled
+  [68/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.891   pair_labeled
+  [69/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch]
+20:30:26.892   pair_labeled
+  [70/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:26.893   pair_labeled
+  [71/250] pair_2026052... PASS
+20:30:26.895   pair_labeled
+  [72/250] pair_2026052... PASS
+20:30:26.896   pair_labeled
+  [73/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.897   pair_labeled
+  [74/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.899   pair_labeled
+  [75/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:26.901   pair_labeled
+  [76/250] pair_2026052... PASS
+20:30:26.903   pair_labeled
+  [77/250] pair_2026052... PASS
+20:30:26.904   pair_labeled
+  [78/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.906   pair_labeled
+  [79/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.908   pair_labeled
+  [80/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.910   pair_labeled
+  [81/250] pair_2026052... PASS
+20:30:26.911   pair_labeled
+  [82/250] pair_2026052... PASS
+20:30:26.914   pair_labeled
+  [83/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.920   pair_labeled
+  [84/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.922   pair_labeled
+  [85/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.923   pair_labeled
+  [86/250] pair_2026052... FAIL [hallucination]
+20:30:26.927   pair_labeled
+  [87/250] pair_2026052... FAIL [seniority_mismatch]
+20:30:26.931   pair_labeled
+  [88/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.932   pair_labeled
+  [89/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.933   pair_labeled
+  [90/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.934   pair_labeled
+  [91/250] pair_2026052... PASS
+20:30:26.935   pair_labeled
+  [92/250] pair_2026052... PASS
+20:30:26.936   pair_labeled
+  [93/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:26.938   pair_labeled
+  [94/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.939   pair_labeled
+  [95/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:26.939   pair_labeled
+  [96/250] pair_2026052... PASS
+20:30:26.940   pair_labeled
+  [97/250] pair_2026052... PASS
+20:30:26.941   pair_labeled
+  [98/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.942   pair_labeled
+  [99/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:26.943   pair_labeled
+  [100/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:26.943   pair_labeled
+  [101/250] pair_2026052... PASS
+20:30:26.944   pair_labeled
+  [102/250] pair_2026052... PASS
+20:30:26.945   pair_labeled
+  [103/250] pair_2026052... PASS
+20:30:26.946   pair_labeled
+  [104/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:26.947   pair_labeled
+  [105/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.948   pair_labeled
+  [106/250] pair_2026052... PASS
+20:30:26.948   pair_labeled
+  [107/250] pair_2026052... PASS
+20:30:26.949   pair_labeled
+  [108/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:26.949   pair_labeled
+  [109/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.950   pair_labeled
+  [110/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.951   pair_labeled
+  [111/250] pair_2026052... PASS
+20:30:26.952   pair_labeled
+  [112/250] pair_2026052... FAIL [seniority_mismatch]
+20:30:26.952   pair_labeled
+  [113/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:26.954   pair_labeled
+  [114/250] pair_2026052... FAIL [overlap=0.25, seniority_mismatch, missing_core]
+20:30:26.955   pair_labeled
+  [115/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.956   pair_labeled
+  [116/250] pair_2026052... PASS
+20:30:26.957   pair_labeled
+  [117/250] pair_2026052... PASS
+20:30:26.958   pair_labeled
+  [118/250] pair_2026052... PASS
+20:30:26.958   pair_labeled
+  [119/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.959   pair_labeled
+  [120/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.960   pair_labeled
+  [121/250] pair_2026052... FAIL [hallucination]
+20:30:26.960   pair_labeled
+  [122/250] pair_2026052... PASS
+20:30:26.961   pair_labeled
+  [123/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.962   pair_labeled
+  [124/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.963   pair_labeled
+  [125/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.964   pair_labeled
+  [126/250] pair_2026052... PASS
+20:30:26.965   pair_labeled
+  [127/250] pair_2026052... PASS
+20:30:26.965   pair_labeled
+  [128/250] pair_2026052... FAIL [awkward_lang]
+20:30:26.966   pair_labeled
+  [129/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.966   pair_labeled
+  [130/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.967   pair_labeled
+  [131/250] pair_2026052... PASS
+20:30:26.968   pair_labeled
+  [132/250] pair_2026052... PASS
+20:30:26.968   pair_labeled
+  [133/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.969   pair_labeled
+  [134/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.970   pair_labeled
+  [135/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.971   pair_labeled
+  [136/250] pair_2026052... PASS
+20:30:26.972   pair_labeled
+  [137/250] pair_2026052... FAIL [overlap=0.25, seniority_mismatch, missing_core]
+20:30:26.973   pair_labeled
+  [138/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.974   pair_labeled
+  [139/250] pair_2026052... FAIL [overlap=0.11, missing_core]
+20:30:26.975   pair_labeled
+  [140/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.975   pair_labeled
+  [141/250] pair_2026052... PASS
+20:30:26.976   pair_labeled
+  [142/250] pair_2026052... PASS
+20:30:26.976   pair_labeled
+  [143/250] pair_2026052... PASS
+20:30:26.977   pair_labeled
+  [144/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.978   pair_labeled
+  [145/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:26.979   pair_labeled
+  [146/250] pair_2026052... PASS
+20:30:26.980   pair_labeled
+  [147/250] pair_2026052... PASS
+20:30:26.981   pair_labeled
+  [148/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.982   pair_labeled
+  [149/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:26.983   pair_labeled
+  [150/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:26.984   pair_labeled
+  [151/250] pair_2026052... PASS
+20:30:26.985   pair_labeled
+  [152/250] pair_2026052... PASS
+20:30:26.986   pair_labeled
+  [153/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.987   pair_labeled
+  [154/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:26.988   pair_labeled
+  [155/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:26.990   pair_labeled
+  [156/250] pair_2026052... FAIL [awkward_lang]
+20:30:26.991   pair_labeled
+  [157/250] pair_2026052... PASS
+20:30:26.993   pair_labeled
+  [158/250] pair_2026052... FAIL [overlap=0.43]
+20:30:26.994   pair_labeled
+  [159/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:26.995   pair_labeled
+  [160/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:26.996   pair_labeled
+  [161/250] pair_2026052... FAIL [awkward_lang]
+20:30:26.997   pair_labeled
+  [162/250] pair_2026052... FAIL [missing_core]
+20:30:26.997   pair_labeled
+  [163/250] pair_2026052... FAIL [overlap=0.25, missing_core, awkward_lang]
+20:30:26.998   pair_labeled
+  [164/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:26.999   pair_labeled
+  [165/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:27.000   pair_labeled
+  [166/250] pair_2026052... FAIL [awkward_lang]
+20:30:27.001   pair_labeled
+  [167/250] pair_2026052... PASS
+20:30:27.002   pair_labeled
+  [168/250] pair_2026052... FAIL [overlap=0.43]
+20:30:27.003   pair_labeled
+  [169/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.004   pair_labeled
+  [170/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:27.004   pair_labeled
+  [171/250] pair_2026052... FAIL [missing_core]
+20:30:27.005   pair_labeled
+  [172/250] pair_2026052... FAIL [overlap=0.43, missing_core]
+20:30:27.006   pair_labeled
+  [173/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.006   pair_labeled
+  [174/250] pair_2026052... FAIL [overlap=0.11, missing_core]
+20:30:27.007   pair_labeled
+  [175/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:27.007   pair_labeled
+  [176/250] pair_2026052... PASS
+20:30:27.008   pair_labeled
+  [177/250] pair_2026052... PASS
+20:30:27.009   pair_labeled
+  [178/250] pair_2026052... FAIL [overlap=0.43, exp_mismatch]
+20:30:27.010   pair_labeled
+  [179/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.010   pair_labeled
+  [180/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.011   pair_labeled
+  [181/250] pair_2026052... PASS
+20:30:27.013   pair_labeled
+  [182/250] pair_2026052... FAIL [seniority_mismatch]
+20:30:27.014   pair_labeled
+  [183/250] pair_2026052... FAIL [overlap=0.43]
+20:30:27.015   pair_labeled
+  [184/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.015   pair_labeled
+  [185/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:27.016   pair_labeled
+  [186/250] pair_2026052... PASS
+20:30:27.017   pair_labeled
+  [187/250] pair_2026052... PASS
+20:30:27.018   pair_labeled
+  [188/250] pair_2026052... PASS
+20:30:27.019   pair_labeled
+  [189/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:27.019   pair_labeled
+  [190/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:27.020   pair_labeled
+  [191/250] pair_2026052... PASS
+20:30:27.021   pair_labeled
+  [192/250] pair_2026052... PASS
+20:30:27.022   pair_labeled
+  [193/250] pair_2026052... PASS
+20:30:27.023   pair_labeled
+  [194/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.024   pair_labeled
+  [195/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:27.025   pair_labeled
+  [196/250] pair_2026052... PASS
+20:30:27.025   pair_labeled
+  [197/250] pair_2026052... PASS
+20:30:27.026   pair_labeled
+  [198/250] pair_2026052... PASS
+20:30:27.027   pair_labeled
+  [199/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.027   pair_labeled
+  [200/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:27.028   pair_labeled
+  [201/250] pair_2026052... PASS
+20:30:27.029   pair_labeled
+  [202/250] pair_2026052... PASS
+20:30:27.030   pair_labeled
+  [203/250] pair_2026052... FAIL [overlap=0.43]
+20:30:27.032   pair_labeled
+  [204/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch]
+20:30:27.033   pair_labeled
+  [205/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.034   pair_labeled
+  [206/250] pair_2026052... PASS
+20:30:27.035   pair_labeled
+  [207/250] pair_2026052... PASS
+20:30:27.036   pair_labeled
+  [208/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:27.037   pair_labeled
+  [209/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.038   pair_labeled
+  [210/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.039   pair_labeled
+  [211/250] pair_2026052... FAIL [awkward_lang]
+20:30:27.041   pair_labeled
+  [212/250] pair_2026052... PASS
+20:30:27.042   pair_labeled
+  [213/250] pair_2026052... FAIL [overlap=0.43]
+20:30:27.043   pair_labeled
+  [214/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.044   pair_labeled
+  [215/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:27.045   pair_labeled
+  [216/250] pair_2026052... PASS
+20:30:27.045   pair_labeled
+  [217/250] pair_2026052... PASS
+20:30:27.046   pair_labeled
+  [218/250] pair_2026052... FAIL [overlap=0.43, seniority_mismatch]
+20:30:27.046   pair_labeled
+  [219/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.047   pair_labeled
+  [220/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:27.047   pair_labeled
+  [221/250] pair_2026052... PASS
+20:30:27.048   pair_labeled
+  [222/250] pair_2026052... PASS
+20:30:27.048   pair_labeled
+  [223/250] pair_2026052... PASS
+20:30:27.049   pair_labeled
+  [224/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, missing_core]
+20:30:27.050   pair_labeled
+  [225/250] pair_2026052... FAIL [overlap=0.00, missing_core]
+20:30:27.050   pair_labeled
+  [226/250] pair_2026052... FAIL [overlap=0.43, missing_core]
+20:30:27.051   pair_labeled
+  [227/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.052   pair_labeled
+  [228/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.052   pair_labeled
+  [229/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.053   pair_labeled
+  [230/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, missing_core]
+20:30:27.054   pair_labeled
+  [231/250] pair_2026052... PASS
+20:30:27.055   pair_labeled
+  [232/250] pair_2026052... PASS
+20:30:27.056   pair_labeled
+  [233/250] pair_2026052... FAIL [exp_mismatch]
+20:30:27.056   pair_labeled
+  [234/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.057   pair_labeled
+  [235/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core, awkward_lang]
+20:30:27.058   pair_labeled
+  [236/250] pair_2026052... PASS
+20:30:27.059   pair_labeled
+  [237/250] pair_2026052... PASS
+20:30:27.059   pair_labeled
+  [238/250] pair_2026052... FAIL [overlap=0.43]
+20:30:27.060   pair_labeled
+  [239/250] pair_2026052... FAIL [overlap=0.25, missing_core]
+20:30:27.061   pair_labeled
+  [240/250] pair_2026052... FAIL [overlap=0.00, seniority_mismatch, missing_core]
+20:30:27.061   pair_labeled
+  [241/250] pair_2026052... PASS
+20:30:27.062   pair_labeled
+  [242/250] pair_2026052... FAIL [awkward_lang]
+20:30:27.063   pair_labeled
+  [243/250] pair_2026052... FAIL [overlap=0.43, exp_mismatch, awkward_lang]
+20:30:27.064   pair_labeled
+  [244/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core, awkward_lang]
+20:30:27.065   pair_labeled
+  [245/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core, awkward_lang]
+20:30:27.066   pair_labeled
+  [246/250] pair_2026052... PASS
+20:30:27.067   pair_labeled
+  [247/250] pair_2026052... PASS
+20:30:27.067   pair_labeled
+  [248/250] pair_2026052... FAIL [exp_mismatch]
+20:30:27.068   pair_labeled
+  [249/250] pair_2026052... FAIL [overlap=0.25, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.069   pair_labeled
+  [250/250] pair_2026052... FAIL [overlap=0.00, exp_mismatch, seniority_mismatch, missing_core]
+20:30:27.070   pair_labeled
+20:30:27.151 Saved 250 records to data/labeled/failure_labels_20260528_185335.jsonl
+20:30:27.159 Saved 250 failure labels to data/labeled/failure_labels_20260528_185335.jsonl
+  Saved → data/labeled/failure_labels_20260528_185335.jsonl
+20:30:27.167 Saved 160 records to data/labeled/failed_pairs_20260528_185335.jsonl
+  Saved → data/labeled/failed_pairs_20260528_185335.jsonl
+
+  Phase 3 complete: 36.0% pass rate, avg skills overlap 0.50
+  Failure rates by mode:
+    Experience Mismatch: 16.4%
+    Seniority Mismatch: 22.4%
+    Missing Core Skill: 43.2%
+    Hallucination: 0.8%
+    Awkward Language: 5.6%
+
+──────────────────────────────────────────────────
+PHASE 4 — Correction Loop
+──────────────────────────────────────────────────
+20:30:27.183 LLMCorrector initialized
+  No invalid records — correction phase skipped
+
+──────────────────────────────────────────────────
+PIPELINE COMPLETE
+──────────────────────────────────────────────────
+  Total time: 4609.39s
+
+  Stage timings:
+    phase1_generation: 4607.51s
+    phase2_validation: 0.7s
+    phase3_labeling: 1.17s
+    phase4_correction: 0.01s
+
+  Output files:
+    jobs: data/generated/jobs_20260528_185335.jsonl
+    pairs: data/generated/pairs_20260528_185335.jsonl
+    resumes: data/generated/resumes_20260528_185335.jsonl
+    failure_labels: data/labeled/failure_labels_20260528_185335.jsonl
+    failed_pairs: data/labeled/failed_pairs_20260528_185335.jsonl
+
+  Summary → data/pipeline_summary_20260528_185335.json
+  Log     → data/iteration_log.jsonl
