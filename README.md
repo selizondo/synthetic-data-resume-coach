@@ -174,15 +174,24 @@ make serve             # FastAPI on 127.0.0.1:8000 — interactive docs at /docs
 ```
 data/
 ├── generated/
-│   ├── jobs_<run_label>.jsonl       # one JobDescription per line
-│   ├── pairs_<run_label>.jsonl      # one ResumeJobPair per line (5 fit levels per job)
-│   └── resumes_<run_label>.jsonl
+│   ├── jobs_<run_label>.jsonl        # one JobDescription per line
+│   ├── pairs_<run_label>.jsonl       # one ResumeJobPair per line (5 fit levels per job)
+│   └── resumes_<run_label>.jsonl     # extracted resumes (one per pair)
 ├── validated/
-│   └── validation_report_<run_label>.json
+│   └── visualizations/
+│       ├── resume_field_validation_<run_label>.png
+│       └── job_field_validation_<run_label>.png
 ├── labeled/
-│   └── failure_labels_<run_label>.jsonl  # 6 rule-based metrics per pair
-├── pipeline_summary_<run_label>.json     # timing + counts for the full run
-└── iteration_log.jsonl                   # before/after delta across all runs
+│   ├── failure_labels_<run_label>.jsonl   # 6 rule-based metrics per pair
+│   ├── failed_pairs_<run_label>.jsonl     # pairs that failed labeling (if any)
+│   └── visualizations/
+│       ├── failure_mode_correlation_<run_label>.png
+│       ├── failure_by_fit_level_<run_label>.png
+│       ├── failure_by_template_<run_label>.png
+│       ├── niche_vs_standard_<run_label>.png
+│       └── hallucination_by_seniority_<run_label>.png
+├── pipeline_summary_<run_label>.json      # timing + counts for the full run
+└── iteration_log.jsonl                    # before/after delta across all runs
 ```
 
 `run_label` is a timestamp (`YYYYMMDD_HHMMSS`) assigned at pipeline start.
@@ -191,19 +200,19 @@ data/
 
 ```bash
 # Resume a run that was interrupted (skips already-completed items)
-python -m src.main --phase 3-4 --resume 20260528_185335
+python -m src.main --phase 3-4 --resume <run_label>
 
 # Skip correction loop (faster; useful for exploration)
 python -m src.main --num-jobs 10 --no-correction
 
-# Run on a headless server (heatmaps require a display)
+# Skip chart generation (faster; charts still work headlessly via Agg backend)
 python -m src.main --num-jobs 10 --no-heatmaps
 
 # Add LLM-based quality assessment (slower, costs tokens)
 python -m src.main --num-jobs 10 --enable-llm-judge
 
 # Run Phase 5 label quality report against a completed run
-python -m src.main --eval-quality --resume 20260528_185335
+python -m src.main --eval-quality --resume <run_label>
 ```
 
 See [docs/tradeoffs.md](docs/tradeoffs.md) for design decisions and [docs/failures.md](docs/failures.md) for known failure modes.
