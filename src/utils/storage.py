@@ -1,7 +1,7 @@
 """Storage utilities for JSONL format and data persistence."""
 
 import json
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 
 def save_jsonl(
-    data: list[dict | BaseModel],
+    data: Sequence[dict[Any, Any] | BaseModel],
     file_path: str | Path,
     append: bool = False,
 ) -> Path:
@@ -164,7 +164,7 @@ class JSONLWriter:
         self.file_path = Path(file_path)
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
         self.append = append
-        self._file = None
+        self._file: Any = None
         self._count = 0
 
     def __enter__(self) -> "JSONLWriter":

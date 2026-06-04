@@ -108,7 +108,7 @@ class Education(BaseModel):
     institution: str = Field(..., description="Name of the educational institution")
     graduation_date: date = Field(..., description="Graduation date")
     gpa: float | None = Field(None, ge=0.0, le=4.0, description="GPA on 4.0 scale")
-    relevant_coursework: list[str] | None = Field(default_factory=list)
+    relevant_coursework: list[str] | None = Field(default_factory=lambda: [])
 
     @field_validator("graduation_date", mode="before")
     @classmethod
@@ -193,8 +193,8 @@ class Resume(BaseModel):
     education: list[Education] = Field(default_factory=list, min_length=1)
     experience: list[Experience] = Field(default_factory=list)
     skills: list[Skill] = Field(default_factory=list, min_length=1)
-    certifications: list[str] | None = Field(default_factory=list)
-    languages: list[str] | None = Field(default_factory=list)
+    certifications: list[str] | None = Field(default_factory=lambda: [])
+    languages: list[str] | None = Field(default_factory=lambda: [])
     metadata: ResumeMetadata | None = Field(default=None)
 
 

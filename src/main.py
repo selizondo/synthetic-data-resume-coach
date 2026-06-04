@@ -333,7 +333,7 @@ def main() -> None:
         for k in after_stats
         if k in before_stats
         and after_stats[k] is not None
-        and isinstance(after_stats[k], (int, float))
+        and isinstance(after_stats[k], int | float)
     }
     log_entry = {
         "date": run_label,
