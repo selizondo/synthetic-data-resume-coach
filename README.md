@@ -18,7 +18,7 @@ This project is a production-grade synthetic data pipeline that generates resume
 
 **Crash recovery without re-generation.** Phase 1 writes each item to JSONL immediately. If the process is killed mid-run (rate-limit, OOM), `--resume <run_label>` picks up at the exact item where it stopped.
 
-**Rule-based labeler, not LLM-based.** The six failure metrics are deterministic, instant, and free. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but rules gate correctness first. This keeps the pipeline runnable on a free Groq tier.
+**Rule-based labeler, not LLM-based.** The six failure metrics are deterministic, instant, and free. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but rules gate correctness first.
 
 **API responses include `strategy_used` and `latency_ms`.** Callers can alert on latency regression or distinguish `rule_based` from `rule_based+llm_judge` paths without parsing logs.
 
@@ -27,11 +27,12 @@ This project is a production-grade synthetic data pipeline that generates resume
 ## How It's Structured
 
 ```
-LLM (Groq llama-3.x or any OpenAI-compatible endpoint)
+LLM (any OpenAI-compatible endpoint — OpenAI, Groq, Ollama)
         │
         ▼ Phase 1: Generate
 jobs_<run>.jsonl    — one JobDescription per line, trace_id stamped
 pairs_<run>.jsonl   — one ResumeJobPair per line, 5 fit levels per job
+resumes_<run>.jsonl — extracted resumes (one per pair)
         │
         ▼ Phase 2: Validate
 Pydantic schema gates all fields
@@ -114,13 +115,24 @@ Failure detection must work across all five styles — a hallucination detector 
 
 | Metric | Value |
 |---|---|
-| Overall pass rate | 61% across 5 fit levels |
-| Dominant failure mode | Seniority mismatch (19.7%) |
-| Correction loop success | ~40% of failed pairs corrected on retry |
-| Validation rate | >90% of generated pairs pass schema |
-| Test suite | 41 tests, fully offline (no LLM calls) |
+| Overall labeler pass rate | 31.6% across 250 pairs (50 jobs × 5 fit levels) |
+| Dominant failure mode | Missing core skill (43.2%) |
+| Schema validation rate | 100% — all generated pairs pass Pydantic |
+| Average skill overlap | 0.50 across all fit levels |
+| Test suite | 57 tests, fully offline (no LLM calls) |
 
-A 61% pass rate is expected — "Mismatch" pairs fail the labeler by design. The signal is whether the rate holds stable across runs and whether failure modes track the fit level distribution.
+A 31.6% pass rate is expected — Poor and Mismatch pairs fail the labeler by design (they intentionally lack required skills). The signal is whether the rate holds stable across runs and whether failure modes track the fit level distribution.
+
+**Failure rates by mode (50-job run):**
+
+| Failure Mode | Rate |
+|---|---|
+| Missing core skill | 43.2% |
+| Seniority mismatch | 26.0% |
+| Low skills overlap (<0.5 Jaccard) | 56.0% |
+| Experience mismatch | 12.8% |
+| Awkward language | 5.6% |
+| Hallucinated skill | 0.8% |
 
 ---
 
