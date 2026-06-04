@@ -171,8 +171,8 @@ One-shot generation of both simultaneously overloads the model's ability to hono
 ## Run It Yourself
 
 ```bash
-git clone git@github.com:selizondo/newline_stuff.git
-cd newline_stuff/projects/synthetic_data_resume_coach
+git clone git@github.com:selizondo/synthetic-data-resume-coach.git
+cd synthetic-data-resume-coach
 
 pip install -r requirements.txt
 cp .env.example .env
