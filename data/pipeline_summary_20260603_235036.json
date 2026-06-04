@@ -1,0 +1,105 @@
+{
+  "run_label": "20260603_235036",
+  "config": {
+    "num_jobs": 10,
+    "resumes_per_job": 5,
+    "model": "gpt-4o-mini"
+  },
+  "phases": {
+    "validation": {
+      "resume_summary": {
+        "total": 40,
+        "valid": 40,
+        "invalid": 0,
+        "success_rate": 1.0
+      },
+      "job_summary": {
+        "total": 10,
+        "valid": 10,
+        "invalid": 0,
+        "success_rate": 1.0
+      }
+    },
+    "labeling": {
+      "total_pairs": 40,
+      "overall_pass_rate": 0.25,
+      "average_skills_overlap": 0.47738095238095235,
+      "failure_rates": {
+        "low_skills_overlap": 0.6,
+        "experience_mismatch": 0.15,
+        "seniority_mismatch": 0.425,
+        "missing_core_skill": 0.4,
+        "hallucinated_skill": 0.05,
+        "awkward_language": 0.05
+      },
+      "by_template": {
+        "technical": {
+          "count": 4,
+          "failures": 2,
+          "failure_rate": 0.5
+        },
+        "achievement_focused": {
+          "count": 10,
+          "failures": 7,
+          "failure_rate": 0.7
+        },
+        "formal": {
+          "count": 13,
+          "failures": 12,
+          "failure_rate": 0.9230769230769231
+        },
+        "casual": {
+          "count": 5,
+          "failures": 4,
+          "failure_rate": 0.8
+        },
+        "career_changer": {
+          "count": 8,
+          "failures": 5,
+          "failure_rate": 0.625
+        }
+      },
+      "by_fit_level": {
+        "excellent": {
+          "count": 8,
+          "avg_overlap": 1.0
+        },
+        "good": {
+          "count": 8,
+          "avg_overlap": 0.7083333333333334
+        },
+        "partial": {
+          "count": 8,
+          "avg_overlap": 0.4285714285714285
+        },
+        "poor": {
+          "count": 8,
+          "avg_overlap": 0.25
+        },
+        "mismatch": {
+          "count": 8,
+          "avg_overlap": 0.0
+        }
+      },
+      "niche_role_failure_rate": 0.6
+    }
+  },
+  "stage_times_seconds": {
+    "phase2_validation": 1.21,
+    "phase3_labeling": 2.67
+  },
+  "files": {
+    "validated_data": "data/validated/validated_data_20260603_235036.json",
+    "schema_failure_modes": "data/validated/schema_failure_modes_20260603_235036.json",
+    "resume_validation_heatmap": "data/validated/visualizations/resume_field_validation_20260603_235036.png",
+    "job_validation_heatmap": "data/validated/visualizations/job_field_validation_20260603_235036.png",
+    "failure_labels": "data/labeled/failure_labels_20260603_235036.jsonl",
+    "failed_pairs": "data/labeled/failed_pairs_20260603_235036.jsonl",
+    "failure_mode_correlation": "data/labeled/visualizations/failure_mode_correlation_20260603_235036.png",
+    "failure_by_template": "data/labeled/visualizations/failure_by_template_20260603_235036.png",
+    "failure_by_fit_level": "data/labeled/visualizations/failure_by_fit_level_20260603_235036.png",
+    "niche_vs_standard": "data/labeled/visualizations/niche_vs_standard_20260603_235036.png",
+    "hallucination_by_seniority": "data/labeled/visualizations/hallucination_by_seniority_20260603_235036.png"
+  },
+  "total_time_seconds": 4.0
+}
