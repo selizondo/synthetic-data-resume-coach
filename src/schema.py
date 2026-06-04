@@ -21,13 +21,14 @@ from pydantic import BaseModel, EmailStr, Field, ValidationError, field_validato
 
 # ── 1. Enums ───────────────────────────────────────────────────────────────────
 
+
 class SeniorityLevel(IntEnum):
     """Ordered seniority scale shared by generators and labeler."""
 
-    ENTRY     = 0
-    MID       = 1
-    SENIOR    = 2
-    LEAD      = 3
+    ENTRY = 0
+    MID = 1
+    SENIOR = 2
+    LEAD = 3
     EXECUTIVE = 4
 
     @classmethod
@@ -75,14 +76,15 @@ class SeniorityLevel(IntEnum):
 class FitLevel(StrEnum):
     """Controlled fit levels between a resume and a job description."""
 
-    EXCELLENT = "excellent"   # 80%+ skill overlap
-    GOOD = "good"             # 60–80%
-    PARTIAL = "partial"       # 40–60%
-    POOR = "poor"             # 20–40%
-    MISMATCH = "mismatch"     # <20%
+    EXCELLENT = "excellent"  # 80%+ skill overlap
+    GOOD = "good"  # 60–80%
+    PARTIAL = "partial"  # 40–60%
+    POOR = "poor"  # 20–40%
+    MISMATCH = "mismatch"  # <20%
 
 
 # ── 2. Resume models ───────────────────────────────────────────────────────────
+
 
 class ContactInfo(BaseModel):
     name: str = Field(..., min_length=1, description="Full name of the candidate")
@@ -198,6 +200,7 @@ class Resume(BaseModel):
 
 # ── 3. Job description models ──────────────────────────────────────────────────
 
+
 class Company(BaseModel):
     name: str = Field(..., min_length=1, description="Company name")
     industry: str = Field(..., description="Industry sector")
@@ -245,7 +248,9 @@ class JobDescription(BaseModel):
     benefits: list[str] = Field(default_factory=list)
     salary_range: str | None = None
     remote_policy: str = Field("On-site", description="Remote, Hybrid, or On-site")
-    employment_type: str = Field("Full-time", description="Full-time, Part-time, Contract, Internship")
+    employment_type: str = Field(
+        "Full-time", description="Full-time, Part-time, Contract, Internship"
+    )
     metadata: JobDescriptionMetadata | None = Field(default=None)
 
     @field_validator("remote_policy")
@@ -261,11 +266,14 @@ class JobDescription(BaseModel):
     def validate_employment_type(cls, v: str) -> str:
         valid = {"full-time", "fulltime", "part-time", "parttime", "contract", "internship"}
         if v.lower().replace("-", "") not in {t.replace("-", "") for t in valid}:
-            raise ValueError("Employment type must be one of: Full-time, Part-time, Contract, Internship")
+            raise ValueError(
+                "Employment type must be one of: Full-time, Part-time, Contract, Internship"
+            )
         return v.capitalize()
 
 
 # ── 4. Pair model ──────────────────────────────────────────────────────────────
+
 
 class ResumeJobPairMetadata(BaseModel):
     trace_id: str | None = Field(None, description="Unique trace ID for this pair")
@@ -285,9 +293,11 @@ class ResumeJobPair(BaseModel):
 
 # ── 5. Validation types ────────────────────────────────────────────────────────
 
+
 @dataclass
 class ValidationError_:
     """Detailed validation error information."""
+
     field: str
     error_type: str
     message: str
@@ -305,6 +315,7 @@ class ValidationError_:
 @dataclass
 class ValidationResult:
     """Result of a validation operation."""
+
     is_valid: bool
     data: BaseModel | None = None
     raw_data: dict | None = None
@@ -323,8 +334,11 @@ class SchemaValidator:
 
     def __init__(self) -> None:
         self.validation_stats: dict = {
-            "total": 0, "valid": 0, "invalid": 0,
-            "errors_by_type": {}, "errors_by_field": {},
+            "total": 0,
+            "valid": 0,
+            "invalid": 0,
+            "errors_by_type": {},
+            "errors_by_field": {},
         }
 
     def validate_resume(self, data: dict) -> ValidationResult:
@@ -348,11 +362,15 @@ class SchemaValidator:
                 self.validation_stats["invalid"] += 1
                 errors = self._parse_errors(e)
                 for err in errors:
-                    self.validation_stats["errors_by_type"][err.error_type] = \
+                    self.validation_stats["errors_by_type"][err.error_type] = (
                         self.validation_stats["errors_by_type"].get(err.error_type, 0) + 1
-                    self.validation_stats["errors_by_field"][err.field] = \
+                    )
+                    self.validation_stats["errors_by_field"][err.field] = (
                         self.validation_stats["errors_by_field"].get(err.field, 0) + 1
-                logfire.warning("Validation failed", schema=schema.__name__, error_count=len(errors))
+                    )
+                logfire.warning(
+                    "Validation failed", schema=schema.__name__, error_count=len(errors)
+                )
                 return ValidationResult(is_valid=False, raw_data=data, errors=errors)
 
     def _parse_errors(self, exc: ValidationError) -> list[ValidationError_]:
@@ -367,16 +385,26 @@ class SchemaValidator:
         ]
 
     def validate_batch(
-        self, data_list: list[dict], data_type: str = "resume",
+        self,
+        data_list: list[dict],
+        data_type: str = "resume",
     ) -> tuple[list[ValidationResult], dict]:
-        fn = {"resume": self.validate_resume, "job": self.validate_job, "pair": self.validate_pair}.get(data_type)
+        fn = {
+            "resume": self.validate_resume,
+            "job": self.validate_job,
+            "pair": self.validate_pair,
+        }.get(data_type)
         if not fn:
             raise ValueError(f"Invalid data_type: {data_type}")
         with logfire.span("validate_batch", count=len(data_list), data_type=data_type):
             results = [fn(d) for d in data_list]
         valid = sum(1 for r in results if r.is_valid)
-        summary = {"total": len(results), "valid": valid, "invalid": len(results) - valid,
-                   "success_rate": valid / len(results) if results else 0}
+        summary = {
+            "total": len(results),
+            "valid": valid,
+            "invalid": len(results) - valid,
+            "success_rate": valid / len(results) if results else 0,
+        }
         logfire.info("Batch validation complete", **summary)
         return results, summary
 
@@ -387,13 +415,18 @@ class SchemaValidator:
 
     def reset_stats(self) -> None:
         self.validation_stats = {
-            "total": 0, "valid": 0, "invalid": 0,
-            "errors_by_type": {}, "errors_by_field": {},
+            "total": 0,
+            "valid": 0,
+            "invalid": 0,
+            "errors_by_type": {},
+            "errors_by_field": {},
         }
 
     def save_results(
-        self, results: list[ValidationResult],
-        output_dir: str = "data/validated", filename: str = "validation_results.json",
+        self,
+        results: list[ValidationResult],
+        output_dir: str = "data/validated",
+        filename: str = "validation_results.json",
     ) -> Path:
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)

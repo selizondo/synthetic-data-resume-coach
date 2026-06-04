@@ -180,13 +180,13 @@ class TestJobDescriptionSchema:
     def test_valid_requirements(self):
         """Test valid requirements creation."""
         reqs = Requirements(
-            required_skills=["Python", "SQL"],
+            required_skills=["Python", "SQL", "Git"],
             preferred_skills=["AWS"],
             education_requirements="Bachelor's degree",
             experience_years=3,
             experience_level="Mid",
         )
-        assert len(reqs.required_skills) == 2
+        assert len(reqs.required_skills) == 3
         assert reqs.experience_years == 3
 
     def test_invalid_experience_level(self):
@@ -211,7 +211,7 @@ class TestJobDescriptionSchema:
             ),
             description="We are looking for a talented software engineer to join our team. " * 5,
             requirements=Requirements(
-                required_skills=["Python", "JavaScript"],
+                required_skills=["Python", "JavaScript", "Docker"],
                 education_requirements="Bachelor's in CS",
                 experience_years=3,
                 experience_level="Mid",
@@ -521,27 +521,21 @@ class TestFailureLabeler:
 
     def test_calculate_skills_overlap(self):
         """Test skills overlap calculation."""
-        overlap, missing, matched = self.labeler.calculate_skills_overlap(
-            self.resume, self.job
-        )
+        overlap, missing, matched = self.labeler.calculate_skills_overlap(self.resume, self.job)
         assert 0 <= overlap <= 1
         assert isinstance(missing, list)
         assert isinstance(matched, list)
 
     def test_detect_experience_mismatch(self):
         """Test experience mismatch detection."""
-        is_mismatch, gap = self.labeler.detect_experience_mismatch(
-            self.resume, self.job
-        )
+        is_mismatch, gap = self.labeler.detect_experience_mismatch(self.resume, self.job)
         assert isinstance(is_mismatch, bool)
         assert isinstance(gap, int)
         assert gap >= 0
 
     def test_detect_seniority_mismatch(self):
         """Test seniority mismatch detection."""
-        is_mismatch, gap_desc = self.labeler.detect_seniority_mismatch(
-            self.resume, self.job
-        )
+        is_mismatch, gap_desc = self.labeler.detect_seniority_mismatch(self.resume, self.job)
         assert isinstance(is_mismatch, bool)
         assert isinstance(gap_desc, str)
 
@@ -624,7 +618,6 @@ class TestAPIRoutes:
             assert "overall_pass_rate" in data
             assert "failure_rates" in data
             assert "total_analyzed" in data
-
 
 
 class TestStorageUtils:

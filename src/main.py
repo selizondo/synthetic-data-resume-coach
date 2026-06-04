@@ -38,6 +38,7 @@ def _load_gen_checkpoint(output_dir: Path, run_label: str) -> dict:
 
 # ── Console helpers ────────────────────────────────────────────────────────────
 
+
 def _banner(text: str) -> None:
     line = "=" * 60
     print(f"\n{line}\n{text}\n{line}")
@@ -49,6 +50,7 @@ def _section(text: str) -> None:
 
 # ── Main orchestrator ──────────────────────────────────────────────────────────
 
+
 def main() -> None:
     load_dotenv()
     try:
@@ -59,32 +61,65 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Synthetic Data Resume Coach — Data Generation Pipeline"
     )
-    parser.add_argument("--num-jobs", "-n", type=int, default=10,
-                        help="Number of job descriptions to generate (default: 10)")
-    parser.add_argument("--resumes-per-job", type=int, default=5,
-                        help="Resumes per job, one per fit level (default: 5)")
-    parser.add_argument("--model", "-m", type=str, default="",
-                        help="LLM model for generation (default: LLM_MODEL env var)")
-    parser.add_argument("--judge-model", type=str, default="",
-                        help="LLM model for judging (defaults to --model)")
-    parser.add_argument("--no-correction", action="store_true",
-                        help="Disable correction loop (Phase 4)")
-    parser.add_argument("--no-heatmaps", action="store_true",
-                        help="Disable heatmap generation")
-    parser.add_argument("--enable-llm-judge", action="store_true",
-                        help="Enable LLM judge quality assessment (slower)")
-    parser.add_argument("--enable-braintrust", action="store_true",
-                        help="Enable Braintrust logging (requires BRAINTRUST_API_KEY)")
-    parser.add_argument("--output-dir", "-o", type=str, default="data",
-                        help="Output directory (default: data)")
-    parser.add_argument("--phase", type=str, default="1-4",
-                        help="Phase range to run, e.g. '1-4', '1', '3-4' (default: 1-4)")
-    parser.add_argument("--resume", type=str, default="",
-                        help="Resume a prior run by its run_label (e.g. 20260501_002340). "
-                             "Reuses existing checkpoint files and skips already-generated items.")
-    parser.add_argument("--eval-quality", action="store_true",
-                        help="Run Phase 5 label quality analysis and exit. "
-                             "Requires --resume <run_label> or a completed run in --output-dir.")
+    parser.add_argument(
+        "--num-jobs",
+        "-n",
+        type=int,
+        default=10,
+        help="Number of job descriptions to generate (default: 10)",
+    )
+    parser.add_argument(
+        "--resumes-per-job",
+        type=int,
+        default=5,
+        help="Resumes per job, one per fit level (default: 5)",
+    )
+    parser.add_argument(
+        "--model",
+        "-m",
+        type=str,
+        default="",
+        help="LLM model for generation (default: LLM_MODEL env var)",
+    )
+    parser.add_argument(
+        "--judge-model", type=str, default="", help="LLM model for judging (defaults to --model)"
+    )
+    parser.add_argument(
+        "--no-correction", action="store_true", help="Disable correction loop (Phase 4)"
+    )
+    parser.add_argument("--no-heatmaps", action="store_true", help="Disable heatmap generation")
+    parser.add_argument(
+        "--enable-llm-judge",
+        action="store_true",
+        help="Enable LLM judge quality assessment (slower)",
+    )
+    parser.add_argument(
+        "--enable-braintrust",
+        action="store_true",
+        help="Enable Braintrust logging (requires BRAINTRUST_API_KEY)",
+    )
+    parser.add_argument(
+        "--output-dir", "-o", type=str, default="data", help="Output directory (default: data)"
+    )
+    parser.add_argument(
+        "--phase",
+        type=str,
+        default="1-4",
+        help="Phase range to run, e.g. '1-4', '1', '3-4' (default: 1-4)",
+    )
+    parser.add_argument(
+        "--resume",
+        type=str,
+        default="",
+        help="Resume a prior run by its run_label (e.g. 20260501_002340). "
+        "Reuses existing checkpoint files and skips already-generated items.",
+    )
+    parser.add_argument(
+        "--eval-quality",
+        action="store_true",
+        help="Run Phase 5 label quality analysis and exit. "
+        "Requires --resume <run_label> or a completed run in --output-dir.",
+    )
 
     args = parser.parse_args()
 
@@ -120,8 +155,11 @@ def main() -> None:
         if not args.resume:
             # Find the latest run with failure_labels_*.jsonl
             labeled_dir = output_dir / "labeled"
-            candidates = sorted(labeled_dir.glob("failure_labels_*.jsonl"),
-                                key=lambda p: p.stat().st_mtime, reverse=True)
+            candidates = sorted(
+                labeled_dir.glob("failure_labels_*.jsonl"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
             if not candidates:
                 print(f"\n  ERROR: No labeled runs found in {labeled_dir}. Run the pipeline first.")
                 return
@@ -134,7 +172,9 @@ def main() -> None:
     _banner("RESUME COACH — SYNTHETIC DATA PIPELINE")
     print(f"  run_label : {run_label}")
     print(f"  num_jobs  : {config.num_jobs}")
-    print(f"  resumes   : {config.resumes_per_job} per job  ({config.num_jobs * config.resumes_per_job} total pairs)")
+    print(
+        f"  resumes   : {config.resumes_per_job} per job  ({config.num_jobs * config.resumes_per_job} total pairs)"
+    )
     print(f"  model     : {config.model}")
     print(f"  output    : {output_dir}")
     print(f"  phases    : {phase_start}–{phase_end}")
@@ -178,7 +218,9 @@ def main() -> None:
     # Load phase 1 output from disk when phase 1 was not run this session.
     if phase_start > 1 and not gen:
         if not run_label:
-            print("\n  ERROR: --resume <run_label> is required when starting from phase 2 or later.")
+            print(
+                "\n  ERROR: --resume <run_label> is required when starting from phase 2 or later."
+            )
             return
         gen = _load_gen_checkpoint(output_dir, run_label)
         if gen["jobs"]:
@@ -279,7 +321,9 @@ def main() -> None:
     after_stats = {
         "jobs_generated": phases.get("generation", {}).get("jobs_generated"),
         "pairs_generated": phases.get("generation", {}).get("pairs_generated"),
-        "resume_valid_rate": phases.get("validation", {}).get("resume_summary", {}).get("valid_rate"),
+        "resume_valid_rate": phases.get("validation", {})
+        .get("resume_summary", {})
+        .get("valid_rate"),
         "labeling_pass_rate": phases.get("labeling", {}).get("overall_pass_rate"),
         "correction_success_rate": phases.get("correction", {}).get("success_rate"),
         "total_time_seconds": results.get("total_time_seconds"),

@@ -57,7 +57,9 @@ def run_validation_phase(
     total_count = resume_summary.get("total", len(resumes))
     rate = valid_count / total_count if total_count else 0
     status = "✓" if rate >= 0.9 else "✗"
-    print(f"  {status} Resumes: {valid_count}/{total_count} valid ({rate*100:.1f}%) — target >90%")
+    print(
+        f"  {status} Resumes: {valid_count}/{total_count} valid ({rate * 100:.1f}%) — target >90%"
+    )
 
     # ── Step 2.2: Validate jobs ────────────────────────────────────────────────
     print(f"  Validating {len(jobs)} job descriptions...")
@@ -68,7 +70,7 @@ def run_validation_phase(
     total_jobs = job_summary.get("total", len(jobs))
     job_rate = valid_jobs / total_jobs if total_jobs else 0
     status = "✓" if job_rate >= 0.9 else "✗"
-    print(f"  {status} Jobs: {valid_jobs}/{total_jobs} valid ({job_rate*100:.1f}%) — target >90%")
+    print(f"  {status} Jobs: {valid_jobs}/{total_jobs} valid ({job_rate * 100:.1f}%) — target >90%")
 
     # ── Step 2.3: Save invalid records ────────────────────────────────────────
     files: dict[str, str] = {}
@@ -79,9 +81,7 @@ def run_validation_phase(
     invalid_jobs = [r for r in job_results if not r.is_valid]
 
     if invalid_resumes or invalid_jobs:
-        invalid_data = [
-            {"type": "resume", **r.to_dict()} for r in invalid_resumes
-        ] + [
+        invalid_data = [{"type": "resume", **r.to_dict()} for r in invalid_resumes] + [
             {"type": "job", **r.to_dict()} for r in invalid_jobs
         ]
         invalid_file = labeled_dir / f"invalid_{run_label}.jsonl"
@@ -89,17 +89,33 @@ def run_validation_phase(
         files["invalid_records"] = str(invalid_file)
         print(f"  Saved → {invalid_file}")
 
-    print(f"\n  Phase 2 complete: {len(invalid_resumes)} invalid resumes, {len(invalid_jobs)} invalid jobs")
+    print(
+        f"\n  Phase 2 complete: {len(invalid_resumes)} invalid resumes, {len(invalid_jobs)} invalid jobs"
+    )
 
     # ── Step 2.3b: Write validated_data summary ───────────────────────────────
-    valid_resume_ids = [r.raw_data.get("metadata", {}).get("trace_id") for r in resume_results if r.is_valid]
-    valid_job_ids   = [r.raw_data.get("metadata", {}).get("trace_id") for r in job_results if r.is_valid]
+    valid_resume_ids = [
+        r.raw_data.get("metadata", {}).get("trace_id") for r in resume_results if r.is_valid
+    ]
+    valid_job_ids = [
+        r.raw_data.get("metadata", {}).get("trace_id") for r in job_results if r.is_valid
+    ]
     validated_summary = {
         "run_label": run_label,
-        "resumes": {"total": len(resumes), "valid": len(valid_resume_ids), "invalid": len(invalid_resumes), "rate": resume_summary.get("valid_rate", 1.0)},
-        "jobs":    {"total": len(jobs),    "valid": len(valid_job_ids),   "invalid": len(invalid_jobs),   "rate": job_summary.get("valid_rate", 1.0)},
+        "resumes": {
+            "total": len(resumes),
+            "valid": len(valid_resume_ids),
+            "invalid": len(invalid_resumes),
+            "rate": resume_summary.get("valid_rate", 1.0),
+        },
+        "jobs": {
+            "total": len(jobs),
+            "valid": len(valid_job_ids),
+            "invalid": len(invalid_jobs),
+            "rate": job_summary.get("valid_rate", 1.0),
+        },
         "valid_resume_trace_ids": valid_resume_ids,
-        "valid_job_trace_ids":    valid_job_ids,
+        "valid_job_trace_ids": valid_job_ids,
     }
     validated_file = validated_dir / f"validated_data_{run_label}.json"
     validated_file.write_text(json.dumps(validated_summary, indent=2, default=str))
@@ -107,11 +123,10 @@ def run_validation_phase(
     print(f"  Saved → {validated_file}")
 
     # ── Step 2.3c: Write schema_failure_modes summary ─────────────────────────
-    error_categories: dict[str, dict] = defaultdict(lambda: {"count": 0, "fields": defaultdict(int)})
-    all_invalid = (
-        [("resume", r) for r in invalid_resumes] +
-        [("job", r) for r in invalid_jobs]
+    error_categories: dict[str, dict] = defaultdict(
+        lambda: {"count": 0, "fields": defaultdict(int)}
     )
+    all_invalid = [("resume", r) for r in invalid_resumes] + [("job", r) for r in invalid_jobs]
     for _dtype, result in all_invalid:
         for err in result.errors:
             category = _categorize_error(err.error_type, err.field)
@@ -126,39 +141,58 @@ def run_validation_phase(
         for cat, v in error_categories.items()
     }
     schema_failure_file = validated_dir / f"schema_failure_modes_{run_label}.json"
-    schema_failure_file.write_text(json.dumps({
-        "run_label": run_label,
-        "total_invalid_records": len(all_invalid),
-        "failure_modes": failure_modes,
-        "_note": (
-            "Empty failure_modes means all records passed Pydantic validation. "
-            "instructor enforces the schema at LLM output time, preventing schema "
-            "errors regardless of model. See docs/correction_loop_proof.md for "
-            "correction loop results on synthetically injected failures."
-        ) if not failure_modes else None,
-    }, indent=2, default=str))
+    schema_failure_file.write_text(
+        json.dumps(
+            {
+                "run_label": run_label,
+                "total_invalid_records": len(all_invalid),
+                "failure_modes": failure_modes,
+                "_note": (
+                    "Empty failure_modes means all records passed Pydantic validation. "
+                    "instructor enforces the schema at LLM output time, preventing schema "
+                    "errors regardless of model. See docs/correction_loop_proof.md for "
+                    "correction loop results on synthetically injected failures."
+                )
+                if not failure_modes
+                else None,
+            },
+            indent=2,
+            default=str,
+        )
+    )
     files["schema_failure_modes"] = str(schema_failure_file)
     print(f"  Saved → {schema_failure_file}")
 
     # ── Step 2.4: Generate field-level validation heatmaps ───────────────────
     if generate_heatmaps:
         from .analysis.heatmap import HeatmapGenerator
+
         viz_dir = validated_dir / "visualizations"
         hm = HeatmapGenerator(output_dir=str(viz_dir))
         heatmap_tasks = [
-            ("resume_validation_heatmap", lambda: hm.create_field_validation_heatmap(
-                resume_results, data_type="resume",
-                filename=f"resume_field_validation_{run_label}.png")),
-            ("job_validation_heatmap", lambda: hm.create_field_validation_heatmap(
-                job_results, data_type="job",
-                filename=f"job_field_validation_{run_label}.png")),
+            (
+                "resume_validation_heatmap",
+                lambda: hm.create_field_validation_heatmap(
+                    resume_results,
+                    data_type="resume",
+                    filename=f"resume_field_validation_{run_label}.png",
+                ),
+            ),
+            (
+                "job_validation_heatmap",
+                lambda: hm.create_field_validation_heatmap(
+                    job_results, data_type="job", filename=f"job_field_validation_{run_label}.png"
+                ),
+            ),
         ]
         for key, fn in heatmap_tasks:
             try:
                 files[key] = str(fn())
             except Exception as exc:
                 print(f"  Warning: heatmap '{key}' failed: {exc}")
-        heatmap_count = sum(1 for k in ("resume_validation_heatmap", "job_validation_heatmap") if k in files)
+        heatmap_count = sum(
+            1 for k in ("resume_validation_heatmap", "job_validation_heatmap") if k in files
+        )
         if heatmap_count:
             print(f"  Generated {heatmap_count} heatmaps → {viz_dir}")
 

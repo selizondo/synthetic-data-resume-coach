@@ -39,7 +39,9 @@ def run_correction_phase(
         print("  No invalid records — correction phase skipped")
         return {"stats": {}, "correction_results": [], "files": {}}
 
-    print(f"  {total_invalid} invalid records to correct ({len(invalid_resumes)} resumes, {len(invalid_jobs)} jobs)")
+    print(
+        f"  {total_invalid} invalid records to correct ({len(invalid_resumes)} resumes, {len(invalid_jobs)} jobs)"
+    )
 
     # ── Step 4.1: Correct invalid resumes ─────────────────────────────────────
     correction_results = []
@@ -74,7 +76,7 @@ def run_correction_phase(
 
     overall_rate = stats.get("success_rate", 0)
     status = "✓" if overall_rate >= 0.5 else "✗"
-    print(f"\n  Phase 4 complete: {status} {overall_rate*100:.1f}% correction rate — target >50%")
+    print(f"\n  Phase 4 complete: {status} {overall_rate * 100:.1f}% correction rate — target >50%")
 
     return {
         "stats": stats,

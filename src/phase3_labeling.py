@@ -46,7 +46,8 @@ def run_labeling_phase(
             fit_level = pair.metadata.fit_level if pair.metadata else "unknown"
             template = (
                 pair.resume.metadata.prompt_template
-                if pair.resume and pair.resume.metadata else "unknown"
+                if pair.resume and pair.resume.metadata
+                else "unknown"
             )
             fail_flags = []
             if label.skills_overlap_ratio < 0.5:
@@ -63,7 +64,7 @@ def run_labeling_phase(
                 fail_flags.append("awkward_lang")
 
             status = "PASS" if label.overall_pass else f"FAIL [{', '.join(fail_flags)}]"
-            print(f"  [{i+1}/{len(labels)}] {label.trace_id[:12]}... {status}")
+            print(f"  [{i + 1}/{len(labels)}] {label.trace_id[:12]}... {status}")
 
             logfire.info(
                 "pair_labeled",
@@ -105,7 +106,9 @@ def run_labeling_phase(
     avg_overlap = stats.get("average_skills_overlap", 0)
     failure_rates = stats.get("failure_rates", {})
 
-    print(f"\n  Phase 3 complete: {pass_rate*100:.1f}% pass rate, avg skills overlap {avg_overlap:.2f}")
+    print(
+        f"\n  Phase 3 complete: {pass_rate * 100:.1f}% pass rate, avg skills overlap {avg_overlap:.2f}"
+    )
     print("  Failure rates by mode:")
     mode_labels = {
         "experience_mismatch": "Experience Mismatch",
@@ -116,25 +119,46 @@ def run_labeling_phase(
     }
     for field, label_text in mode_labels.items():
         rate = failure_rates.get(field, 0)
-        print(f"    {label_text}: {rate*100:.1f}%")
+        print(f"    {label_text}: {rate * 100:.1f}%")
 
     # ── Step 3.5: Generate heatmaps ──────────────────────────────────────────
     if generate_heatmaps:
         from .analysis.heatmap import HeatmapGenerator
+
         viz_dir = labeled_dir / "visualizations"
         hm = HeatmapGenerator(output_dir=str(viz_dir))
         heatmap_files: dict[str, str] = {}
         heatmap_tasks = [
-            ("failure_mode_correlation", lambda: hm.create_failure_mode_correlation_matrix(
-                labeler, f"failure_mode_correlation_{run_label}.png")),
-            ("failure_by_template", lambda: hm.create_failure_rates_by_template_heatmap(
-                labeler, f"failure_by_template_{run_label}.png")),
-            ("failure_by_fit_level", lambda: hm.create_failure_rates_by_fit_level_heatmap(
-                labeler, f"failure_by_fit_level_{run_label}.png")),
-            ("niche_vs_standard", lambda: hm.create_niche_vs_standard_comparison(
-                labeler, f"niche_vs_standard_{run_label}.png")),
-            ("hallucination_by_seniority", lambda: hm.create_hallucination_by_seniority_chart(
-                labeler, f"hallucination_by_seniority_{run_label}.png")),
+            (
+                "failure_mode_correlation",
+                lambda: hm.create_failure_mode_correlation_matrix(
+                    labeler, f"failure_mode_correlation_{run_label}.png"
+                ),
+            ),
+            (
+                "failure_by_template",
+                lambda: hm.create_failure_rates_by_template_heatmap(
+                    labeler, f"failure_by_template_{run_label}.png"
+                ),
+            ),
+            (
+                "failure_by_fit_level",
+                lambda: hm.create_failure_rates_by_fit_level_heatmap(
+                    labeler, f"failure_by_fit_level_{run_label}.png"
+                ),
+            ),
+            (
+                "niche_vs_standard",
+                lambda: hm.create_niche_vs_standard_comparison(
+                    labeler, f"niche_vs_standard_{run_label}.png"
+                ),
+            ),
+            (
+                "hallucination_by_seniority",
+                lambda: hm.create_hallucination_by_seniority_chart(
+                    labeler, f"hallucination_by_seniority_{run_label}.png"
+                ),
+            ),
         ]
         for key, fn in heatmap_tasks:
             try:

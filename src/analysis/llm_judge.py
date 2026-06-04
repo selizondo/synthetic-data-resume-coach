@@ -23,21 +23,15 @@ class JudgmentResult(BaseModel):
     has_awkward_language: bool = Field(
         description="Whether the resume contains awkward or unnatural language"
     )
-    awkward_language_details: str | None = Field(
-        None, description="Details about awkward language"
-    )
+    awkward_language_details: str | None = Field(None, description="Details about awkward language")
     overall_quality_score: float = Field(
         ge=0.0, le=1.0, description="Overall quality score from 0 to 1"
     )
-    fit_assessment: str = Field(
-        description="Assessment of how well the resume fits the job"
-    )
+    fit_assessment: str = Field(description="Assessment of how well the resume fits the job")
     recommendations: list[str] = Field(
         default_factory=list, description="Recommendations for improvement"
     )
-    red_flags: list[str] = Field(
-        default_factory=list, description="Potential red flags identified"
-    )
+    red_flags: list[str] = Field(default_factory=list, description="Potential red flags identified")
 
 
 @dataclass
@@ -298,20 +292,13 @@ Provide your evaluation in structured format."""
 
         return {
             "total_judged": total,
-            "hallucination_rate": sum(
-                1 for j in self.judgments if j.result.has_hallucinations
-            )
+            "hallucination_rate": sum(1 for j in self.judgments if j.result.has_hallucinations)
             / total,
-            "awkward_language_rate": sum(
-                1 for j in self.judgments if j.result.has_awkward_language
-            )
+            "awkward_language_rate": sum(1 for j in self.judgments if j.result.has_awkward_language)
             / total,
-            "average_quality_score": sum(
-                j.result.overall_quality_score for j in self.judgments
-            )
+            "average_quality_score": sum(j.result.overall_quality_score for j in self.judgments)
             / total,
-            "average_red_flags": sum(len(j.result.red_flags) for j in self.judgments)
-            / total,
+            "average_red_flags": sum(len(j.result.red_flags) for j in self.judgments) / total,
         }
 
     def reset(self) -> None:

@@ -31,6 +31,7 @@ FIT_LEVELS = [
 
 # ── Checkpoint helpers ─────────────────────────────────────────────────────────
 
+
 def _load_jsonl(path: Path, model_cls) -> list:
     """Load records from an existing JSONL checkpoint; skip malformed lines."""
     if not path.exists():
@@ -71,6 +72,7 @@ def _pairs_by_job(pairs: list[ResumeJobPair]) -> dict[str, list[ResumeJobPair]]:
 
 # ── Main phase runner ──────────────────────────────────────────────────────────
 
+
 def run_generation_phase(
     num_jobs: int,
     resumes_per_job: int,
@@ -103,8 +105,8 @@ def run_generation_phase(
     generated_dir = Path(output_dir) / "generated"
     generated_dir.mkdir(parents=True, exist_ok=True)
 
-    jobs_file    = generated_dir / f"jobs_{run_label}.jsonl"
-    pairs_file   = generated_dir / f"pairs_{run_label}.jsonl"
+    jobs_file = generated_dir / f"jobs_{run_label}.jsonl"
+    pairs_file = generated_dir / f"pairs_{run_label}.jsonl"
     resumes_file = generated_dir / f"resumes_{run_label}.jsonl"
 
     # ── Load existing progress ─────────────────────────────────────────────────
@@ -117,8 +119,9 @@ def run_generation_phase(
     # ── Step 1.1: Generate remaining job descriptions ──────────────────────────
     jobs_needed = num_jobs - len(jobs)
     if jobs_needed > 0:
-        print(f"  Generating {jobs_needed} job descriptions "
-              f"({len(jobs)}/{num_jobs} already done)...")
+        print(
+            f"  Generating {jobs_needed} job descriptions ({len(jobs)}/{num_jobs} already done)..."
+        )
         # Seed every 5th job with a niche title so niche_vs_standard chart has data.
         # Cycle through NICHE_JOB_TITLES so longer runs get varied niche roles.
         consecutive_rl = 0
@@ -132,16 +135,18 @@ def run_generation_phase(
                 consecutive_rl = 0
                 jobs.append(job)
                 _append_jsonl(jobs_file, job)
-                print(f"  [{i+1}/{num_jobs}] {job.title} @ {job.company.name}... OK")
+                print(f"  [{i + 1}/{num_jobs}] {job.title} @ {job.company.name}... OK")
             except Exception as e:
                 if isinstance(e, RateLimitError) or "429" in str(e):
                     consecutive_rl += 1
-                    print(f"  [{i+1}/{num_jobs}] rate limit ({consecutive_rl}/{_CIRCUIT_BREAKER_THRESHOLD}): {e!s:.60}")
+                    print(
+                        f"  [{i + 1}/{num_jobs}] rate limit ({consecutive_rl}/{_CIRCUIT_BREAKER_THRESHOLD}): {e!s:.60}"
+                    )
                     if consecutive_rl >= _CIRCUIT_BREAKER_THRESHOLD:
                         print(f"  Circuit breaker tripped — resume with --resume {run_label}")
                         break
                 else:
-                    print(f"  [{i+1}/{num_jobs}] generation failed: {e!s:.80}")
+                    print(f"  [{i + 1}/{num_jobs}] generation failed: {e!s:.80}")
     else:
         print(f"  Jobs: {len(jobs)}/{num_jobs} already complete — skipping job generation")
 
@@ -150,9 +155,10 @@ def run_generation_phase(
 
     # Count how many pairs are still needed across all jobs.
     total_needed = sum(
-        max(0, resumes_per_job - len(job_pairs.get(
-            job.metadata.trace_id if job.metadata else "", []
-        )))
+        max(
+            0,
+            resumes_per_job - len(job_pairs.get(job.metadata.trace_id if job.metadata else "", [])),
+        )
         for job in jobs
     )
     print(f"\n  Generating resumes ({total_needed} needed across {len(jobs)} jobs)...")
@@ -164,20 +170,18 @@ def run_generation_phase(
         already_done = len(existing)
 
         if already_done >= resumes_per_job:
-            fit_summary = ", ".join(
-                p.metadata.fit_level for p in existing if p.metadata
+            fit_summary = ", ".join(p.metadata.fit_level for p in existing if p.metadata)
+            print(
+                f"  [{i + 1}/{len(jobs)}] {job.title} → already complete "
+                f"({already_done} resumes: {fit_summary})"
             )
-            print(f"  [{i+1}/{len(jobs)}] {job.title} → already complete "
-                  f"({already_done} resumes: {fit_summary})")
             continue
 
         # Determine which fit levels are still missing.
-        done_fit_levels = {
-            p.metadata.fit_level for p in existing if p.metadata
-        }
-        remaining = [
-            fl for fl in FIT_LEVELS if fl.value not in done_fit_levels
-        ][: resumes_per_job - already_done]
+        done_fit_levels = {p.metadata.fit_level for p in existing if p.metadata}
+        remaining = [fl for fl in FIT_LEVELS if fl.value not in done_fit_levels][
+            : resumes_per_job - already_done
+        ]
 
         try:
             new_pairs = job_gen.generate_with_multiple_resumes(
@@ -195,17 +199,21 @@ def run_generation_phase(
             fit_summary = ", ".join(
                 p.metadata.fit_level for p in (existing + new_pairs) if p.metadata
             )
-            print(f"  [{i+1}/{len(jobs)}] {job.title} → "
-                  f"{already_done + len(new_pairs)} resumes [{fit_summary}]")
+            print(
+                f"  [{i + 1}/{len(jobs)}] {job.title} → "
+                f"{already_done + len(new_pairs)} resumes [{fit_summary}]"
+            )
         except Exception as e:
             if isinstance(e, RateLimitError) or "429" in str(e):
                 consecutive_rl += 1
-                print(f"  [{i+1}/{len(jobs)}] rate limit ({consecutive_rl}/{_CIRCUIT_BREAKER_THRESHOLD}): {e!s:.60}")
+                print(
+                    f"  [{i + 1}/{len(jobs)}] rate limit ({consecutive_rl}/{_CIRCUIT_BREAKER_THRESHOLD}): {e!s:.60}"
+                )
                 if consecutive_rl >= _CIRCUIT_BREAKER_THRESHOLD:
                     print(f"  Circuit breaker tripped — resume with --resume {run_label}")
                     break
             else:
-                print(f"  [{i+1}/{len(jobs)}] resume generation failed: {e!s:.80}")
+                print(f"  [{i + 1}/{len(jobs)}] resume generation failed: {e!s:.80}")
 
     resumes: list[Resume] = [p.resume for p in all_pairs]
     print(f"\n  Phase 1 complete: {len(jobs)} jobs, {len(all_pairs)} pairs generated")
@@ -215,8 +223,8 @@ def run_generation_phase(
         "pairs": all_pairs,
         "resumes": resumes,
         "files": {
-            "jobs":    str(jobs_file),
-            "pairs":   str(pairs_file),
+            "jobs": str(jobs_file),
+            "pairs": str(pairs_file),
             "resumes": str(resumes_file),
         },
     }

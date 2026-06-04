@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import matplotlib
 
-matplotlib.use('Agg')
+matplotlib.use("Agg")
 import logfire
 import matplotlib.pyplot as plt
 import numpy as np
@@ -103,11 +103,13 @@ class HeatmapGenerator:
         for field, stats in field_stats.items():
             total = stats["success"] + stats["failure"]
             success_rate = stats["success"] / total if total > 0 else 0
-            df_data.append({
-                "field": field,
-                "success_rate": success_rate,
-                "failures": stats["failure"],
-            })
+            df_data.append(
+                {
+                    "field": field,
+                    "success_rate": success_rate,
+                    "failures": stats["failure"],
+                }
+            )
 
         df = pd.DataFrame(df_data)
 
@@ -177,11 +179,13 @@ class HeatmapGenerator:
             field_df = df[df["field"] == field]
             for category in categories:
                 count = field_df[field_df["category"] == category]["count"].sum()
-                pivot_data.append({
-                    "field": field,
-                    "category": category,
-                    "count": count,
-                })
+                pivot_data.append(
+                    {
+                        "field": field,
+                        "category": category,
+                        "count": count,
+                    }
+                )
 
         pivot_df = pd.DataFrame(pivot_data)
         pivot_table = pivot_df.pivot(index="field", columns="category", values="count")
@@ -335,7 +339,9 @@ class HeatmapGenerator:
             categories = list(stats["by_category"].keys())
             counts = list(stats["by_category"].values())
 
-            bars = axes[0, 1].barh(categories, counts, color=sns.color_palette("husl", len(categories)))
+            bars = axes[0, 1].barh(
+                categories, counts, color=sns.color_palette("husl", len(categories))
+            )
             axes[0, 1].set_xlabel("Error Count")
             axes[0, 1].set_title("Errors by Category")
 
@@ -356,7 +362,9 @@ class HeatmapGenerator:
             fields = list(stats["by_field"].keys())[:10]
             field_counts = [stats["by_field"][f] for f in fields]
 
-            bars = axes[1, 0].barh(fields, field_counts, color=sns.color_palette("viridis", len(fields)))
+            bars = axes[1, 0].barh(
+                fields, field_counts, color=sns.color_palette("viridis", len(fields))
+            )
             axes[1, 0].set_xlabel("Error Count")
             axes[1, 0].set_title("Top Error Fields")
             axes[1, 0].invert_yaxis()
@@ -374,11 +382,13 @@ class HeatmapGenerator:
         Valid: {valid_count} ({valid_count / len(results) * 100:.1f}%)
         Invalid: {invalid_count} ({invalid_count / len(results) * 100:.1f}%)
 
-        Total Errors: {stats['total_errors']}
-        Unique Error Modes: {stats['unique_modes']}
+        Total Errors: {stats["total_errors"]}
+        Unique Error Modes: {stats["unique_modes"]}
         """
         axes[1, 1].text(
-            0.1, 0.9, summary_text,
+            0.1,
+            0.9,
+            summary_text,
             transform=axes[1, 1].transAxes,
             fontsize=12,
             verticalalignment="top",
@@ -441,14 +451,18 @@ class HeatmapGenerator:
         # Build DataFrame of binary failure flags
         data = []
         for label in labeler.labels:
-            data.append({
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
-                "experience_mismatch": label.experience_mismatch,
-                "seniority_mismatch": label.seniority_mismatch,
-                "missing_core_skill": label.missing_core_skill,
-                "hallucinated_skill": label.hallucinated_skill,
-                "awkward_language": label.awkward_language_flag,
-            })
+            data.append(
+                {
+                    "low_skills_overlap": 1
+                    if label.skills_overlap_ratio < 0.5
+                    else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
+                    "experience_mismatch": label.experience_mismatch,
+                    "seniority_mismatch": label.seniority_mismatch,
+                    "missing_core_skill": label.missing_core_skill,
+                    "hallucinated_skill": label.hallucinated_skill,
+                    "awkward_language": label.awkward_language_flag,
+                }
+            )
 
         df = pd.DataFrame(data)
 
@@ -512,22 +526,30 @@ class HeatmapGenerator:
         data = []
         for label in labeler.labels:
             template = label.prompt_template or "unknown"
-            data.append({
-                "template": template,
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
-                "experience_mismatch": label.experience_mismatch,
-                "seniority_mismatch": label.seniority_mismatch,
-                "missing_core_skill": label.missing_core_skill,
-                "hallucinated_skill": label.hallucinated_skill,
-                "awkward_language": label.awkward_language_flag,
-            })
+            data.append(
+                {
+                    "template": template,
+                    "low_skills_overlap": 1
+                    if label.skills_overlap_ratio < 0.5
+                    else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
+                    "experience_mismatch": label.experience_mismatch,
+                    "seniority_mismatch": label.seniority_mismatch,
+                    "missing_core_skill": label.missing_core_skill,
+                    "hallucinated_skill": label.hallucinated_skill,
+                    "awkward_language": label.awkward_language_flag,
+                }
+            )
 
         df = pd.DataFrame(data)
 
         # Group by template and calculate mean failure rates
         failure_cols = [
-            "low_skills_overlap", "experience_mismatch", "seniority_mismatch",
-            "missing_core_skill", "hallucinated_skill", "awkward_language"
+            "low_skills_overlap",
+            "experience_mismatch",
+            "seniority_mismatch",
+            "missing_core_skill",
+            "hallucinated_skill",
+            "awkward_language",
         ]
         template_rates = df.groupby("template")[failure_cols].mean()
 
@@ -581,15 +603,19 @@ class HeatmapGenerator:
         data = []
         for label in labeler.labels:
             fit = label.fit_level or "unknown"
-            data.append({
-                "fit_level": fit,
-                "low_skills_overlap": 1 if label.skills_overlap_ratio < 0.5 else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
-                "experience_mismatch": label.experience_mismatch,
-                "seniority_mismatch": label.seniority_mismatch,
-                "missing_core_skill": label.missing_core_skill,
-                "hallucinated_skill": label.hallucinated_skill,
-                "awkward_language": label.awkward_language_flag,
-            })
+            data.append(
+                {
+                    "fit_level": fit,
+                    "low_skills_overlap": 1
+                    if label.skills_overlap_ratio < 0.5
+                    else 0,  # 0.5 Jaccard pass threshold; see docs/tradeoffs.md
+                    "experience_mismatch": label.experience_mismatch,
+                    "seniority_mismatch": label.seniority_mismatch,
+                    "missing_core_skill": label.missing_core_skill,
+                    "hallucinated_skill": label.hallucinated_skill,
+                    "awkward_language": label.awkward_language_flag,
+                }
+            )
 
         df = pd.DataFrame(data)
 
@@ -599,8 +625,12 @@ class HeatmapGenerator:
 
         # Group by fit level and calculate mean failure rates
         failure_cols = [
-            "low_skills_overlap", "experience_mismatch", "seniority_mismatch",
-            "missing_core_skill", "hallucinated_skill", "awkward_language"
+            "low_skills_overlap",
+            "experience_mismatch",
+            "seniority_mismatch",
+            "missing_core_skill",
+            "hallucinated_skill",
+            "awkward_language",
         ]
         fit_rates = df.groupby("fit_level", observed=True)[failure_cols].mean()
 
@@ -661,8 +691,12 @@ class HeatmapGenerator:
 
         # Calculate failure rates
         failure_types = [
-            "low_skills_overlap", "experience_mismatch", "seniority_mismatch",
-            "missing_core_skill", "hallucinated_skill", "awkward_language"
+            "low_skills_overlap",
+            "experience_mismatch",
+            "seniority_mismatch",
+            "missing_core_skill",
+            "hallucinated_skill",
+            "awkward_language",
         ]
 
         def calc_rates(labels):
@@ -685,8 +719,18 @@ class HeatmapGenerator:
         x = np.arange(len(failure_types))
         width = 0.35
 
-        bars1 = ax.bar(x - width/2, [niche_rates[ft] for ft in failure_types], width, label=f"Niche (n={len(niche_labels)})")
-        bars2 = ax.bar(x + width/2, [standard_rates[ft] for ft in failure_types], width, label=f"Standard (n={len(standard_labels)})")
+        bars1 = ax.bar(
+            x - width / 2,
+            [niche_rates[ft] for ft in failure_types],
+            width,
+            label=f"Niche (n={len(niche_labels)})",
+        )
+        bars2 = ax.bar(
+            x + width / 2,
+            [standard_rates[ft] for ft in failure_types],
+            width,
+            label=f"Standard (n={len(standard_labels)})",
+        )
 
         ax.set_ylabel("Failure Rate")
         ax.set_title("Failure Rates: Niche vs Standard Roles")
@@ -698,11 +742,15 @@ class HeatmapGenerator:
         for bars in [bars1, bars2]:
             for bar in bars:
                 height = bar.get_height()
-                ax.annotate(f'{height:.1%}',
-                            xy=(bar.get_x() + bar.get_width() / 2, height),
-                            xytext=(0, 3),
-                            textcoords="offset points",
-                            ha='center', va='bottom', fontsize=8)
+                ax.annotate(
+                    f"{height:.1%}",
+                    xy=(bar.get_x() + bar.get_width() / 2, height),
+                    xytext=(0, 3),
+                    textcoords="offset points",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8,
+                )
 
         plt.tight_layout()
 
@@ -762,7 +810,9 @@ class HeatmapGenerator:
         # Create bar chart
         fig, ax = plt.subplots(figsize=(10, 6))
 
-        bars = ax.bar(fit_labels, hallucination_rates, color=sns.color_palette("viridis", len(fit_labels)))
+        bars = ax.bar(
+            fit_labels, hallucination_rates, color=sns.color_palette("viridis", len(fit_labels))
+        )
 
         ax.set_ylabel("Hallucination Rate")
         ax.set_xlabel("Fit Level")
@@ -772,11 +822,15 @@ class HeatmapGenerator:
         # Add value labels and counts
         for bar, rate, count in zip(bars, hallucination_rates, counts, strict=False):
             height = bar.get_height()
-            ax.annotate(f'{rate:.1%}\n(n={count})',
-                        xy=(bar.get_x() + bar.get_width() / 2, height),
-                        xytext=(0, 3),
-                        textcoords="offset points",
-                        ha='center', va='bottom', fontsize=9)
+            ax.annotate(
+                f"{rate:.1%}\n(n={count})",
+                xy=(bar.get_x() + bar.get_width() / 2, height),
+                xytext=(0, 3),
+                textcoords="offset points",
+                ha="center",
+                va="bottom",
+                fontsize=9,
+            )
 
         plt.tight_layout()
 

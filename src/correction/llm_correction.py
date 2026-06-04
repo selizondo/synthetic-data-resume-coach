@@ -176,11 +176,13 @@ Return the corrected data as a valid {schema.__name__} object.
                         validation = self.validator.validate_job(corrected_data)
 
                     # Record this attempt
-                    result.correction_history.append({
-                        "attempt": result.attempts,
-                        "is_valid": validation.is_valid,
-                        "error_count": len(validation.errors) if not validation.is_valid else 0,
-                    })
+                    result.correction_history.append(
+                        {
+                            "attempt": result.attempts,
+                            "is_valid": validation.is_valid,
+                            "error_count": len(validation.errors) if not validation.is_valid else 0,
+                        }
+                    )
 
                     if validation.is_valid:
                         result.is_corrected = True
@@ -203,10 +205,12 @@ Return the corrected data as a valid {schema.__name__} object.
                         f"Correction attempt {result.attempts} failed",
                         error=str(e),
                     )
-                    result.correction_history.append({
-                        "attempt": result.attempts,
-                        "error": str(e),
-                    })
+                    result.correction_history.append(
+                        {
+                            "attempt": result.attempts,
+                            "error": str(e),
+                        }
+                    )
 
             # Max retries reached without success
             self.stats["failed_corrections"] += 1
@@ -254,9 +258,7 @@ Return the corrected data as a valid {schema.__name__} object.
         """
         stats = self.stats.copy()
         if stats["total_corrections"] > 0:
-            stats["success_rate"] = (
-                stats["successful_corrections"] / stats["total_corrections"]
-            )
+            stats["success_rate"] = stats["successful_corrections"] / stats["total_corrections"]
             stats["avg_attempts"] = stats["total_attempts"] / stats["total_corrections"]
         else:
             stats["success_rate"] = 0

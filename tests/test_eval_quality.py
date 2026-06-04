@@ -12,6 +12,7 @@ from src.analysis.eval_quality import (
 
 # ── Fixtures ───────────────────────────────────────────────────────────────────
 
+
 def _label(
     fit_level="good",
     overlap=0.7,
@@ -45,6 +46,7 @@ def _judgment(trace_id: str, has_hall: bool, has_awk: bool) -> dict:
 
 # ── TestThresholdSensitivity ───────────────────────────────────────────────────
 
+
 class TestThresholdSensitivity:
     def setup_method(self):
         self.analyzer = LabelQualityAnalyzer()
@@ -72,6 +74,7 @@ class TestThresholdSensitivity:
 
 
 # ── TestFitLevelStats ──────────────────────────────────────────────────────────
+
 
 class TestFitLevelStats:
     def setup_method(self):
@@ -101,15 +104,17 @@ class TestFitLevelStats:
 
 # ── TestMonotonicOrdering ──────────────────────────────────────────────────────
 
+
 class TestMonotonicOrdering:
     def setup_method(self):
         self.analyzer = LabelQualityAnalyzer()
 
     def test_detects_inversion(self):
         from src.analysis.eval_quality import FitLevelStats
+
         stats = {
             "excellent": FitLevelStats(n=10, pass_rate=0.60, failure_breakdown={}),
-            "good":      FitLevelStats(n=10, pass_rate=0.72, failure_breakdown={}),  # inversion
+            "good": FitLevelStats(n=10, pass_rate=0.72, failure_breakdown={}),  # inversion
         }
         valid, violations = self.analyzer._check_monotonic_ordering(stats)
         assert not valid
@@ -118,12 +123,13 @@ class TestMonotonicOrdering:
 
     def test_valid_ordering_passes(self):
         from src.analysis.eval_quality import FitLevelStats
+
         stats = {
             "excellent": FitLevelStats(n=10, pass_rate=0.90, failure_breakdown={}),
-            "good":      FitLevelStats(n=10, pass_rate=0.70, failure_breakdown={}),
-            "partial":   FitLevelStats(n=10, pass_rate=0.40, failure_breakdown={}),
-            "poor":      FitLevelStats(n=10, pass_rate=0.15, failure_breakdown={}),
-            "mismatch":  FitLevelStats(n=10, pass_rate=0.05, failure_breakdown={}),
+            "good": FitLevelStats(n=10, pass_rate=0.70, failure_breakdown={}),
+            "partial": FitLevelStats(n=10, pass_rate=0.40, failure_breakdown={}),
+            "poor": FitLevelStats(n=10, pass_rate=0.15, failure_breakdown={}),
+            "mismatch": FitLevelStats(n=10, pass_rate=0.05, failure_breakdown={}),
         }
         valid, violations = self.analyzer._check_monotonic_ordering(stats)
         assert valid
@@ -132,15 +138,14 @@ class TestMonotonicOrdering:
 
 # ── TestDimensionCorrelations ──────────────────────────────────────────────────
 
+
 class TestDimensionCorrelations:
     def setup_method(self):
         self.analyzer = LabelQualityAnalyzer()
 
     def test_perfect_positive_correlation(self):
         # exp_mm and sen_mm always identical → r = 1.0
-        labels = [
-            _label(exp_mm=v, sen_mm=v) for v in [0, 1, 0, 1, 1, 0, 1, 0]
-        ]
+        labels = [_label(exp_mm=v, sen_mm=v) for v in [0, 1, 0, 1, 1, 0, 1, 0]]
         matrix = self.analyzer._dimension_correlations(labels)
         r = matrix["experience_mismatch"]["seniority_mismatch"]
         assert r == pytest.approx(1.0, abs=1e-3)
@@ -160,6 +165,7 @@ class TestDimensionCorrelations:
 
 
 # ── TestCohenKappa ─────────────────────────────────────────────────────────────
+
 
 class TestCohenKappa:
     def setup_method(self):
@@ -191,6 +197,7 @@ class TestCohenKappa:
 
 
 # ── TestFullAnalyze ────────────────────────────────────────────────────────────
+
 
 class TestFullAnalyze:
     def test_integration_with_synthetic_data(self):

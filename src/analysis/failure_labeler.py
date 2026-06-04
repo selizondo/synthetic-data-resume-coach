@@ -233,9 +233,7 @@ class FailureLabeler:
 
         return overlap_ratio, list(missing), list(matched)
 
-    def detect_experience_mismatch(
-        self, resume: Resume, job: JobDescription
-    ) -> tuple[bool, int]:
+    def detect_experience_mismatch(self, resume: Resume, job: JobDescription) -> tuple[bool, int]:
         """Detect if there's an experience mismatch.
 
         Args:
@@ -267,9 +265,7 @@ class FailureLabeler:
 
         return is_mismatch, max(0, gap)
 
-    def detect_seniority_mismatch(
-        self, resume: Resume, job: JobDescription
-    ) -> tuple[bool, str]:
+    def detect_seniority_mismatch(self, resume: Resume, job: JobDescription) -> tuple[bool, str]:
         """Detect if there's a seniority level mismatch.
 
         Args:
@@ -286,6 +282,7 @@ class FailureLabeler:
             resume_seniority = SeniorityLevel.from_title(resume.experience[0].title)
             if resume_seniority == SeniorityLevel.MID:
                 from datetime import date as _date
+
                 total_years = sum(
                     ((exp.end_date or _date.today()) - exp.start_date).days / 365
                     for exp in resume.experience
@@ -299,9 +296,7 @@ class FailureLabeler:
         )
         return is_mismatch, gap_description
 
-    def detect_missing_core_skill(
-        self, resume: Resume, job: JobDescription
-    ) -> bool:
+    def detect_missing_core_skill(self, resume: Resume, job: JobDescription) -> bool:
         """Detect if resume is missing a core/critical skill.
 
         Core skills are typically the first 3 required skills or
@@ -325,9 +320,7 @@ class FailureLabeler:
         for core_skill in core_skills:
             if core_skill not in resume_skills:
                 # Check for partial matches
-                partial_match = any(
-                    core_skill in rs or rs in core_skill for rs in resume_skills
-                )
+                partial_match = any(core_skill in rs or rs in core_skill for rs in resume_skills)
                 if not partial_match:
                     return True
 
@@ -358,9 +351,7 @@ class FailureLabeler:
         # Check for unrealistic skill counts
         if len(resume.skills) > 20:
             # Too many skills might indicate hallucination
-            expert_count = sum(
-                1 for s in resume.skills if s.proficiency_level.lower() == "expert"
-            )
+            expert_count = sum(1 for s in resume.skills if s.proficiency_level.lower() == "expert")
             if expert_count > 10:
                 return True
 
@@ -371,17 +362,12 @@ class FailureLabeler:
 
         # Check if entry-level resume claims too many advanced skills
         total_exp_years = sum(
-            (
-                (exp.end_date or datetime.now().date()) - exp.start_date
-            ).days
-            / 365
+            ((exp.end_date or datetime.now().date()) - exp.start_date).days / 365
             for exp in resume.experience
         )
 
         if total_exp_years < 2:  # Entry-level
-            expert_count = sum(
-                1 for s in resume.skills if s.proficiency_level.lower() == "expert"
-            )
+            expert_count = sum(1 for s in resume.skills if s.proficiency_level.lower() == "expert")
             if expert_count > 2:
                 return True
 
@@ -423,9 +409,7 @@ class FailureLabeler:
             "world-class",
             "game-changing",
         ]
-        buzzword_count = sum(
-            1 for word in buzzwords if word in full_text.lower()
-        )
+        buzzword_count = sum(1 for word in buzzwords if word in full_text.lower())
 
         # More than 5 buzzwords in a single resume is suspicious
         if buzzword_count > 5:

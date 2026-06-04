@@ -388,9 +388,7 @@ async def review_resume(request: ReviewResumeRequest):
             )
 
             # Generate recommendations
-            recommendations = generate_recommendations(
-                labels, skill_analysis, failure_flags
-            )
+            recommendations = generate_recommendations(labels, skill_analysis, failure_flags)
 
             # Optional LLM assessment
             llm_assessment = None
@@ -413,7 +411,9 @@ async def review_resume(request: ReviewResumeRequest):
                 except Exception as e:
                     logfire.warning(f"LLM judge failed: {e}")
 
-            strategy = "rule_based+llm_judge" if request.use_llm_judge and llm_assessment else "rule_based"
+            strategy = (
+                "rule_based+llm_judge" if request.use_llm_judge and llm_assessment else "rule_based"
+            )
             response = ReviewResumeResponse(
                 trace_id=trace_id,
                 overall_fit=fit_level,
@@ -492,17 +492,19 @@ async def get_failure_rates(labeled_dir: str = "data/labeled"):
         "awkward_language_flag",
     ]
     failure_rates = {
-        field: sum(r.get(field, 0) for r in records) / total
-        for field in failure_fields
+        field: sum(r.get(field, 0) for r in records) / total for field in failure_fields
     }
-    overall_pass_rate = sum(
-        1
-        for r in records
-        if (
-            r.get("skills_overlap_ratio", 0.0) >= 0.5
-            and all(r.get(f, 0) == 0 for f in failure_fields)
+    overall_pass_rate = (
+        sum(
+            1
+            for r in records
+            if (
+                r.get("skills_overlap_ratio", 0.0) >= 0.5
+                and all(r.get(f, 0) == 0 for f in failure_fields)
+            )
         )
-    ) / total
+        / total
+    )
 
     return {
         "source_file": str(latest_file),
@@ -537,7 +539,7 @@ async def get_label_quality(run_label: str = "", labeled_dir: str = "data/labele
             raise HTTPException(
                 status_code=404,
                 detail=f"No label quality report for run '{run_label}'. "
-                       "Run: python -m src.main --eval-quality --resume <run_label>",
+                "Run: python -m src.main --eval-quality --resume <run_label>",
             )
     else:
         candidates = sorted(
@@ -549,7 +551,7 @@ async def get_label_quality(run_label: str = "", labeled_dir: str = "data/labele
             raise HTTPException(
                 status_code=404,
                 detail=f"No label quality reports found in {labeled_dir}. "
-                       "Run: python -m src.main --eval-quality",
+                "Run: python -m src.main --eval-quality",
             )
         report_file = candidates[0]
 

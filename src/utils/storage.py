@@ -126,11 +126,13 @@ def save_invalid_records(
 
     invalid_data = []
     for record, error in zip(records, errors, strict=False):
-        invalid_data.append({
-            "record": record,
-            "errors": error,
-            "labeled_at": datetime.now(UTC).isoformat(),
-        })
+        invalid_data.append(
+            {
+                "record": record,
+                "errors": error,
+                "labeled_at": datetime.now(UTC).isoformat(),
+            }
+        )
 
     return save_jsonl(invalid_data, file_path, append=True)
 

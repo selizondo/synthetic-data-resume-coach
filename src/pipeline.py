@@ -24,6 +24,7 @@ from .utils.storage import save_jsonl
 
 try:
     from .evaluation.braintrust_eval import BraintrustEvaluator
+
     _BRAINTRUST_AVAILABLE = True
 except ImportError:
     _BRAINTRUST_AVAILABLE = False
@@ -63,9 +64,7 @@ class Pipeline:
         self.validator = SchemaValidator()
         self.failure_analyzer = FailureModeAnalyzer()
         self.failure_labeler = FailureLabeler()
-        self.heatmap_generator = HeatmapGenerator(
-            output_dir=f"{self.config.output_dir}/validated"
-        )
+        self.heatmap_generator = HeatmapGenerator(output_dir=f"{self.config.output_dir}/validated")
         self.corrector = LLMCorrector(
             model=self.config.model,
             max_retries=self.config.max_correction_retries,
@@ -134,7 +133,7 @@ class Pipeline:
             # ── Stage 1: Generate jobs ────────────────────────────────────────
             t0 = time.perf_counter()
             logfire.info("Stage 1: Generating job descriptions...")
-            print(f"\n{'─'*50}\nSTAGE 1 — Job Generation\n{'─'*50}")
+            print(f"\n{'─' * 50}\nSTAGE 1 — Job Generation\n{'─' * 50}")
             jobs = self.job_generator.generate_batch(
                 count=num_jobs,
                 industries=industries,
@@ -152,7 +151,9 @@ class Pipeline:
             # ── Stage 2: Generate resumes (5 fit levels per job) ─────────────
             t0 = time.perf_counter()
             logfire.info("Stage 2: Generating resumes for each job...")
-            print(f"\n{'─'*50}\nSTAGE 2 — Resume Generation (jobs-first, {self.config.resumes_per_job} fit levels)\n{'─'*50}")
+            print(
+                f"\n{'─' * 50}\nSTAGE 2 — Resume Generation (jobs-first, {self.config.resumes_per_job} fit levels)\n{'─' * 50}"
+            )
             all_pairs = []
             for i, job in enumerate(jobs):
                 try:
@@ -163,13 +164,9 @@ class Pipeline:
                         fit_levels=self.FIT_LEVELS,
                     )
                     all_pairs.extend(pairs)
-                    logfire.info(
-                        f"Generated {len(pairs)} resumes for job {i + 1}/{len(jobs)}"
-                    )
+                    logfire.info(f"Generated {len(pairs)} resumes for job {i + 1}/{len(jobs)}")
                 except Exception as e:
-                    logfire.error(
-                        f"Failed generating resumes for job {i + 1}", error=str(e)
-                    )
+                    logfire.error(f"Failed generating resumes for job {i + 1}", error=str(e))
 
             stage_times["generate_resumes"] = round(time.perf_counter() - t0, 2)
             results["generation"]["pairs_generated"] = len(all_pairs)
@@ -194,7 +191,7 @@ class Pipeline:
             # ── Stage 3: Validate resumes ─────────────────────────────────────
             t0 = time.perf_counter()
             logfire.info("Stage 3: Validating resumes...")
-            print(f"\n{'─'*50}\nSTAGE 3 — Resume Validation\n{'─'*50}")
+            print(f"\n{'─' * 50}\nSTAGE 3 — Resume Validation\n{'─' * 50}")
             resume_data = [r.model_dump(mode="json") for r in resumes]
             resume_results, resume_summary = self.validator.validate_batch(
                 resume_data, data_type="resume"
@@ -205,18 +202,16 @@ class Pipeline:
             # ── Stage 4: Validate jobs ────────────────────────────────────────
             t0 = time.perf_counter()
             logfire.info("Stage 4: Validating job descriptions...")
-            print(f"\n{'─'*50}\nSTAGE 4 — Job Validation\n{'─'*50}")
+            print(f"\n{'─' * 50}\nSTAGE 4 — Job Validation\n{'─' * 50}")
             job_data = [j.model_dump(mode="json") for j in jobs]
-            job_results, job_summary = self.validator.validate_batch(
-                job_data, data_type="job"
-            )
+            job_results, job_summary = self.validator.validate_batch(job_data, data_type="job")
             stage_times["validate_jobs"] = round(time.perf_counter() - t0, 2)
             results["validation"]["jobs"] = job_summary
 
             # ── Stage 5: Schema failure mode analysis ─────────────────────────
             t0 = time.perf_counter()
             logfire.info("Stage 5: Analyzing schema validation failure modes...")
-            print(f"\n{'─'*50}\nSTAGE 5 — Failure Mode Analysis\n{'─'*50}")
+            print(f"\n{'─' * 50}\nSTAGE 5 — Failure Mode Analysis\n{'─' * 50}")
             all_results = resume_results + job_results
             self.failure_analyzer.analyze_results(all_results)
             failure_stats = self.failure_analyzer.get_statistics()
@@ -264,9 +259,7 @@ class Pipeline:
                 judgments = []
                 for pair in sample_pairs:
                     try:
-                        judgment = self.llm_judge.judge_pair(
-                            pair.resume, pair.job_description
-                        )
+                        judgment = self.llm_judge.judge_pair(pair.resume, pair.job_description)
                         judgments.append(judgment)
                         if self.braintrust and getattr(self.braintrust, "enabled", False):
                             self.braintrust.log_llm_judgment(judgment)
@@ -290,7 +283,7 @@ class Pipeline:
             if self.config.enable_correction:
                 t0 = time.perf_counter()
                 logfire.info("Stage 6: Running correction loop...")
-                print(f"\n{'─'*50}\nSTAGE 6 — Correction Loop\n{'─'*50}")
+                print(f"\n{'─' * 50}\nSTAGE 6 — Correction Loop\n{'─' * 50}")
                 invalid_resumes = [r for r in resume_results if not r.is_valid]
                 invalid_jobs = [r for r in job_results if not r.is_valid]
                 correction_results = []
@@ -304,9 +297,7 @@ class Pipeline:
 
                 if invalid_jobs:
                     logfire.info(f"Correcting {len(invalid_jobs)} invalid jobs...")
-                    job_corrections = self.corrector.correct_batch(
-                        invalid_jobs, data_type="job"
-                    )
+                    job_corrections = self.corrector.correct_batch(invalid_jobs, data_type="job")
                     correction_results.extend(job_corrections)
 
                 results["correction"] = self.corrector.get_stats()
@@ -324,7 +315,7 @@ class Pipeline:
             if self.config.generate_heatmaps:
                 t0 = time.perf_counter()
                 logfire.info("Stage 7: Generating visualizations...")
-                print(f"\n{'─'*50}\nSTAGE 7 — Visualizations\n{'─'*50}")
+                print(f"\n{'─' * 50}\nSTAGE 7 — Visualizations\n{'─' * 50}")
 
                 resume_heatmap = self.heatmap_generator.create_field_validation_heatmap(
                     resume_results,
@@ -360,9 +351,11 @@ class Pipeline:
                     )
                     results["files"]["failure_correlation"] = str(corr_heatmap)
 
-                    template_heatmap = self.heatmap_generator.create_failure_rates_by_template_heatmap(
-                        self.failure_labeler,
-                        filename=f"failure_by_template_{timestamp}.png",
+                    template_heatmap = (
+                        self.heatmap_generator.create_failure_rates_by_template_heatmap(
+                            self.failure_labeler,
+                            filename=f"failure_by_template_{timestamp}.png",
+                        )
                     )
                     results["files"]["failure_by_template"] = str(template_heatmap)
 
@@ -391,14 +384,10 @@ class Pipeline:
             logfire.info("Stage 8: Exporting validated data...")
 
             valid_resumes = [
-                r.data.model_dump(mode="json")
-                for r in resume_results
-                if r.is_valid and r.data
+                r.data.model_dump(mode="json") for r in resume_results if r.is_valid and r.data
             ]
             valid_jobs = [
-                r.data.model_dump(mode="json")
-                for r in job_results
-                if r.is_valid and r.data
+                r.data.model_dump(mode="json") for r in job_results if r.is_valid and r.data
             ]
 
             if valid_resumes:
@@ -490,7 +479,8 @@ def main():
         description="Synthetic Data Resume Coach - Data Generation Pipeline"
     )
     parser.add_argument(
-        "--num-jobs", "-n",
+        "--num-jobs",
+        "-n",
         type=int,
         default=10,
         help="Number of job descriptions to generate (default: 10)",
@@ -502,7 +492,8 @@ def main():
         help="Number of resumes to generate per job (default: 5)",
     )
     parser.add_argument(
-        "--model", "-m",
+        "--model",
+        "-m",
         type=str,
         default="llama-3.3-70b-versatile",
         help="LLM model to use (default: llama-3.3-70b-versatile)",
@@ -528,7 +519,8 @@ def main():
         help="Enable Braintrust logging (requires BRAINTRUST_API_KEY)",
     )
     parser.add_argument(
-        "--output-dir", "-o",
+        "--output-dir",
+        "-o",
         type=str,
         default="data",
         help="Output directory (default: data)",

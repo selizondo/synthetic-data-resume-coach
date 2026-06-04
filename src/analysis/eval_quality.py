@@ -40,6 +40,7 @@ MIN_PAIRS_FOR_KAPPA = 5
 
 # ── Pydantic report models ─────────────────────────────────────────────────────
 
+
 class FitLevelStats(BaseModel):
     n: int
     pass_rate: float = Field(ge=0.0, le=1.0)
@@ -65,6 +66,7 @@ class LabelQualityReport(BaseModel):
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 
 def _pair_passes(label: dict, overlap_threshold: float) -> bool:
     if label.get("skills_overlap_ratio", 0.0) < overlap_threshold:
@@ -102,6 +104,7 @@ def _cohen_kappa_binary(rule_vals: list[int], judge_vals: list[int]) -> float:
 
 
 # ── Analyzer ───────────────────────────────────────────────────────────────────
+
 
 class LabelQualityAnalyzer:
     """Compute label quality diagnostics from persisted failure-label records."""
@@ -154,8 +157,7 @@ class LabelQualityAnalyzer:
             n = len(group)
             passes = sum(1 for lb in group if _pair_passes(lb, 0.5))
             breakdown = {
-                dim: round(sum(lb.get(dim, 0) for lb in group) / n, 4)
-                for dim in BINARY_DIMS
+                dim: round(sum(lb.get(dim, 0) for lb in group) / n, 4) for dim in BINARY_DIMS
             }
             stats[lvl] = FitLevelStats(
                 n=n,
@@ -164,9 +166,7 @@ class LabelQualityAnalyzer:
             )
         return stats
 
-    def _check_monotonic_ordering(
-        self, stats: dict[str, FitLevelStats]
-    ) -> tuple[bool, list[str]]:
+    def _check_monotonic_ordering(self, stats: dict[str, FitLevelStats]) -> tuple[bool, list[str]]:
         violations: list[str] = []
         present = [lvl for lvl in FIT_LEVEL_ORDER if lvl in stats]
         for i in range(1, len(present)):
@@ -174,17 +174,12 @@ class LabelQualityAnalyzer:
             prev_rate = stats[prev].pass_rate
             curr_rate = stats[curr].pass_rate
             if curr_rate > prev_rate:
-                violations.append(
-                    f"{curr}({curr_rate:.2f}) > {prev}({prev_rate:.2f})"
-                )
+                violations.append(f"{curr}({curr_rate:.2f}) > {prev}({prev_rate:.2f})")
         return len(violations) == 0, violations
 
-    def _dimension_correlations(
-        self, labels: list[dict]
-    ) -> dict[str, dict[str, float]]:
+    def _dimension_correlations(self, labels: list[dict]) -> dict[str, dict[str, float]]:
         cols: dict[str, list[float]] = {
-            dim: [float(lb.get(dim, 0)) for lb in labels]
-            for dim in BINARY_DIMS
+            dim: [float(lb.get(dim, 0)) for lb in labels] for dim in BINARY_DIMS
         }
         matrix: dict[str, dict[str, float]] = {}
         for d1 in BINARY_DIMS:
@@ -193,9 +188,7 @@ class LabelQualityAnalyzer:
                 matrix[d1][d2] = 1.0 if d1 == d2 else _pearson_r(cols[d1], cols[d2])
         return matrix
 
-    def _cohen_kappa(
-        self, labels: list[dict], judgments: list[dict]
-    ) -> LLMAgreementStats | None:
+    def _cohen_kappa(self, labels: list[dict], judgments: list[dict]) -> LLMAgreementStats | None:
         # Build lookup: trace_id → judgment
         j_by_id = {j["trace_id"]: j for j in judgments if "trace_id" in j}
 

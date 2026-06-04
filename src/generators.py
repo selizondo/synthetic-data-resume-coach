@@ -50,23 +50,36 @@ EXPERIENCE_LEVELS = [
     "Lead/Principal (10+ years)",
 ]
 
+
 def _years_to_exp_level(years: int) -> str:
     """Human-readable label for resume metadata display."""
     level = SeniorityLevel.from_years(years)
     labels = {
-        SeniorityLevel.ENTRY:     EXPERIENCE_LEVELS[0],
-        SeniorityLevel.MID:       EXPERIENCE_LEVELS[1],
-        SeniorityLevel.SENIOR:    EXPERIENCE_LEVELS[2],
-        SeniorityLevel.LEAD:      EXPERIENCE_LEVELS[3],
+        SeniorityLevel.ENTRY: EXPERIENCE_LEVELS[0],
+        SeniorityLevel.MID: EXPERIENCE_LEVELS[1],
+        SeniorityLevel.SENIOR: EXPERIENCE_LEVELS[2],
+        SeniorityLevel.LEAD: EXPERIENCE_LEVELS[3],
         SeniorityLevel.EXECUTIVE: EXPERIENCE_LEVELS[3],
     }
     return labels[level]
 
 
 NICHE_ROLES = {
-    "blockchain", "quantum computing", "ai ethics", "robotics",
-    "bioinformatics", "cryptography", "embedded systems", "fpga",
-    "compiler", "kernel", "hpc", "mlops", "devsecops", "sre", "reliability",
+    "blockchain",
+    "quantum computing",
+    "ai ethics",
+    "robotics",
+    "bioinformatics",
+    "cryptography",
+    "embedded systems",
+    "fpga",
+    "compiler",
+    "kernel",
+    "hpc",
+    "mlops",
+    "devsecops",
+    "sre",
+    "reliability",
 }
 
 # Explicit titles that guarantee niche detection fires. Used to seed ~20% of
@@ -84,9 +97,11 @@ NICHE_JOB_TITLES = [
     "Cryptography Engineer",
 ]
 
+
 def _detect_resume_seniority(resume) -> SeniorityLevel:
     """Infer candidate seniority from resume — mirrors FailureLabeler logic."""
     from datetime import date
+
     if resume.experience:
         level = SeniorityLevel.from_title(resume.experience[0].title)
         if level == SeniorityLevel.MID:
@@ -99,7 +114,9 @@ def _detect_resume_seniority(resume) -> SeniorityLevel:
     return SeniorityLevel.MID
 
 
-def _seniority_check_passes(candidate: SeniorityLevel, job: SeniorityLevel, fit_level: FitLevel) -> bool:
+def _seniority_check_passes(
+    candidate: SeniorityLevel, job: SeniorityLevel, fit_level: FitLevel
+) -> bool:
     """Return True if the generated candidate's seniority satisfies the fit level constraint."""
     gap = candidate - job
     if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD):
@@ -115,15 +132,16 @@ def _seniority_check_passes(candidate: SeniorityLevel, job: SeniorityLevel, fit_
 # Spec-defined overlap targets per fit level (lo inclusive, hi exclusive)
 FIT_OVERLAP_RANGE: dict[FitLevel, tuple[float, float]] = {
     FitLevel.EXCELLENT: (0.80, 1.01),
-    FitLevel.GOOD:      (0.60, 0.80),
-    FitLevel.PARTIAL:   (0.40, 0.60),
-    FitLevel.POOR:      (0.20, 0.40),
-    FitLevel.MISMATCH:  (0.00, 0.20),
+    FitLevel.GOOD: (0.60, 0.80),
+    FitLevel.PARTIAL: (0.40, 0.60),
+    FitLevel.POOR: (0.20, 0.40),
+    FitLevel.MISMATCH: (0.00, 0.20),
 }
 
 
 def _normalize_skill(skill: str) -> str:
     import re
+
     n = skill.lower().strip()
     n = re.sub(r"\s*\d+(\.\d+)*\s*", "", n)
     for suffix in [".js", ".py", " developer", " engineer", " programming"]:
@@ -134,7 +152,7 @@ def _normalize_skill(skill: str) -> str:
 def _compute_overlap(resume, required_skills: list[str]) -> float:
     """Jaccard similarity between resume skills and job required skills."""
     resume_set = {_normalize_skill(s.name) for s in resume.skills}
-    job_set    = {_normalize_skill(s) for s in required_skills}
+    job_set = {_normalize_skill(s) for s in required_skills}
     if not resume_set or not job_set:
         return 0.0
     return len(resume_set & job_set) / len(resume_set | job_set)
@@ -147,19 +165,20 @@ def _overlap_in_range(overlap: float, fit_level: FitLevel) -> bool:
 
 FIT_INSTRUCTIONS: dict[FitLevel, str] = {
     FitLevel.EXCELLENT: "Include ALL required skills with Expert proficiency.",
-    FitLevel.GOOD:      "Include 80% of required skills with Advanced proficiency.",
-    FitLevel.PARTIAL:   "Include about 50% of required skills with varying proficiency.",
-    FitLevel.POOR:      "Include only 20-30% of required skills, mostly at Beginner level.",
-    FitLevel.MISMATCH:  "Include skills from a completely different field. Do NOT include any of the required skills listed above.",
+    FitLevel.GOOD: "Include 80% of required skills with Advanced proficiency.",
+    FitLevel.PARTIAL: "Include about 50% of required skills with varying proficiency.",
+    FitLevel.POOR: "Include only 20-30% of required skills, mostly at Beginner level.",
+    FitLevel.MISMATCH: "Include skills from a completely different field. Do NOT include any of the required skills listed above.",
 }
 
 TEMPLATE_STYLE_HINTS: dict[str, str] = {
-    "formal":              "Write in a formal, traditional resume style.",
-    "casual":              "Write in a friendly, approachable tone.",
-    "technical":           "Use precise, technical language. Quantify achievements with metrics. Do not add skills beyond those required by the job.",
+    "formal": "Write in a formal, traditional resume style.",
+    "casual": "Write in a friendly, approachable tone.",
+    "technical": "Use precise, technical language. Quantify achievements with metrics. Do not add skills beyond those required by the job.",
     "achievement_focused": "Lead every bullet with a quantified achievement (numbers, percentages, scale).",
-    "career_changer":      "Frame the candidate as transitioning from a different field. Emphasize transferable skills, self-learning, and bootcamps over direct experience.",
+    "career_changer": "Frame the candidate as transitioning from a different field. Emphasize transferable skills, self-learning, and bootcamps over direct experience.",
 }
+
 
 def _seniority_instruction(fit_level: FitLevel, job_seniority: SeniorityLevel) -> str:
     if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD):
@@ -181,6 +200,7 @@ def _is_niche_role(title: str) -> bool:
 
 
 # ── ResumeGenerator ────────────────────────────────────────────────────────────
+
 
 class ResumeGenerator:
     """Generate synthetic resumes using LLM with structured output."""
@@ -227,11 +247,14 @@ class ResumeGenerator:
             resume = instructor_complete(
                 messages=[
                     {"role": "system", "content": tmpl["system"]},
-                    {"role": "user", "content": tmpl["user"].format(
-                        industry=industry,
-                        experience_level=experience_level,
-                        role_context=role_context,
-                    )},
+                    {
+                        "role": "user",
+                        "content": tmpl["user"].format(
+                            industry=industry,
+                            experience_level=experience_level,
+                            role_context=role_context,
+                        ),
+                    },
                 ],
                 response_model=Resume,
                 model=self.model,
@@ -245,8 +268,13 @@ class ResumeGenerator:
                 fit_level=fit_level,
                 target_job_trace_id=target_job_trace_id,
             )
-            logfire.info("Resume generated", trace_id=trace_id, industry=industry,
-                         experience_level=experience_level, prompt_template=prompt_template)
+            logfire.info(
+                "Resume generated",
+                trace_id=trace_id,
+                industry=industry,
+                experience_level=experience_level,
+                prompt_template=prompt_template,
+            )
         return resume
 
     def generate_for_job(
@@ -263,8 +291,10 @@ class ResumeGenerator:
         exp_level = _years_to_exp_level(experience_years)
         job_seniority = SeniorityLevel.from_years(experience_years)
         fit_match = (
-            "matches well with" if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD)
-            else "partially matches" if fit_level == FitLevel.PARTIAL
+            "matches well with"
+            if fit_level in (FitLevel.EXCELLENT, FitLevel.GOOD)
+            else "partially matches"
+            if fit_level == FitLevel.PARTIAL
             else "does not match"
         )
         prompt_template = template or random.choice(list(self._templates().keys()))
@@ -276,15 +306,14 @@ class ResumeGenerator:
             n = len(required_skills)
             if fit_level == FitLevel.GOOD:
                 # Exclude 1 skill so overlap lands in 0.60–0.80
-                excluded = required_skills[n - 1:]
+                excluded = required_skills[n - 1 :]
                 if excluded:
                     fit_instruction += (
-                        f" Do NOT include: {', '.join(excluded)}."
-                        " Target skill overlap: 60–80%."
+                        f" Do NOT include: {', '.join(excluded)}. Target skill overlap: 60–80%."
                     )
             elif fit_level == FitLevel.PARTIAL:
                 # Exclude last 2 skills so overlap lands in 0.40–0.60
-                excluded = required_skills[max(1, n - 2):]
+                excluded = required_skills[max(1, n - 2) :]
                 if excluded:
                     fit_instruction += (
                         f" Do NOT include these skills: {', '.join(excluded)}."
@@ -292,7 +321,7 @@ class ResumeGenerator:
                     )
             elif fit_level == FitLevel.POOR:
                 # Keep at most 2 skills, exclude the rest
-                excluded = required_skills[min(2, n):]
+                excluded = required_skills[min(2, n) :]
                 if excluded:
                     fit_instruction += (
                         f" Do NOT include these skills: {', '.join(excluded)}."
@@ -300,7 +329,7 @@ class ResumeGenerator:
                         " Target skill overlap: 20–40%."
                     )
             elif fit_level == FitLevel.MISMATCH:
-                excluded = required_skills[:min(5, n)]
+                excluded = required_skills[: min(5, n)]
                 fit_instruction += (
                     f" Specifically exclude: {', '.join(excluded)}. "
                     "Target Jaccard skill overlap with the job: < 0.20."
@@ -366,24 +395,29 @@ class ResumeGenerator:
                     model=self.model,
                 )
                 candidate_seniority = _detect_resume_seniority(candidate)
-                candidate_overlap   = _compute_overlap(candidate, required_skills)
+                candidate_overlap = _compute_overlap(candidate, required_skills)
 
-                seniority_ok = _seniority_check_passes(candidate_seniority, job_seniority, fit_level)
-                overlap_ok   = _overlap_in_range(candidate_overlap, fit_level)
+                seniority_ok = _seniority_check_passes(
+                    candidate_seniority, job_seniority, fit_level
+                )
+                overlap_ok = _overlap_in_range(candidate_overlap, fit_level)
 
                 if seniority_ok and overlap_ok:
                     resume = candidate
                     total_attempts = attempt + 1
                     break
 
-                logfire.info("Quality check failed, retrying",
-                             attempt=attempt + 1, fit_level=fit_level.value,
-                             candidate_seniority=candidate_seniority.label,
-                             job_seniority=job_seniority.label,
-                             candidate_overlap=round(candidate_overlap, 3),
-                             overlap_target=f"{lo:.0%}-{hi:.0%}",
-                             seniority_ok=seniority_ok,
-                             overlap_ok=overlap_ok)
+                logfire.info(
+                    "Quality check failed, retrying",
+                    attempt=attempt + 1,
+                    fit_level=fit_level.value,
+                    candidate_seniority=candidate_seniority.label,
+                    job_seniority=job_seniority.label,
+                    candidate_overlap=round(candidate_overlap, 3),
+                    overlap_target=f"{lo:.0%}-{hi:.0%}",
+                    seniority_ok=seniority_ok,
+                    overlap_ok=overlap_ok,
+                )
             else:
                 resume = candidate  # max attempts reached — use last candidate
                 total_attempts = 2
@@ -397,12 +431,18 @@ class ResumeGenerator:
                 fit_level=fit_level,
                 target_job_trace_id=job_trace_id,
             )
-            logfire.info("Resume generated for job", trace_id=trace_id,
-                         job_trace_id=job_trace_id, fit_level=fit_level.value,
-                         template=prompt_template, industry=industry, model=self.model,
-                         total_attempts=total_attempts,
-                         final_overlap=round(candidate_overlap, 3),
-                         final_seniority=candidate_seniority.label)
+            logfire.info(
+                "Resume generated for job",
+                trace_id=trace_id,
+                job_trace_id=job_trace_id,
+                fit_level=fit_level.value,
+                template=prompt_template,
+                industry=industry,
+                model=self.model,
+                total_attempts=total_attempts,
+                final_overlap=round(candidate_overlap, 3),
+                final_seniority=candidate_seniority.label,
+            )
         return resume
 
     def generate_batch(
@@ -447,6 +487,7 @@ class ResumeGenerator:
 
 # ── JobDescriptionGenerator ────────────────────────────────────────────────────
 
+
 class JobDescriptionGenerator:
     """Generate synthetic job descriptions using LLM with structured output."""
 
@@ -488,9 +529,14 @@ class JobDescriptionGenerator:
             min_years=min_years,
         )
 
-        with logfire.span("generate_job_description", trace_id=trace_id,
-                          industry=industry, seniority=seniority_level,
-                          model=self.model, phase="generation"):
+        with logfire.span(
+            "generate_job_description",
+            trace_id=trace_id,
+            industry=industry,
+            seniority=seniority_level,
+            model=self.model,
+            phase="generation",
+        ):
             job = instructor_complete(
                 messages=[
                     {"role": "system", "content": tmpl["system"]},
@@ -505,9 +551,14 @@ class JobDescriptionGenerator:
                 prompt_template=prompt_template or "default",
                 is_niche_role=_is_niche_role(job.title),
             )
-            logfire.info("Job description generated", trace_id=trace_id, title=job.title,
-                         company=job.company.name, seniority=seniority_level,
-                         is_niche=job.metadata.is_niche_role)
+            logfire.info(
+                "Job description generated",
+                trace_id=trace_id,
+                title=job.title,
+                company=job.company.name,
+                seniority=seniority_level,
+                is_niche=job.metadata.is_niche_role,
+            )
         return job
 
     def generate_batch(
@@ -571,22 +622,30 @@ class JobDescriptionGenerator:
                     ),
                 )
                 pairs.append(pair)
-                logfire.info(f"Generated resume {i + 1}/{resumes_per_job} for job",
-                             job_trace_id=job_trace_id, fit_level=fit_level.value,
-                             template=template)
+                logfire.info(
+                    f"Generated resume {i + 1}/{resumes_per_job} for job",
+                    job_trace_id=job_trace_id,
+                    fit_level=fit_level.value,
+                    template=template,
+                )
             except Exception as e:
                 if isinstance(e, RateLimitError) or "429" in str(e):
                     raise
                 dropped.append(fit_level.value)
-                logfire.error(f"Failed to generate resume {i + 1} for job",
-                              error=str(e), job_trace_id=job_trace_id,
-                              fit_level=fit_level.value)
+                logfire.error(
+                    f"Failed to generate resume {i + 1} for job",
+                    error=str(e),
+                    job_trace_id=job_trace_id,
+                    fit_level=fit_level.value,
+                )
 
         if dropped:
-            logfire.error("pairs_dropped",
-                          job_trace_id=job_trace_id,
-                          dropped_count=len(dropped),
-                          dropped_fit_levels=dropped)
+            logfire.error(
+                "pairs_dropped",
+                job_trace_id=job_trace_id,
+                dropped_count=len(dropped),
+                dropped_fit_levels=dropped,
+            )
 
         return pairs
 

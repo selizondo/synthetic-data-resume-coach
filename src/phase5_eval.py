@@ -73,6 +73,7 @@ def _print_summary(report: LabelQualityReport) -> None:
 
     print("\n  Fit-Level Stratification:")
     from .analysis.eval_quality import FIT_LEVEL_ORDER
+
     for lvl in FIT_LEVEL_ORDER:
         if lvl not in report.fit_level_stats:
             continue
