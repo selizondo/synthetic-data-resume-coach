@@ -6,6 +6,8 @@ ML teams training resume-matching models need labeled data, but manually labeled
 
 This project is a production-grade synthetic data pipeline that generates resume–job-description pairs at five calibrated fit levels, validates every pair against a strict Pydantic schema, labels each one with six independent failure metrics, and corrects failures by re-prompting the LLM with its own error messages. It also ships a FastAPI service that runs the same labeling logic on demand.
 
+*Companion post: [Why career_changer Resumes Failed 2× More Often](docs/blog_post.md) — what the failure mode data revealed about prompt template bias and why 100% schema validation still left 42% of pairs failing quality labels.*
+
 ---
 
 ## Engineering Decisions
@@ -214,8 +216,6 @@ python -m src.main --num-jobs 10 --enable-llm-judge
 # Run Phase 5 label quality report against a completed run
 python -m src.main --eval-quality --resume <run_label>
 ```
-
-**Blog post:** [docs/blog_post.md](docs/blog_post.md)
 
 ---
 
