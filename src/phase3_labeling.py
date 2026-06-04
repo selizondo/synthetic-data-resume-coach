@@ -71,6 +71,7 @@ def run_labeling_phase(
                 fit_level=fit_level,
                 template=template,
                 passed=label.overall_pass,
+                quality_passed=label.quality_pass,
                 skills_overlap=round(label.skills_overlap_ratio, 3),
                 seniority_mismatch=label.seniority_mismatch,
                 experience_mismatch=label.experience_mismatch,
@@ -111,7 +112,7 @@ def run_labeling_phase(
         "seniority_mismatch": "Seniority Mismatch",
         "missing_core_skill": "Missing Core Skill",
         "hallucinated_skill": "Hallucination",
-        "awkward_language_flag": "Awkward Language",
+        "awkward_language": "Awkward Language",
     }
     for field, label_text in mode_labels.items():
         rate = failure_rates.get(field, 0)

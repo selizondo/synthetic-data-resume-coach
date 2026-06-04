@@ -17,7 +17,7 @@ format:
 	uv run ruff format .
 
 serve:
-	uv run uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+	PYTHONPATH=. uv run uvicorn src.api.main:app --reload --host 127.0.0.1 --port 8000
 
 generate:
-	uv run python -m src.main --samples 10
+	uv run python -m src.main --num-jobs 10 --no-heatmaps

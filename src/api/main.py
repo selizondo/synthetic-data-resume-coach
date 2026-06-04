@@ -13,7 +13,10 @@ from .routes import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler."""
-    logfire.configure()
+    try:
+        logfire.configure(export_kwargs={"timeout": 5})
+    except Exception:
+        logfire.configure(send_to_logfire=False)
     logfire.info("Starting Synthetic Data Resume Coach API")
     yield
     logfire.info("Shutting down Synthetic Data Resume Coach API")

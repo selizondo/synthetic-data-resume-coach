@@ -5,16 +5,64 @@ Organized in dependency order:
   2. Resume models (ContactInfo → Education → Experience → Skill → ResumeMetadata → Resume)
   3. Job description models (Company → Requirements → JobDescriptionMetadata → JobDescription)
   4. Pair model (ResumeJobPairMetadata → ResumeJobPair)
+  5. Validation types (ValidationError_, ValidationResult, SchemaValidator)
 """
 
+import json
+from dataclasses import dataclass, field as dc_field
 from datetime import date, datetime
-from enum import Enum
-from typing import Optional
+from enum import Enum, IntEnum
+from pathlib import Path
+from typing import Any, Optional, Type
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+import logfire
+from pydantic import BaseModel, EmailStr, Field, ValidationError, field_validator
 
 
 # ── 1. Enums ───────────────────────────────────────────────────────────────────
+
+class SeniorityLevel(IntEnum):
+    """Ordered seniority scale shared by generators and labeler."""
+
+    ENTRY     = 0
+    MID       = 1
+    SENIOR    = 2
+    LEAD      = 3
+    EXECUTIVE = 4
+
+    @classmethod
+    def from_years(cls, years: float) -> "SeniorityLevel":
+        if years < 2:  return cls.ENTRY
+        if years < 5:  return cls.MID
+        if years < 8:  return cls.SENIOR
+        if years < 12: return cls.LEAD
+        return cls.EXECUTIVE
+
+    @classmethod
+    def from_title(cls, title: str) -> "SeniorityLevel":
+        t = title.lower()
+        if any(k in t for k in ("executive", "director", "vp", "c-level", "chief")): return cls.EXECUTIVE
+        if any(k in t for k in ("lead", "principal")):                                return cls.LEAD
+        if any(k in t for k in ("senior", " sr ")):                                   return cls.SENIOR
+        if any(k in t for k in ("junior", " jr ", "entry")):                          return cls.ENTRY
+        return cls.MID
+
+    def below(self, steps: int = 1) -> "SeniorityLevel":
+        return SeniorityLevel(max(0, self.value - steps))
+
+    def opposite(self) -> "SeniorityLevel":
+        if self.value <= 1:
+            return SeniorityLevel(min(self.value + 2, 4))
+        return SeniorityLevel(max(self.value - 2, 0))
+
+    @property
+    def label(self) -> str:
+        return self.name.capitalize()
+
+    @property
+    def min_years(self) -> int:
+        return {0: 1, 1: 3, 2: 6, 3: 8, 4: 10}[self.value]
+
 
 class FitLevel(str, Enum):
     """Controlled fit levels between a resume and a job description."""
@@ -225,3 +273,124 @@ class ResumeJobPair(BaseModel):
     match_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     match_analysis: Optional[str] = None
     metadata: Optional[ResumeJobPairMetadata] = Field(default=None)
+
+
+# ── 5. Validation types ────────────────────────────────────────────────────────
+
+@dataclass
+class ValidationError_:
+    """Detailed validation error information."""
+    field: str
+    error_type: str
+    message: str
+    input_value: Any = None
+
+    def to_dict(self) -> dict:
+        return {
+            "field": self.field,
+            "error_type": self.error_type,
+            "message": self.message,
+            "input_value": str(self.input_value)[:100] if self.input_value else None,
+        }
+
+
+@dataclass
+class ValidationResult:
+    """Result of a validation operation."""
+    is_valid: bool
+    data: Optional[BaseModel] = None
+    raw_data: Optional[dict] = None
+    errors: list[ValidationError_] = dc_field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {
+            "is_valid": self.is_valid,
+            "error_count": len(self.errors),
+            "errors": [e.to_dict() for e in self.errors],
+        }
+
+
+class SchemaValidator:
+    """Validate Resume, JobDescription, and ResumeJobPair against Pydantic schemas."""
+
+    def __init__(self) -> None:
+        self.validation_stats: dict = {
+            "total": 0, "valid": 0, "invalid": 0,
+            "errors_by_type": {}, "errors_by_field": {},
+        }
+
+    def validate_resume(self, data: dict) -> ValidationResult:
+        return self._validate(data, Resume)
+
+    def validate_job(self, data: dict) -> ValidationResult:
+        return self._validate(data, JobDescription)
+
+    def validate_pair(self, data: dict) -> ValidationResult:
+        return self._validate(data, ResumeJobPair)
+
+    def _validate(self, data: dict, schema: Type[BaseModel]) -> ValidationResult:
+        self.validation_stats["total"] += 1
+        with logfire.span("validate_data", schema=schema.__name__):
+            try:
+                validated = schema.model_validate(data)
+                self.validation_stats["valid"] += 1
+                logfire.info("Validation successful", schema=schema.__name__)
+                return ValidationResult(is_valid=True, data=validated, raw_data=data)
+            except ValidationError as e:
+                self.validation_stats["invalid"] += 1
+                errors = self._parse_errors(e)
+                for err in errors:
+                    self.validation_stats["errors_by_type"][err.error_type] = \
+                        self.validation_stats["errors_by_type"].get(err.error_type, 0) + 1
+                    self.validation_stats["errors_by_field"][err.field] = \
+                        self.validation_stats["errors_by_field"].get(err.field, 0) + 1
+                logfire.warning("Validation failed", schema=schema.__name__, error_count=len(errors))
+                return ValidationResult(is_valid=False, raw_data=data, errors=errors)
+
+    def _parse_errors(self, exc: ValidationError) -> list[ValidationError_]:
+        return [
+            ValidationError_(
+                field=".".join(str(loc) for loc in e["loc"]),
+                error_type=e["type"],
+                message=e["msg"],
+                input_value=e.get("input"),
+            )
+            for e in exc.errors()
+        ]
+
+    def validate_batch(
+        self, data_list: list[dict], data_type: str = "resume",
+    ) -> tuple[list[ValidationResult], dict]:
+        fn = {"resume": self.validate_resume, "job": self.validate_job, "pair": self.validate_pair}.get(data_type)
+        if not fn:
+            raise ValueError(f"Invalid data_type: {data_type}")
+        with logfire.span("validate_batch", count=len(data_list), data_type=data_type):
+            results = [fn(d) for d in data_list]
+        valid = sum(1 for r in results if r.is_valid)
+        summary = {"total": len(results), "valid": valid, "invalid": len(results) - valid,
+                   "success_rate": valid / len(results) if results else 0}
+        logfire.info("Batch validation complete", **summary)
+        return results, summary
+
+    def get_stats(self) -> dict:
+        stats = self.validation_stats.copy()
+        stats["success_rate"] = stats["valid"] / stats["total"] if stats["total"] > 0 else 0
+        return stats
+
+    def reset_stats(self) -> None:
+        self.validation_stats = {
+            "total": 0, "valid": 0, "invalid": 0,
+            "errors_by_type": {}, "errors_by_field": {},
+        }
+
+    def save_results(
+        self, results: list[ValidationResult],
+        output_dir: str = "data/validated", filename: str = "validation_results.json",
+    ) -> Path:
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+        file_path = output_path / filename
+        with open(file_path, "w") as f:
+            json.dump([r.to_dict() for r in results], f, indent=2)
+        logfire.info(f"Saved {len(results)} validation results to {file_path}")
+        return file_path

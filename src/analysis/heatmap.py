@@ -3,13 +3,15 @@
 from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import logfire
 
-from ..validators.schema_validator import ValidationResult
+from ..schema import ValidationResult
 from .failure_modes import FailureModeAnalyzer, FailureCategory
 
 if TYPE_CHECKING:
@@ -50,7 +52,10 @@ class HeatmapGenerator:
         Args:
             output_dir: Directory to save generated visualizations.
         """
-        logfire.configure()
+        try:
+            logfire.configure(export_kwargs={"timeout": 5})
+        except Exception:
+            logfire.configure(send_to_logfire=False)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 

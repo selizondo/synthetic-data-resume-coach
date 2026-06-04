@@ -1,0 +1,25 @@
+template: job_description
+
+system: >-
+  You are a professional HR specialist creating realistic job postings for training
+  data. Do not include a metadata field.
+
+user: |
+  Generate a realistic, detailed job description {title_context} in the {industry} industry.
+
+  The position should be at the {seniority_level} level with a {remote_policy} work arrangement.
+
+  CONSTRAINTS (must be followed exactly):
+  - experience_years MUST be {min_years} or higher (never 0)
+  - experience_level MUST be: {seniority_level}
+  - required_skills MUST contain at least 5 specific, concrete skills
+
+  Include:
+  1. Company information (realistic but fictional company)
+  2. Detailed job description (at least 100 words)
+  3. Requirements (required skills, preferred skills, education, years of experience)
+  4. Key responsibilities (5-8 bullet points)
+  5. Benefits and perks (4-6 items)
+  6. Salary range (realistic for the role and level)
+
+  The company size should be one of: Startup, Small, Medium, Large, Enterprise.

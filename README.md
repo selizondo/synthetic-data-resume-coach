@@ -8,15 +8,19 @@ This project is a production-grade synthetic data pipeline that generates resume
 
 ---
 
-## The Core Engineering Problem
+## Engineering Decisions
 
-Three failure modes that LLM-generated training data introduces — each detected and handled:
+**LLMs default to generating "good enough" resumes.** Without explicit instructions, you get a pile of mid-range fits and almost no true mismatches or excellent candidates — which makes it impossible to train a model that can distinguish between them. Each job generates exactly one resume per fit level using structured prompts that specify exact skill coverage targets (e.g., "include only 20–30% of required skills" for Poor). This is the only reliable way to cover the full fit spectrum.
 
-**1. Distribution collapse** — Unconstrained LLM generation clusters near "good enough" and never produces the extremes (Excellent, Mismatch) that train a discriminative model. Fix: each job generates exactly one resume per fit level via structured prompts with per-level skill coverage targets (e.g., "include only 20–30% of required skills, mostly Beginner" for Poor).
+**Generated data can be structurally broken with no visible error.** A hallucinated `null` date or a missing required field poisons the training set silently. Every pair is gated through Pydantic schema validation before it enters the labeled dataset. Invalid pairs are quarantined to `failed_pairs_<run>.jsonl` for correction rather than silently dropped.
 
-**2. Silent schema violations** — An LLM that hallucinates `null` dates or omits required skills fields poisons the training set with no error. Fix: Pydantic schema gates every pair before it enters the labeled dataset. Failed pairs are quarantined to `failed_pairs_<run>.jsonl` for correction, not silently dropped.
+**Invalid records need a correction signal, not a gold standard.** There's no human-labeled "right answer" to correct toward. The correction loop re-prompts the LLM with its own Pydantic error messages (up to 3 retries), using the validator output as the feedback signal. Before/after deltas are logged per run.
 
-**3. No supervision signal for correction** — When a pair fails, there's no gold standard to correct toward. Fix: the correction loop re-prompts the LLM with its own schema error messages (up to 3 retries), using the validator's output as the supervision signal. The before/after delta is logged per run for drift tracking.
+**Crash recovery without re-generation.** Phase 1 writes each item to JSONL immediately. If the process is killed mid-run (rate-limit, OOM), `--resume <run_label>` picks up at the exact item where it stopped.
+
+**Rule-based labeler, not LLM-based.** The six failure metrics are deterministic, instant, and free. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but rules gate correctness first. This keeps the pipeline runnable on a free Groq tier.
+
+**API responses include `strategy_used` and `latency_ms`.** Callers can alert on latency regression or distinguish `rule_based` from `rule_based+llm_judge` paths without parsing logs.
 
 ---
 
@@ -49,6 +53,63 @@ Jaccard + 5 binary gates → { fit_score, overall_fit, strategy_used, latency_ms
 
 ---
 
+## Key Concepts
+
+### Fit Levels
+
+Each job generates exactly one resume per fit level. The target Jaccard overlap is controlled at generation time via per-level prompt instructions:
+
+| Fit Level | Jaccard Target | What it means |
+|---|---|---|
+| Excellent | ≥ 0.80 | Strong skill match; resume is a genuine candidate |
+| Good | 0.60–0.80 | Solid overlap with minor gaps |
+| Partial | 0.40–0.60 | Notable gaps but viable with upskilling |
+| Poor | 0.20–0.40 | Significant mismatch; missing core skills |
+| Mismatch | < 0.20 | Wrong role entirely |
+
+Without explicit instructions, an LLM defaults to generating plausible resumes — you get plenty of "good" fits but almost never a true mismatch or an excellent one. Per-level prompts fix this by telling the model exactly what overlap to aim for.
+
+### Failure Metrics
+
+Six rule-based metrics are computed for every resume–job pair by `src/analysis/failure_labeler.py`:
+
+| Metric | Calculation | Flag condition |
+|---|---|---|
+| **skills_overlap_ratio** | Jaccard: `\|A ∩ B\| / \|A ∪ B\|` on normalized skill sets | Continuous 0–1 |
+| **experience_mismatch** | Resume years < 50% of required, or gap > 2 years | Binary |
+| **seniority_mismatch** | Seniority level distance > 1 | Binary |
+| **missing_core_skill** | Absence of any top-3 required skill | Binary |
+| **hallucinated_skill** | Entry-level with 10+ "Expert" ratings, or 20+ skills total | Binary |
+| **awkward_language_flag** | Buzzword density > 5 per section; repeated jargon patterns | Binary |
+
+Seniority levels are mapped to integers: Entry=0, Mid=1, Senior=2, Lead/Staff=3, Executive=4. A mismatch fires when `|resume_level − job_level| > 1`.
+
+### Skill Normalization
+
+Jaccard is only meaningful if "Python", "Python 3.10", and "python developer" resolve to the same token. The labeler normalizes all skill strings before comparison:
+
+1. Lowercase
+2. Strip version numbers (`3.10`, `v2`, `2.x`)
+3. Strip common suffixes (`.js`, `developer`, `engineer`, `programming`)
+
+Without normalization, Jaccard scores are artificially low and the fit level distribution collapses toward "poor" regardless of actual alignment.
+
+### Resume Writing Templates
+
+Each resume is generated using one of five prompt templates, recorded in the `writing_style` metadata field:
+
+| Template | Characteristics |
+|---|---|
+| Formal | Corporate tone, structured, passive voice |
+| Casual | Startup-friendly, first-person, conversational |
+| Technical | Detail-heavy, emphasizes stack depth and tooling |
+| Achievement | Metrics-driven, quantified impact statements |
+| Career-changer | Transferable skills framing, reframes prior experience |
+
+Failure detection must work across all five styles — a hallucination detector tuned only on formal resumes will miss patterns in casual ones.
+
+---
+
 ## Results
 
 | Metric | Value |
@@ -63,18 +124,6 @@ A 61% pass rate is expected — "Mismatch" pairs fail the labeler by design. The
 
 ---
 
-## Staff-Level Design Decisions
-
-**Checkpoint recovery** — Phase 1 writes each item to JSONL immediately. If the process is killed (rate-limit circuit breaker, OOM), `--resume <run_label>` picks up at the exact item where it stopped. No re-generation of completed work.
-
-**Per-fit-level generation** — five explicit prompt variants rather than random sampling. Random generation produces a bimodal distribution (mostly "good" with some "poor") and never reaches "Mismatch" at meaningful frequency. Structured generation gives full control over label balance.
-
-**Rule-based labeler, not LLM-based** — the six failure metrics are deterministic, instant, and don't consume tokens. The LLM judge (`--enable-llm-judge`) is additive — it catches subtle quality issues the rules miss, but the rules gate schema correctness first. This keeps the pipeline runnable on a free Groq tier.
-
-**strategy_used + latency_ms in API responses** — callers can alert on latency regression or distinguish `rule_based` from `rule_based+llm_judge` paths without parsing logs.
-
----
-
 ## At Scale
 
 At org scale, any AI team training on synthetic data faces the same governance question: how do you know your synthetic distribution matches the real one? This pipeline operationalizes a validation-first answer — every pair is independently scored by six rule-based metrics before it enters the training corpus, failed pairs are corrected and re-scored rather than discarded, and the correction loop's before/after delta is tracked across runs. The pattern — generate → validate schema → label failure modes → correct with error context — applies to any LLM-generated training corpus regardless of domain. A team building customer-intent training data, legal-clause classifiers, or code-review datasets runs the same four phases against a different schema and a different labeler.
@@ -83,12 +132,66 @@ At org scale, any AI team training on synthetic data faces the same governance q
 
 ## Quick Start
 
+### Prerequisites
+
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
+- Access to `selizondo/llm-utils` (private dep — required for `make bootstrap` to succeed)
+- An OpenAI-compatible LLM API key (OpenAI, Groq, or local Ollama)
+
+### Setup
+
 ```bash
-cp .env.example .env   # add GROQ_API_KEY
-make bootstrap         # uv sync --all-extras
-make test              # 41 tests, ~10 seconds, no API calls
-make generate          # run the full pipeline (10 jobs × 5 fit levels)
-make serve             # FastAPI on :8000 — interactive docs at /docs
+cp .env.example .env
+# Edit .env — set LLM_API_KEY and LLM_MODEL at minimum
+# Default is OpenAI gpt-4o-mini; see .env.example for Groq/Ollama alternatives
+
+make bootstrap         # uv sync --all-extras — installs all deps including dev tools
+make test              # 57 tests, ~10 seconds, no API calls
+```
+
+### Run the pipeline
+
+```bash
+make generate          # 10 jobs × 5 fit levels = 50 pairs; heatmaps disabled by default
+make serve             # FastAPI on 127.0.0.1:8000 — interactive docs at /docs
+```
+
+### Output structure
+
+```
+data/
+├── generated/
+│   ├── jobs_<run_label>.jsonl       # one JobDescription per line
+│   ├── pairs_<run_label>.jsonl      # one ResumeJobPair per line (5 fit levels per job)
+│   └── resumes_<run_label>.jsonl
+├── validated/
+│   └── validation_report_<run_label>.json
+├── labeled/
+│   └── failure_labels_<run_label>.jsonl  # 6 rule-based metrics per pair
+├── pipeline_summary_<run_label>.json     # timing + counts for the full run
+└── iteration_log.jsonl                   # before/after delta across all runs
+```
+
+`run_label` is a timestamp (`YYYYMMDD_HHMMSS`) assigned at pipeline start.
+
+### Key CLI flags
+
+```bash
+# Resume a run that was interrupted (skips already-completed items)
+python -m src.main --phase 3-4 --resume 20260528_185335
+
+# Skip correction loop (faster; useful for exploration)
+python -m src.main --num-jobs 10 --no-correction
+
+# Run on a headless server (heatmaps require a display)
+python -m src.main --num-jobs 10 --no-heatmaps
+
+# Add LLM-based quality assessment (slower, costs tokens)
+python -m src.main --num-jobs 10 --enable-llm-judge
+
+# Run Phase 5 label quality report against a completed run
+python -m src.main --eval-quality --resume 20260528_185335
 ```
 
 See [docs/tradeoffs.md](docs/tradeoffs.md) for design decisions and [docs/failures.md](docs/failures.md) for known failure modes.

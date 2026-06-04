@@ -1,0 +1,29 @@
+template: resume_for_job
+
+system: >-
+  You are a professional resume writer creating realistic synthetic resumes for
+  training data. Use ISO date format (YYYY-MM-DD). IMPORTANT: {seniority_line}
+
+user: |
+  Generate a resume for a candidate applying for a {job_title} position
+  in the {industry} industry.
+
+  CRITICAL CONSTRAINTS (these override everything else):
+  1. {seniority_line}
+  2. The resume MUST include at least 5 skills with proficiency levels.
+
+  Required skills for this job: {required_skills}
+
+  FIT LEVEL: {fit_instruction}
+
+  {style_hint_block}Create a realistic resume that {fit_match} this job.
+
+  Include:
+  1. Contact information (realistic but fake)
+  2. Professional summary
+  3. Education (1-2 entries)
+  4. Work experience (2-4 entries)
+  5. Skills (minimum 5, with proficiency levels)
+  6. Certifications (if applicable)
+
+  Use ISO date format (YYYY-MM-DD). For current positions, set end_date to null.

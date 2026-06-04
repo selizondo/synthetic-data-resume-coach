@@ -9,7 +9,7 @@ from typing import Optional
 import logfire
 import pandas as pd
 
-from ..schema import JobDescription, Resume, ResumeJobPair
+from ..schema import JobDescription, Resume, ResumeJobPair, SeniorityLevel
 from ..utils.storage import save_jsonl, get_timestamped_filename
 
 
@@ -61,11 +61,13 @@ class FailureLabels:
             "prompt_template": self.prompt_template,
             "fit_level": self.fit_level,
             "is_niche_role": self.is_niche_role,
+            "overall_pass": self.overall_pass,
+            "quality_pass": self.quality_pass,
         }
 
     @property
     def overall_pass(self) -> bool:
-        """Check if all failure checks pass."""
+        """Raw pass — all 6 checks must pass regardless of fit level."""
         return (
             self.skills_overlap_ratio >= 0.5
             and self.experience_mismatch == 0
@@ -74,6 +76,26 @@ class FailureLabels:
             and self.hallucinated_skill == 0
             and self.awkward_language_flag == 0
         )
+
+    @property
+    def quality_pass(self) -> bool:
+        """Fit-level-aware pass — only flags failures that are unintentional for this fit level.
+
+        For POOR/MISMATCH, seniority divergence, experience gap, low overlap,
+        and missing core skills are intentional by design — only hallucination
+        and awkward language are real quality failures.
+        """
+        fit = (self.fit_level or "").lower()
+        if fit == "mismatch":
+            return self.hallucinated_skill == 0 and self.awkward_language_flag == 0
+        if fit == "poor":
+            return (
+                self.hallucinated_skill == 0
+                and self.awkward_language_flag == 0
+                and self.skills_overlap_ratio < 0.5  # poor should NOT have high overlap
+            )
+        # excellent / good / partial: all checks apply
+        return self.overall_pass
 
     @property
     def failure_count(self) -> int:
@@ -90,21 +112,6 @@ class FailureLabels:
 
 class FailureLabeler:
     """Label failure modes for resume-job pairs."""
-
-    # Seniority level ordering for comparison
-    SENIORITY_ORDER = {
-        "entry": 0,
-        "junior": 0,
-        "mid": 1,
-        "intermediate": 1,
-        "senior": 2,
-        "lead": 3,
-        "principal": 3,
-        "executive": 4,
-        "director": 4,
-        "vp": 5,
-        "c-level": 5,
-    }
 
     # Patterns for awkward language detection
     AWKWARD_PATTERNS = [
@@ -273,51 +280,24 @@ class FailureLabeler:
         Returns:
             Tuple of (is_mismatch, gap_description).
         """
-        # Get job seniority level
-        job_level = job.requirements.experience_level.lower()
-        job_order = self.SENIORITY_ORDER.get(job_level, 1)
+        job_seniority = SeniorityLevel.from_title(job.requirements.experience_level)
 
-        # Estimate resume seniority from most recent job title
-        resume_level = "mid"  # Default
+        resume_seniority = SeniorityLevel.MID
         if resume.experience:
-            title = resume.experience[0].title.lower()
-            for level, order in self.SENIORITY_ORDER.items():
-                if level in title:
-                    resume_level = level
-                    break
-            if "junior" in title or "jr" in title:
-                resume_level = "entry"
-            elif "senior" in title or "sr" in title:
-                resume_level = "senior"
-            elif "lead" in title or "principal" in title:
-                resume_level = "lead"
-
-            # Fallback: infer from total experience years when title is ambiguous.
-            # Avoids defaulting plain titles like "Software Engineer" to "mid" when
-            # the candidate has entry-level or senior-level total experience.
-            if resume_level == "mid":
+            resume_seniority = SeniorityLevel.from_title(resume.experience[0].title)
+            if resume_seniority == SeniorityLevel.MID:
                 from datetime import date as _date
                 total_years = sum(
                     ((exp.end_date or _date.today()) - exp.start_date).days / 365
                     for exp in resume.experience
                 )
-                if total_years < 2:
-                    resume_level = "entry"
-                elif total_years >= 8:
-                    resume_level = "lead"
-                elif total_years >= 5:
-                    resume_level = "senior"
+                resume_seniority = SeniorityLevel.from_years(total_years)
 
-        resume_order = self.SENIORITY_ORDER.get(resume_level, 1)
-
-        # Check if gap is more than 1 level
-        gap = abs(job_order - resume_order)
+        gap = abs(job_seniority - resume_seniority)
         is_mismatch = gap > 1
-
-        gap_description = ""
-        if is_mismatch:
-            gap_description = f"{resume_level.capitalize()} vs {job_level.capitalize()}"
-
+        gap_description = (
+            f"{resume_seniority.label} vs {job_seniority.label}" if is_mismatch else ""
+        )
         return is_mismatch, gap_description
 
     def detect_missing_core_skill(

@@ -9,7 +9,7 @@ from pathlib import Path
 import logfire
 from dotenv import load_dotenv
 
-from .config import PipelineConfig
+from .pipeline import PipelineConfig
 from llm_utils.config import get_settings
 from .phase1_generation import _load_jsonl, run_generation_phase
 from .phase2_validation import run_validation_phase
@@ -52,7 +52,7 @@ def _section(text: str) -> None:
 def main() -> None:
     load_dotenv()
     try:
-        logfire.configure()
+        logfire.configure(export_kwargs={"timeout": 5})
     except Exception:
         logfire.configure(send_to_logfire=False)
 

@@ -10,7 +10,7 @@ import logfire
 from llm_utils import instructor_complete
 
 from ..schema import JobDescription, Resume
-from ..validators.schema_validator import SchemaValidator, ValidationResult
+from ..schema import SchemaValidator, ValidationResult
 
 
 @dataclass

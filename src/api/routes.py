@@ -95,7 +95,7 @@ class RequirementsInput(BaseModel):
     required_skills: list[str] = Field(default_factory=list, min_length=1)
     preferred_skills: list[str] = Field(default_factory=list)
     education_requirements: str
-    experience_years: int = Field(ge=0, le=30)
+    experience_years: int = Field(ge=1, le=30)
     experience_level: str  # Entry, Mid, Senior, Lead, Executive
 
 

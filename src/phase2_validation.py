@@ -5,7 +5,7 @@ from typing import Optional
 
 from .schema import JobDescription, Resume, ResumeJobPair
 from .utils.storage import save_jsonl
-from .validators.schema_validator import SchemaValidator
+from .schema import SchemaValidator
 
 
 def run_validation_phase(

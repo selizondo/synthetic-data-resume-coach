@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from .correction.llm_correction import LLMCorrector
-from .validators.schema_validator import ValidationResult
+from .schema import ValidationResult
 
 
 def run_correction_phase(

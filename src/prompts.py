@@ -8,6 +8,22 @@ import yaml
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 FAILURE_MODES_DIR = Path(__file__).parent / "failure_modes"
 
+# Templates used as writing-style variants (not generation scaffolds)
+_STYLE_TEMPLATES = {"formal", "casual", "technical", "achievement_focused", "career_changer"}
+
+
+def load_prompt(name: str) -> dict:
+    """Load a single prompt template by name (e.g. 'job_description', 'resume_for_job')."""
+    path = PROMPTS_DIR / f"{name}.yaml"
+    if not path.exists():
+        raise FileNotFoundError(f"Prompt template not found: {path}")
+    with path.open() as f:
+        data = yaml.safe_load(f)
+    missing = [k for k in ("system", "user") if k not in data]
+    if missing:
+        raise ValueError(f"{path.name} is missing keys: {missing}")
+    return {"system": data["system"], "user": data["user"]}
+
 
 def load_resume_prompt_templates(template_name: Optional[str] = None) -> dict[str, dict]:
     """Load resume generation prompt templates from YAML files.
@@ -33,6 +49,9 @@ def load_resume_prompt_templates(template_name: Optional[str] = None) -> dict[st
         name = data.get("template")
         if not name:
             raise ValueError(f"{path.name} is missing 'template' key")
+
+        if name not in _STYLE_TEMPLATES:
+            continue  # skip generation scaffolds (job_description, resume_for_job)
 
         missing = [k for k in ("system", "user") if k not in data]
         if missing:

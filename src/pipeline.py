@@ -6,16 +6,30 @@ and phase-by-phase control via --phase argument.
 
 import json
 import time
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+
+
+@dataclass
+class PipelineConfig:
+    num_jobs: int = 10
+    resumes_per_job: int = 5
+    max_correction_retries: int = 3
+    model: str = "llama-3.3-70b-versatile"
+    output_dir: str = "data"
+    generate_heatmaps: bool = True
+    enable_correction: bool = True
+    enable_llm_judge: bool = False
+    enable_braintrust: bool = False
 from typing import Optional
 
 import logfire
 from dotenv import load_dotenv
 
-from .config import PipelineConfig
+
 from .generators import JobDescriptionGenerator, ResumeGenerator
-from .validators.schema_validator import SchemaValidator
+from .schema import SchemaValidator
 from .analysis.failure_modes import FailureModeAnalyzer
 from .analysis.failure_labeler import FailureLabeler
 from .analysis.llm_judge import LLMJudge

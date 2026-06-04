@@ -17,7 +17,7 @@ from src.schema import (
     Requirements,
     JobDescription,
 )
-from src.validators.schema_validator import SchemaValidator, ValidationResult
+from src.schema import SchemaValidator, ValidationResult
 from src.analysis.failure_modes import FailureModeAnalyzer, FailureCategory
 
 
@@ -311,7 +311,7 @@ class TestFailureModeAnalyzer:
 
     def test_categorize_missing_error(self):
         """Test categorization of missing field error."""
-        from src.validators.schema_validator import ValidationError_
+        from src.schema import ValidationError_
 
         error = ValidationError_(
             field="contact.name",
@@ -323,7 +323,7 @@ class TestFailureModeAnalyzer:
 
     def test_categorize_date_error(self):
         """Test categorization of date-related error."""
-        from src.validators.schema_validator import ValidationError_
+        from src.schema import ValidationError_
 
         error = ValidationError_(
             field="experience.0.end_date",

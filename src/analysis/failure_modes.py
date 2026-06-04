@@ -10,7 +10,7 @@ from typing import Optional
 import logfire
 import pandas as pd
 
-from ..validators.schema_validator import ValidationResult, ValidationError_
+from ..schema import ValidationResult, ValidationError_
 
 
 class FailureCategory(str, Enum):
