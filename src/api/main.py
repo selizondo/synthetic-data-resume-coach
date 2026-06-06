@@ -7,6 +7,7 @@ import logfire
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from . import counters
 from .routes import router
 
 
@@ -57,6 +58,26 @@ async def root():
         "version": "0.1.0",
         "status": "healthy",
         "docs": "/docs",
+    }
+
+
+@app.get("/metrics")
+async def metrics():
+    """Runtime telemetry counters.
+
+    Tracks requests, strategy distribution, LLM fallback count, and average
+    latency since process start. Resets on restart — in-process counters are
+    acceptable for a portfolio service (documented in tradeoffs.md).
+    """
+    data = counters.snapshot()
+    return {
+        "requests_total": data["requests_total"],
+        "strategy_breakdown": {
+            "rule_based": data["rule_based_count"],
+            "rule_based_plus_llm": data["rule_based_plus_llm_count"],
+        },
+        "llm_judge_fallback_count": data["llm_judge_fallback_count"],
+        "avg_latency_ms": data["avg_latency_ms"],
     }
 
 

@@ -20,6 +20,7 @@ from ..schema import (
     Skill,
 )
 from ..utils.trace import generate_trace_id
+from . import counters
 
 router = APIRouter()
 
@@ -414,6 +415,16 @@ async def review_resume(request: ReviewResumeRequest):
             strategy = (
                 "rule_based+llm_judge" if request.use_llm_judge and llm_assessment else "rule_based"
             )
+            llm_fallback = request.use_llm_judge and llm_assessment is None
+            counters.increment("requests_total")
+            counters.increment(
+                "rule_based_plus_llm_count"
+                if strategy == "rule_based+llm_judge"
+                else "rule_based_count"
+            )
+            if llm_fallback:
+                counters.increment("llm_judge_fallback_count")
+
             response = ReviewResumeResponse(
                 trace_id=trace_id,
                 overall_fit=fit_level,
@@ -427,6 +438,7 @@ async def review_resume(request: ReviewResumeRequest):
                 analyzed_at=datetime.now(UTC).isoformat(),
             )
 
+            counters.increment("latency_ms_total", response.latency_ms)
             logfire.info(
                 "Resume review complete",
                 trace_id=trace_id,
