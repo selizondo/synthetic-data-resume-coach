@@ -45,7 +45,7 @@ If the LLM overproduces one fit level or writing template relative to others, th
 Downstream fine-tuning quality depends on balanced representation across all fit levels and template types.
 
 ### Detection mechanism
-Phase 1 generates exactly one resume per fit level per job via structured prompts — imbalance is prevented at generation time, not detected after. The `by_template` and `by_fit_level` breakdowns in `pipeline_summary_{run_label}.json` → `phases.labeling` let you verify coverage after the run.
+Phase 1 generates exactly one resume per fit level per job via structured prompts: imbalance is prevented at generation time, not detected after. The `by_template` and `by_fit_level` breakdowns in `pipeline_summary_{run_label}.json` → `phases.labeling` let you verify coverage after the run.
 
 ### Fallback behavior
 If a fit level or template is underrepresented, re-run Phase 1 with `--resume <run_label>` to generate missing pairs without regenerating existing ones.
@@ -61,7 +61,7 @@ Two pairs share the same job but slightly different resume phrasing. They pass s
 Near-duplicate training pairs cause a fine-tuned model to memorize specific phrasings rather than learning generalizable patterns.
 
 ### Detection mechanism
-Currently not detected — deduplication is not implemented. This is a known gap. Each job generates exactly one resume per fit level (5 pairs per job), so within-job duplication can't happen. Cross-job near-duplication is possible but low-probability at dataset sizes ≤500 pairs.
+Currently not detected: deduplication is not implemented. This is a known gap. Each job generates exactly one resume per fit level (5 pairs per job), so within-job duplication can't happen. Cross-job near-duplication is possible but low-probability at dataset sizes ≤500 pairs.
 
 ### Fallback behavior
 None at pipeline level. Embedding-based near-dedup (cosine similarity threshold) was cut to avoid added complexity and API cost at this dataset size. Manual inspection of the final JSONL is recommended before using the dataset for fine-tuning.
