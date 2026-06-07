@@ -1,5 +1,19 @@
 # Setup and Usage
 
+## Key Concepts
+
+**One resume per fit level with generation-time gate:** Each job generates exactly one resume per fit level (Excellent → Mismatch). Without explicit instructions, LLM defaults to plausible resumes at every level (Mismatch Jaccard 0.582). Overlap retry loop computes Jaccard post-generation, retries if outside target range (3x max). After gate: Excellent=0.979, Mismatch=0.000.
+
+**Rule-based labeling:** Jaccard skill overlap, experience mismatch, seniority mismatch, missing core skill, hallucinated skill, language clarity. All deterministic, computed offline, zero API cost. LLM judge is opt-in and additive: catches subtle quality the rules miss.
+
+**Pydantic errors as feedback:** Invalid pairs re-prompted with exact error messages (field path, error type, invalid value). Gives LLM precise context to fix without guessing. 100% correction on first attempt in proof-of-concept. In normal runs: `instructor` prevents schema-invalid generation.
+
+**Fit-level distribution as the signal:** 8B model passed at 61.1%, stronger model at 31.6%. The lower number is correct: 8B ignored fit-level instructions and generated plausible resumes for every level. Stronger model with overlap retry produced real mismatches (avg Jaccard 0.000). Measurement: does distribution match what you asked for?
+
+**Jaccard as fit-level measurement:** Measures overlap of skills between resume and job. Excellent resumes show high overlap (1.00), Mismatch shows none (0.00). The progression (1.00, 0.67, 0.43, 0.25, 0.00) validates that the generation-time gate is working.
+
+---
+
 ## Prerequisites
 
 - Python 3.12+

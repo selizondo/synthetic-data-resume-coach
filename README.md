@@ -10,6 +10,15 @@ This is the measurement that matters: not whether the pass rate is high, but whe
 
 **Stack:** Python · OpenAI · instructor · FastAPI · Pydantic · llm-utils
 
+## Related Projects
+
+1. [synthetic-data-diy](https://github.com/selizondo/synthetic-data-diy) — same generate-validate-label-correct pattern, different domain
+2. [llm-utils](https://github.com/selizondo/llm-utils) — shared LLM client used by generation and correction
+
+*Companion post: [Why career_changer Resumes Failed 2x More Often](docs/blog_post.md) — fit-level distribution and measurement*
+
+---
+
 ## Results
 
 50-job run (gpt-4o-mini + overlap retry loop), 250 pairs (5 fit levels per job):
@@ -37,11 +46,6 @@ Jaccard skill overlap, experience mismatch, seniority mismatch, missing core ski
 ### Correction loop uses Pydantic errors as the feedback signal
 
 Invalid pairs are re-prompted with their exact Pydantic error messages (field path, error type, invalid value). This gives the LLM precise context to fix the issue without guessing. 100% correction on the first attempt in the proof-of-concept run. In normal runs, the correction loop does not fire: `instructor` prevents schema-invalid records from being generated in the first place.
-
-**Companion post:** [Why career_changer Resumes Failed 2x More Often](docs/blog_post.md)
-**Related projects:** [synthetic-data-diy](https://github.com/selizondo/synthetic-data-diy) (same generate-validate-label-correct pattern, different domain) · [llm-utils](https://github.com/selizondo/llm-utils) (shared LLM client used by generation and correction)
-
----
 
 ## Go Deeper
 
